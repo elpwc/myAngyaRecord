@@ -1,0 +1,124 @@
+.map-tiles-radio-group {
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.map-tiles-radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.map-tiles-radio-group label:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.map-tiles-radio-group input[type="radio"] {
+  margin: 0;
+}
+
+/* 选中状态的样式 */
+.map-tiles-radio-group input[type="radio"]:checked + span {
+  font-weight: 500;
+  color: #1890ff;
+}
+
+.map-tiles-checkbox-group {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 8px;
+}
+
+.map-tiles-checkbox-group label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.map-tiles-checkbox-group label:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.map-tiles-checkbox-group input[type="checkbox"] {
+  margin: 0;
+  width: 16px;
+  height: 16px;
+}
+
+.map-tiles-checkbox-group input[type="checkbox"]:checked + span {
+  color: #1890ff;
+}
+
+.municipalitiesList {
+  width: 100%;
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 8px;
+}
+
+.prefDropdownButton {
+  width: 100%;
+  padding: 8px 12px;
+  background: #f0f0f0;
+  border: none;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.prefDropdownButton:hover {
+  background: #e8e8e8;
+}
+
+.municipalityItem {
+  padding: 8px 12px;
+  display: grid;
+  grid-template-columns: 2fr 2fr 1fr;
+  gap: 8px;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+}
+
+.municipalityItem:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.municipalityName {
+  font-weight: 500;
+}
+
+.municipalityRegion {
+  color: #666;
+}
+
+.municipalityStatus {
+  text-align: center;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: #e6e6e6;
+  font-size: 12px;
+}

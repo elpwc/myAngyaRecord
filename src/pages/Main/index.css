@@ -1,0 +1,22 @@
+
+header {
+	height: fit-content;
+	width: 100%;
+	background-color: #238551;
+	color: white;
+	padding: 5px;
+	box-shadow: 0 0 black;
+	display: flex;
+}
+#regionMenu {
+	display: flex;
+	gap: 10px;
+}
+
+.regionMenuItem {
+	padding: 0 10px;
+}
+
+.regionMenuItem a {
+	color: white;
+}
