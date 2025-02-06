@@ -1,5 +1,7 @@
 import prefJson from '../geojson/japan/prefectures.geojson';
-import { Municipality, Prefecture } from './addr';
+import shinkoukyokuJson from '../geojson/japan/hokkaido-branch.geojson';
+import railwaysJson from '../geojson/japan/railways.geojson';
+import { Municipality, Prefecture, Railway } from './addr';
 import { allPrefJsons } from './geojsonReader';
 
 const getGeoJsonData = async (url: string) => {
@@ -7,11 +9,11 @@ const getGeoJsonData = async (url: string) => {
 };
 
 /**
- * 获取都道府县数据
+ * 解析都道府县或者北海道振兴局数据
  * @returns any
  */
-export const getPrefectureData = async () => {
-  const geojsondata = await getGeoJsonData(prefJson);
+export const getPrefecture_ShinkoukyokuData = async (shinkoukyoku: boolean = false) => {
+  const geojsondata = await getGeoJsonData(shinkoukyoku ? shinkoukyokuJson : prefJson);
   return geojsondata.features.map((feature: any) => {
     return {
       id: feature.properties.name,
@@ -78,5 +80,27 @@ export const getMunicipalitiesData = async () => {
         } as Municipality;
       }),
     };
+  });
+};
+
+export const getRailwaysData = async () => {
+  const geojsondata = await getGeoJsonData(railwaysJson);
+  return geojsondata.features.map((railwayCompanyFeature: any) => {
+    return {
+      companyName: railwayCompanyFeature.properties.name,
+      isJR: railwayCompanyFeature.properties.name.includes('旅客'),
+      coordinates: railwayCompanyFeature.geometry.coordinates.map((area: any) => {
+        if (typeof area[0][0] === 'number') {
+          // 只有一个polygon
+          return area.map((point: any) => {
+            return [point[1], point[0]];
+          });
+        }
+        // 有多个polygon
+        return area[0].map((point: any) => {
+          return [point[1], point[0]];
+        });
+      }),
+    } as Railway;
   });
 };

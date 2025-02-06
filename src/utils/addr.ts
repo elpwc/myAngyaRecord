@@ -17,3 +17,10 @@ export interface Municipality {
   is_special_city_ward: boolean;
   coordinates: [number, number][][];
 }
+
+/** railway */
+export interface Railway {
+  companyName: string;
+  isJR: boolean;
+  coordinates: [number, number][][];
+}

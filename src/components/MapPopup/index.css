@@ -1,0 +1,26 @@
+.popup {
+}
+
+.popuproute {
+	color: gray;
+}
+
+.popuptitle {
+	font-size: 20px;
+	font-weight: bold;
+}
+
+.popupbuttoncontainer {
+	display: flex;
+	flex-direction: row;
+	gap: 2px;
+	width: max-content;
+}
+
+.popupbutton {
+  border-width: 1px;
+  border-color: gray;
+	cursor: pointer;
+  font-size: 15px;
+  padding: 2px 2px;
+}
