@@ -3,11 +3,12 @@ import { useEffect } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router';
 import './index.css';
 import '../../../node_modules/leaflet/dist/leaflet.css';
-import { AttributionControl, MapContainer, Marker, Polygon, Polyline, Popup, ScaleControl, TileLayer } from 'react-leaflet';
-import { chihous_data, mapTiles } from '../../utils/map';
-import { getMunicipalitiesData, getPrefecture_ShinkoukyokuData, getRailwaysData } from '../../utils/geojsonUtils';
+import { AttributionControl, MapContainer, Marker, Polygon, Polyline, Popup, ScaleControl, TileLayer, Tooltip, useMapEvents } from 'react-leaflet';
+import { chihous_data, getBounds, mapTiles } from '../../utils/map';
+import { getMunicipalitiesData, getPrefecture_ShinkoukyokuData, getRailwaysData } from './geojsonUtils';
 import { Municipality, Prefecture, Railway } from '../../utils/addr';
 import MapPopup from '../../components/MapPopup';
+import { divIcon, LatLngTuple } from 'leaflet';
 
 interface P {}
 
@@ -30,6 +31,7 @@ export default (props: P) => {
   const [railwaysData, setrailwaysData]: [Railway[], any] = useState([]);
   const [muniBorderData, setmuniBorderData]: [{ municipalities: Municipality[]; prefecture: string }[], any] = useState([]);
   const [expandedPrefectures, setExpandedPrefectures] = useState<string[]>([]);
+  const [currentZoom, setCurrentZoom] = useState(5);
 
   useEffect(() => {
     (async () => {
@@ -54,6 +56,16 @@ export default (props: P) => {
 
   const togglePrefecture = (prefecture: string) => {
     setExpandedPrefectures(prev => (prev.includes(prefecture) ? prev.filter(p => p !== prefecture) : [...prev, prefecture]));
+  };
+
+  const ZoomListener = () => {
+    const map = useMapEvents({
+      zoomend: () => {
+        setCurrentZoom(map.getZoom());
+        console.log(map.getZoom());
+      },
+    });
+    return null;
   };
 
   return (
@@ -104,22 +116,27 @@ export default (props: P) => {
                 </div>
                 <div>
                   {muniBorderData.length > 0 &&
-                    chihou.pref.map(pref_in_chihou => {
-                      console.log(pref_in_chihou, muniBorderData);
-                      const a = muniBorderData.findIndex(mp => {
-                        console.log(mp, pref_in_chihou);
-                        return mp.prefecture === pref_in_chihou;
+                    chihou.pref.map(prefInChihou => {
+                      const prefIndex = muniBorderData.findIndex(mp => {
+                        return mp.prefecture === prefInChihou;
                       });
-                      if (a !== -1) {
-                        const prefMuniBorder = muniBorderData[a];
-                        console.log(prefMuniBorder);
+                      if (prefIndex !== -1) {
+                        const prefMuniBorder = muniBorderData[prefIndex];
                         return (
                           <div key={prefMuniBorder.prefecture}>
                             <button
                               className={'prefDropdownButton ' + (expandedPrefectures.includes(prefMuniBorder.prefecture) ? 'prefDropdownButtonOpen' : '')}
                               onClick={() => togglePrefecture(prefMuniBorder.prefecture)}
                             >
-                              {prefMuniBorder.prefecture}
+                              <span>{prefMuniBorder.prefecture}</span>
+                              <span className="prefDropdownButton-status">
+                                <span>居住{0}</span>
+                                <span>宿泊{0}</span>
+                                <span>訪問{0}</span>
+                                <span>接地{0}</span>
+                                <span>通過{0}</span>
+                                <span>未踏{0}</span>
+                              </span>
                               <span>{expandedPrefectures.includes(prefMuniBorder.prefecture) ? '▼' : '▶'}</span>
                             </button>
                             {expandedPrefectures.includes(prefMuniBorder.prefecture) &&
@@ -142,43 +159,101 @@ export default (props: P) => {
         </div>
       </div>
       <MapContainer center={[36.016142, 137.990904]} zoom={5} scrollWheelZoom={true} attributionControl={false} style={{ height: '100%', width: '100%' }}>
+        <ZoomListener />
         <ScaleControl position="bottomleft" />
         <AttributionControl position="bottomright" prefix={'Dev by <a href="https://github.com/elpwc" target="_blank">@elpwc</a>'} />
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url={mapTiles.find(tile => tile.id === currentTileMap)?.url || mapTiles[0].url}
         />
+        {
+          /* 市区町村 */
+          layers.muni &&
+            muniBorderData.map(prefMuniBorder => {
+              return prefMuniBorder.municipalities.map(muniBorder => {
+                // 计算中心点
+                const center = getBounds(muniBorder.coordinates);
 
-        {layers.muni &&
-          muniBorderData.map(prefMuniBorder => {
-            return prefMuniBorder.municipalities.map(muniBorder => {
+                return (
+                  <Polygon className="muniBorder" pathOptions={{ fillColor: '#ffffff33', color: 'black', opacity: 1, fillOpacity: 1, weight: 0.4 }} positions={muniBorder.coordinates}>
+                    <Popup>
+                      <MapPopup addr={(muniBorder.pref ?? '') + (muniBorder.shinkoukyoku ?? '') + (muniBorder.gun_seireishi ?? '')} name={muniBorder.name} onClick={value => {}} />
+                    </Popup>
+                    {currentZoom >= 8 && layers.placename && (
+                      <Marker
+                        position={center as LatLngTuple}
+                        icon={divIcon({
+                          className: 'munilabels',
+                          html: `<span class="munilabels-specialCityName">${muniBorder.is_special_city_ward ? muniBorder.gun_seireishi : ''}</span><br /><span>${muniBorder.name}</span>`,
+                          iconSize: [60, 20],
+                          iconAnchor: [30, 10],
+                        })}
+                      />
+                    )}
+                  </Polygon>
+                );
+              });
+            })
+        }
+        {
+          /* 铁道 */
+          layers.railways &&
+            railwaysData.map(railwayLines => {
               return (
-                <Polygon pathOptions={{ fillColor: '#ffffff33', color: 'black', opacity: 1, fillOpacity: 1, weight: 0.4 }} positions={muniBorder.coordinates}>
-                  <Popup>
-                    <MapPopup addr={(muniBorder.pref ?? '') + (muniBorder.shinkoukyoku ?? '') + (muniBorder.gun_seireishi ?? '')} name={muniBorder.name} onClick={value => {}} />
-                  </Popup>
+                <Polyline
+                  pathOptions={railwayLines.isJR ? { weight: 1.5, color: 'darkred', opacity: 1, fillOpacity: 1 } : { weight: 1, color: 'blue', opacity: 1, fillOpacity: 1 }}
+                  positions={railwayLines.coordinates}
+                  interactive={false}
+                />
+              );
+            })
+        }
+        {
+          /* 都道府县 */
+          layers.pref &&
+            prefBorderData.map(prefBorder => {
+              // 计算中心点
+              const center = getBounds(prefBorder.coordinates);
+              return (
+                <Polygon pathOptions={{ fillColor: '#ffffff33', opacity: 1, fillOpacity: 1.5, weight: 0.7, color: 'black' }} positions={prefBorder.coordinates} interactive={false}>
+                  {currentZoom < 8 && layers.placename && (
+                    <Marker
+                      position={center as LatLngTuple}
+                      icon={divIcon({
+                        className: 'munilabels',
+                        html: `<span class="">${prefBorder.name}</span>`,
+                        iconSize: [60, 20],
+                        iconAnchor: [30, 10],
+                      })}
+                    />
+                  )}
                 </Polygon>
               );
-            });
-          })}
-        {layers.railways &&
-          railwaysData.map(railwayLines => {
-            return (
-              <Polyline
-                pathOptions={railwayLines.isJR ? { weight: 1.5, color: 'darkred', opacity: 1, fillOpacity: 1 } : { weight: 1, color: 'blue', opacity: 1, fillOpacity: 1 }}
-                positions={railwayLines.coordinates}
-                interactive={false}
-              />
-            );
-          })}
-        {layers.pref &&
-          prefBorderData.map(prefBorder => {
-            return <Polygon pathOptions={{ fillColor: '#ffffff33', opacity: 1, fillOpacity: 1.5, weight: 0.7, color: 'black' }} positions={prefBorder.coordinates} interactive={false} />;
-          })}
-        {layers.sinkoukyoku &&
-          shinkouBorderData.map(shinkouBorder => {
-            return <Polygon pathOptions={{ fillColor: '#ffffff33', opacity: 1, fillOpacity: 1.5, weight: 0.7, color: 'black' }} positions={shinkouBorder.coordinates} interactive={false} />;
-          })}
+            })
+        }
+        {
+          /* 振兴局 */
+          layers.sinkoukyoku &&
+            shinkouBorderData.map(shinkouBorder => {
+              // 计算中心点
+              const center = getBounds(shinkouBorder.coordinates);
+              return (
+                <Polygon pathOptions={{ fillColor: '#ffffff33', opacity: 1, fillOpacity: 1.5, weight: 0.7, color: 'black' }} positions={shinkouBorder.coordinates} interactive={false}>
+                  {currentZoom < 8 && layers.placename && (
+                    <Marker
+                      position={center as LatLngTuple}
+                      icon={divIcon({
+                        className: 'munilabels',
+                        html: `<span class="">${shinkouBorder.name}</span>`,
+                        iconSize: [60, 20],
+                        iconAnchor: [30, 10],
+                      })}
+                    />
+                  )}
+                </Polygon>
+              );
+            })
+        }
       </MapContainer>
     </div>
   );

@@ -1,7 +1,7 @@
-import prefJson from '../geojson/japan/prefectures.geojson';
-import shinkoukyokuJson from '../geojson/japan/hokkaido-branch.geojson';
-import railwaysJson from '../geojson/japan/railways.geojson';
-import { Municipality, Prefecture, Railway } from './addr';
+import prefJson from '../../geojson/japan/prefectures.geojson';
+import shinkoukyokuJson from '../../geojson/japan/hokkaido-branch.geojson';
+import railwaysJson from '../../geojson/japan/railways.geojson';
+import { Municipality, Prefecture, Railway } from '../../utils/addr';
 import { allPrefJsons } from './geojsonReader';
 
 const getGeoJsonData = async (url: string) => {
@@ -104,3 +104,4 @@ export const getRailwaysData = async () => {
     } as Railway;
   });
 };
+

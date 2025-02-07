@@ -1,3 +1,5 @@
+import { LatLngTuple } from 'leaflet';
+
 export const mapTiles = [
   { id: 'blank', name: '空白背景', url: '' },
   { id: 'default', name: '地図背景', url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' },
@@ -51,3 +53,21 @@ export const chihous_data = [
     color: '#C8A01D',
   },
 ];
+
+// 计算多边形的中心点
+export const getBounds = (coordinates: [number, number][][]) => {
+  const bounds = coordinates[0].reduce(
+    (bounds, coord) => {
+      return [
+        [Math.min(bounds[0][0], coord[0]), Math.min(bounds[0][1], coord[1])],
+        [Math.max(bounds[1][0], coord[0]), Math.max(bounds[1][1], coord[1])],
+      ];
+    },
+    [
+      [Infinity, Infinity],
+      [-Infinity, -Infinity],
+    ]
+  );
+
+  return [(bounds[0][0] + bounds[1][0]) / 2, (bounds[0][1] + bounds[1][1]) / 2] as LatLngTuple;
+};
