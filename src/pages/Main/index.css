@@ -1,22 +1,70 @@
-
 header {
-	height: fit-content;
-	width: 100%;
-	background-color: #238551;
-	color: white;
-	padding: 5px;
-	box-shadow: 0 0 black;
-	display: flex;
+  height: fit-content;
+  width: 100%;
+  background-color: #234285;
+  color: white;
+  padding: 8px 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  box-sizing: border-box;
 }
+
+#title {
+  font-size: 18px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
 #regionMenu {
-	display: flex;
-	gap: 10px;
+  display: flex;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  flex-grow: 1;
 }
 
 .regionMenuItem {
-	padding: 0 10px;
+  padding: 4px 12px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.regionMenuItem:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.regionMenuItem.selected {
+  background-color: rgba(255, 255, 255, 0.2);
+  font-weight: 500;
+}
+
+.regionMenuItem.selected:hover {
+  background-color: rgba(255, 255, 255, 0.25);
 }
 
 .regionMenuItem a {
-	color: white;
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.rightMenu {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.rightMenu a {
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+  padding: 4px 12px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.rightMenu a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
