@@ -158,7 +158,7 @@ export default (props: P) => {
           })}
         </div>
       </div>
-      <MapContainer center={[36.016142, 137.990904]} zoom={5} scrollWheelZoom={true} attributionControl={false} style={{ height: '100%', width: '100%' }}>
+      <MapContainer center={[36.016142, 137.990904]} zoom={5} scrollWheelZoom={true} attributionControl={false} className="mapContainer">
         <ZoomListener />
         <ScaleControl position="bottomleft" />
         <AttributionControl position="bottomright" prefix={'Dev by <a href="https://github.com/elpwc" target="_blank">@elpwc</a>'} />

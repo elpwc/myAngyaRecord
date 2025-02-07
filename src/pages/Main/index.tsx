@@ -16,6 +16,7 @@ export default (props: P) => {
     { title: '日本', link: '/japan' },
     { title: '中国本土', link: '/mainlandchina' },
     { title: '台湾', link: '/taiwan' },
+    { title: '韓国', link: '/taiwan' },
     { title: '沼津', link: '/numazu' },
   ];
 
