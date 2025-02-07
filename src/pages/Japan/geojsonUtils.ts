@@ -3,10 +3,7 @@ import shinkoukyokuJson from '../../geojson/japan/hokkaido-branch.geojson';
 import railwaysJson from '../../geojson/japan/railways.geojson';
 import { Municipality, Prefecture, Railway } from '../../utils/addr';
 import { allPrefJsons } from './geojsonReader';
-
-const getGeoJsonData = async (url: string) => {
-  return await fetch(url).then(response => response.json());
-};
+import { getGeoJsonData } from '../../utils/map';
 
 /**
  * 解析都道府县或者北海道振兴局数据
@@ -104,4 +101,3 @@ export const getRailwaysData = async () => {
     } as Railway;
   });
 };
-
