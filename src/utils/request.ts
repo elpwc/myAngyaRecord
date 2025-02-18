@@ -2,16 +2,17 @@ import axios, { AxiosRequestHeaders, Method } from 'axios';
 import cookie from 'react-cookies';
 import appconfig from '../appconfig';
 import { userInfoStorage } from '../globalStorages';
+import { c_token } from './cookies';
 
 // 更新services里的接口的方法：npm run openapi
 
 axios.defaults.withCredentials = false;
 
 const service = axios.create({
-  baseURL: appconfig.apiBaseURL + '/api/v1',
+  baseURL: appconfig.apiBaseURL + '',
   timeout: 5000,
   responseType: 'json',
-  //withCredentials: true,
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json;charset=utf-8',
   },
@@ -22,7 +23,7 @@ service.interceptors.request.use(
   config => {
     //token
     if (config && config.headers) {
-      config.headers.authorization = 'bearer ' + userInfoStorage.value.token || '';
+      config.headers.authorization = 'Bearer ' + (c_token() || '');
     }
     return config;
   },
@@ -49,22 +50,24 @@ service.interceptors.response.use(
     const errResponse = err.response;
     console.log('Oops! ', errResponse);
 
-    switch (errResponse.status) {
-      case 400:
-        break;
-      case 401:
-        break;
-      case 403:
-        break;
-      case 404:
-        //message.error('请求的页面不存在喵');
-        break;
-      case 422:
-        break;
-      case 500:
-        break;
-      default:
-        break;
+    if (errResponse?.status) {
+      switch (errResponse.status) {
+        case 400:
+          break;
+        case 401:
+          break;
+        case 403:
+          break;
+        case 404:
+          //message.error('请求的页面不存在喵');
+          break;
+        case 422:
+          break;
+        case 500:
+          break;
+        default:
+          break;
+      }
     }
 
     throw errResponse;
@@ -106,6 +109,9 @@ const request = <T = any>(url: string, options?: RequestOptions): Promise<T> => 
         //paramsSerializer: options?.paramsSerializer,
         timeout: options?.timeout,
         timeoutErrorMessage: options?.timeoutMessage,
+        headers: options?.headers ?? {
+          'Content-Type': 'application/json',
+        },
       })
       .then((response: any) => {
         // console.log(response);

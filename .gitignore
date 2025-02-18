@@ -30,3 +30,9 @@ src/appconfig.ts
 /public/api/plugin/*
 
 src/global.ts
+/vendor/
+
+global.ts
+
+/vendor/
+/public/vendor/

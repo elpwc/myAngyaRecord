@@ -31,7 +31,7 @@ export default ({ addr, name, onClick }: P) => {
         <button
           className="popupbutton"
           onClick={() => {
-            onClick(0);
+            onClick(5);
           }}
           style={{ backgroundColor: mapStyles[currentMapStyle].bgcolor[0], color: mapStyles[currentMapStyle].color[0] }}
         >
@@ -40,7 +40,7 @@ export default ({ addr, name, onClick }: P) => {
         <button
           className="popupbutton"
           onClick={() => {
-            onClick(0);
+            onClick(4);
           }}
           style={{ backgroundColor: mapStyles[currentMapStyle].bgcolor[1], color: mapStyles[currentMapStyle].color[1] }}
         >
@@ -49,7 +49,7 @@ export default ({ addr, name, onClick }: P) => {
         <button
           className="popupbutton"
           onClick={() => {
-            onClick(0);
+            onClick(3);
           }}
           style={{ backgroundColor: mapStyles[currentMapStyle].bgcolor[2], color: mapStyles[currentMapStyle].color[2] }}
         >
@@ -58,7 +58,7 @@ export default ({ addr, name, onClick }: P) => {
         <button
           className="popupbutton"
           onClick={() => {
-            onClick(0);
+            onClick(2);
           }}
           style={{ backgroundColor: mapStyles[currentMapStyle].bgcolor[3], color: mapStyles[currentMapStyle].color[3] }}
         >
@@ -67,7 +67,7 @@ export default ({ addr, name, onClick }: P) => {
         <button
           className="popupbutton"
           onClick={() => {
-            onClick(0);
+            onClick(1);
           }}
           style={{ backgroundColor: mapStyles[currentMapStyle].bgcolor[4], color: mapStyles[currentMapStyle].color[4] }}
         >

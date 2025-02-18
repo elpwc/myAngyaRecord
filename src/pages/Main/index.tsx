@@ -1,7 +1,9 @@
 import React from 'react';
 import { useEffect } from 'react';
-import { Outlet, useLocation, useNavigate, useParams } from 'react-router';
+import { Link, Outlet, useLocation, useNavigate, useParams } from 'react-router';
 import './index.css';
+import { isLogin, logout } from '../../utils/userUtils';
+import { c_userName } from '../../utils/cookies';
 
 interface P {}
 
@@ -13,11 +15,11 @@ export default (props: P) => {
   // let currentId: string = params.id as string;
 
   const menuItems = [
-    { title: '日本', link: '/japan' },
-    { title: '中国本土', link: '/mainlandchina' },
-    { title: '台湾', link: '/taiwan' },
-    { title: '韓国', link: '/taiwan' },
-    { title: '沼津', link: '/numazu' },
+    { title: '日本', link: '/japan', disabled: false },
+    { title: '中国本土', link: '/mainlandchina', disabled: true },
+    { title: '台湾', link: '/taiwan', disabled: true },
+    { title: '韓国', link: '/taiwan' , disabled: true},
+    { title: '沼津', link: '/numazu', disabled: false },
   ];
 
   useEffect(() => {
@@ -42,19 +44,31 @@ export default (props: P) => {
 
           <menu id="regionMenu">
             {menuItems.map(menuItem => (
-              <div 
-                key={menuItem.title} 
-                className={`regionMenuItem ${mylocation.pathname.includes(menuItem.link) ? 'selected' : ''}`}
-              >
-                <a href={menuItem.link}>{menuItem.title}</a>
+              <div key={menuItem.title} className={`regionMenuItem ${menuItem.disabled ? 'regionMenuItem-disabled ' : ''}  ${mylocation.pathname.includes(menuItem.link) ? 'selected' : ''}`}>
+                <Link className={`regionMenuLink ${menuItem.disabled ? 'regionMenuLink-disabled ' : ''}`} to={menuItem.link}>{menuItem.title}</Link>
               </div>
             ))}
           </menu>
 
           <div className="rightMenu">
-            <a href="/register">Register</a>
-            <a href="/login">Login</a>
-            <a href="/about">About</a>
+            {isLogin() ? (
+              <>
+                <Link to="/user">{c_userName()}</Link>
+                <button
+                  onClick={() => {
+                    logout();
+                  }}
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link to="/emailverify">Register</Link>
+                <Link to="/login">Login</Link>
+              </>
+            )}
+            <Link to="/about">About</Link>
           </div>
         </header>
         <main>

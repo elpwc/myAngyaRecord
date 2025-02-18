@@ -9,6 +9,9 @@ import { getMunicipalitiesData, getPrefecture_ShinkoukyokuData, getRailwaysData 
 import { Municipality, Prefecture, Railway } from '../../utils/addr';
 import MapPopup from '../../components/MapPopup';
 import { divIcon, LatLngTuple } from 'leaflet';
+import request from '../../utils/request';
+import { c_uid } from '../../utils/cookies';
+import { getFillcolor, getForecolor, getRecords, postRecord } from '../../utils/serverUtils';
 
 interface P {}
 
@@ -33,6 +36,20 @@ export default (props: P) => {
   const [expandedPrefectures, setExpandedPrefectures] = useState<string[]>([]);
   const [currentZoom, setCurrentZoom] = useState(5);
 
+  const [records, setrecords] = useState([]);
+
+  const refreshRecords = () => {
+    getRecords(
+      'japanmuni',
+      (data: any) => {
+        setrecords(data);
+      },
+      errmsg => {
+        alert(errmsg);
+      }
+    );
+  };
+
   useEffect(() => {
     (async () => {
       setprefBorderData(await getPrefecture_ShinkoukyokuData());
@@ -40,6 +57,7 @@ export default (props: P) => {
       setmuniBorderData(await getMunicipalitiesData());
       setrailwaysData(await getRailwaysData());
     })();
+    refreshRecords();
   }, []);
 
   const handleMapStyleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -175,9 +193,29 @@ export default (props: P) => {
                 const center = getBounds(muniBorder.coordinates);
 
                 return (
-                  <Polygon className="muniBorder" pathOptions={{ fillColor: '#ffffff33', color: 'black', opacity: 1, fillOpacity: 1, weight: 0.4 }} positions={muniBorder.coordinates}>
+                  <Polygon
+                    className="muniBorder"
+                    pathOptions={{ fillColor: getFillcolor(records, muniBorder.id), color: getForecolor(records, muniBorder.id), opacity: 1, fillOpacity: 1, weight: 0.4 }}
+                    positions={muniBorder.coordinates}
+                  >
                     <Popup>
-                      <MapPopup addr={(muniBorder.pref ?? '') + (muniBorder.shinkoukyoku ?? '') + (muniBorder.gun_seireishi ?? '')} name={muniBorder.name} onClick={value => {}} />
+                      <MapPopup
+                        addr={(muniBorder.pref ?? '') + (muniBorder.shinkoukyoku ?? '') + (muniBorder.gun_seireishi ?? '')}
+                        name={muniBorder.name}
+                        onClick={value => {
+                          postRecord(
+                            'japanmuni',
+                            muniBorder.id,
+                            value,
+                            () => {
+                              refreshRecords();
+                            },
+                            errmsg => {
+                              alert(errmsg);
+                            }
+                          );
+                        }}
+                      />
                     </Popup>
                     {currentZoom >= 8 && layers.placename && (
                       <Marker

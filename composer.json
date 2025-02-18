@@ -1,0 +1,15 @@
+{
+  "name": "elpwc/my_angya_record",
+  "autoload": {
+    "psr-4": {
+      "Elpwc\\MyAngyaRecord\\": "src/"
+    }
+  },
+  "require": {
+    "phpmailer/phpmailer": "^6.9",
+    "firebase/php-jwt": "^6.11"
+  },
+  "config": {
+    "vendor-dir": "./public/vendor"
+  }
+}

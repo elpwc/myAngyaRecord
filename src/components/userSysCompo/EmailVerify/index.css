@@ -1,0 +1,84 @@
+.register-container {
+  background: linear-gradient(151deg, rgba(233, 209, 237, 1) 0%, rgba(233, 209, 237, 1) 36%, rgba(0, 212, 255, 1) 100%);
+  min-height: 100%;
+  display: flex;
+  padding-top: 100px;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.register-form {
+  background: white;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border-left-color: rgb(173, 173, 173);
+  border-top-color: rgb(173, 173, 173);
+  border-right-color: black;
+  border-bottom-color: black;
+  border-width: 3px;
+  border-style: solid;
+  padding: 2rem;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: fit-content;
+  align-items: center;
+}
+
+.register-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #374151;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.register-input {
+  width: 100%;
+  padding: 0.5rem 0.5rem;
+  box-sizing: border-box;
+  border-left-color: black;
+  border-top-color: black;
+  border-right-color: rgb(173, 173, 173);
+  border-bottom-color: rgb(173, 173, 173);
+  border-width: 3px;
+  border-style: solid;
+  margin-top: 0.5rem;
+  transition: all 0.3s ease;
+  background-color: #f5f5f5;
+}
+
+.register-input:focus {
+  outline: none;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.2);
+}
+
+.register-button {
+  width: 100%;
+  padding: 0.7rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.register-tip {
+  text-align: center;
+  margin-top: 0.75rem;
+  color: #ef4444;
+  min-height: 1.5rem;
+}
+
+.auto-register-checkbox {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-right: 0.5rem;
+  cursor: pointer;
+}
+
+.auto-register-label {
+  user-select: none;
+}
+
+.register-form-item-container {
+  width: 100%;
+}
