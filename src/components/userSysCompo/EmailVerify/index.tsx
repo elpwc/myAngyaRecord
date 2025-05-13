@@ -40,6 +40,7 @@ export default (props: P) => {
     return request<any>('/user/mail.php', {
       method: 'POST',
       data: { email, token, isForgetPassword: isForgetPassword ? 1 : 0 },
+      timeout: 20000,
     });
   };
 
