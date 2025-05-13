@@ -11,7 +11,8 @@ import MapPopup from '../../components/MapPopup';
 import { divIcon, LatLngTuple } from 'leaflet';
 import request from '../../utils/request';
 import { c_uid } from '../../utils/cookies';
-import { getFillcolor, getForecolor, getRecords, postRecord } from '../../utils/serverUtils';
+import { getFillcolor, getForecolor, getRecordGroups, getRecords, postRecord } from '../../utils/serverUtils';
+import { isLogin } from '../../utils/userUtils';
 
 interface P {}
 
@@ -36,18 +37,39 @@ export default (props: P) => {
   const [expandedPrefectures, setExpandedPrefectures] = useState<string[]>([]);
   const [currentZoom, setCurrentZoom] = useState(5);
 
+  const [recordGroups, setrecordGroups] = useState([]);
   const [records, setrecords] = useState([]);
 
+  
+  const refreshRecordGroups = () => {
+    if(isLogin()){
+      getRecordGroups(
+        'japanmuni',
+        (data: any) => {
+          setrecords(data);
+        },
+        errmsg => {
+          alert(errmsg);
+        }
+      );
+    }
+
+  };
+
+
   const refreshRecords = () => {
-    getRecords(
-      'japanmuni',
-      (data: any) => {
-        setrecords(data);
-      },
-      errmsg => {
-        alert(errmsg);
-      }
-    );
+    if(isLogin()){
+      getRecords(
+        'japanmuni',
+        (data: any) => {
+          setrecords(data);
+        },
+        errmsg => {
+          alert(errmsg);
+        }
+      );
+    }
+
   };
 
   useEffect(() => {
@@ -57,7 +79,7 @@ export default (props: P) => {
       setmuniBorderData(await getMunicipalitiesData());
       setrailwaysData(await getRailwaysData());
     })();
-    refreshRecords();
+    refreshRecordGroups();
   }, []);
 
   const handleMapStyleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

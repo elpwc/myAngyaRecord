@@ -41,6 +41,26 @@ export const getRecords = async (mapid: string, onOK: (data: any) => void, onErr
     });
 };
 
+
+export const getRecordGroups = async (mapid: string, onOK: (data: any) => void, onError: (msg: string) => void) => {
+  return request(`/recordgroup.php?mapid=${mapid}&uid=${c_uid()}`, {
+    method: 'GET',
+  })
+    .then(e => {
+      switch (e.res) {
+        case 'ok':
+          onOK(e.groups);
+          break;
+        default:
+          onError(e.res);
+          break;
+      }
+    })
+    .catch(e => {
+      console.log(e);
+    });
+};
+
 export const getFillcolor = (records: any[], admin_id: string) => {
   const res = records.findIndex(record => {
     return record.admin_id === admin_id;
