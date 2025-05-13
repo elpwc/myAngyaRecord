@@ -10,7 +10,7 @@ axios.defaults.withCredentials = false;
 
 const service = axios.create({
   baseURL: appconfig.apiBaseURL + '',
-  timeout: 5000,
+  timeout: 10000,
   responseType: 'json',
   withCredentials: true,
   headers: {
@@ -114,13 +114,11 @@ const request = <T = any>(url: string, options?: RequestOptions): Promise<T> => 
         },
       })
       .then((response: any) => {
-        // console.log(response);
         if (response?.data) {
           resolve(response.data as T);
         }
       })
       .catch((err: ErrorResponse) => {
-        // console.log(err);
         reject(err);
       });
   });
