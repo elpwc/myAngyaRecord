@@ -100,7 +100,7 @@ function send_verification_code_mail($target, $verify_code)
 
 function send_verification_mail($target, $verify_code, $isForgetPassword = false)
 {
-  $url_prefix = 'https://www.elpwc.com/otogemap/';
+  $url_prefix = 'http://localhost:3000/';
   $url = $url_prefix . ($isForgetPassword ? ('resetpassword?acc=') : ('register?acc=')) . $target . '&v=' . $verify_code; //'https://www.elpwc.com/otogemap/';
 
   $res =  sendMail(

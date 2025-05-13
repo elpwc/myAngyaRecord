@@ -23,32 +23,32 @@ switch ($request_type) {
     }
 
     // 检查是否存在相同的记录
-    $check_sql = "SELECT * FROM `record` WHERE `mapid` = ? AND `admin_id` = ? AND `uid` = ?";
+    $check_sql = "SELECT * FROM `record` WHERE `mapid` = ? AND `admin_id` = ? AND `group_id` = ?";
     $check_params = [
       escape_string($sqllink, $data->mapid),
       escape_string($sqllink, $data->admin_id),
-      (int)($data->uid)
+      (int)($data->group_id),
     ];
     $check_result = prepare_bind_execute($sqllink, $check_sql, "ssi", $check_params);
 
     if ($check_result && mysqli_num_rows($check_result) > 0) {
       // 如果记录存在，更新level值
-      $update_sql = "UPDATE `record` SET `level` = ? WHERE `mapid` = ? AND `admin_id` = ? AND `uid` = ?";
+      $update_sql = "UPDATE `record` SET `level` = ? WHERE `mapid` = ? AND `admin_id` = ? AND `group_id` = ?";
       $update_params = [
         (int)($data->level),
         escape_string($sqllink, $data->mapid),
         escape_string($sqllink, $data->admin_id),
-        (int)($data->uid)
+        (int)($data->group_id)
       ];
       $update_result = prepare_bind_execute($sqllink, $update_sql, "issi", $update_params);
       echo json_encode(["res" => $update_result !== false ? "ok" : "error"]);
     } else {
       // 如果记录不存在，插入新记录
-      $insert_sql = "INSERT INTO `record` (`mapid`, `admin_id`, `uid`, `level`) VALUES (?, ?, ?, ?)";
+      $insert_sql = "INSERT INTO `record` (`mapid`, `admin_id`, `group_id`, `level`) VALUES (?, ?, ?, ?)";
       $insert_params = [
         escape_string($sqllink, $data->mapid),
         escape_string($sqllink, $data->admin_id),
-        (int)($data->uid),
+        (int)($data->group_id),
         (int)($data->level)
       ];
       $insert_result = prepare_bind_execute($sqllink, $insert_sql, "ssii", $insert_params);
@@ -62,18 +62,18 @@ switch ($request_type) {
       return;
     }
     $id = isset($_GET['id']) ? escape_string($sqllink, $_GET['id']) : null;
-    $uid = isset($_GET['uid']) ? escape_string($sqllink, $_GET['uid']) : null;
+    $group_id  = isset($_GET['group_id']) ? escape_string($sqllink, $_GET['group_id']) : null;
     $mapid = isset($_GET['mapid']) ? escape_string($sqllink, $_GET['mapid']) : null;
 
     if ($id) {
       $sql = "SELECT * FROM `record` WHERE `id` = ? AND `is_deleted` = 0";
       $result = prepare_bind_execute($sqllink, $sql, "s", [$id]);
-    } else if ($uid) {
-      $sql = "SELECT * FROM `record` WHERE `uid` = ? AND `is_deleted` = 0";
-      $result = prepare_bind_execute($sqllink, $sql, "s", [$uid]);
-    } else if ($mapid) {
-      $sql = "SELECT * FROM `record` WHERE `mapid` = ? AND `is_deleted` = 0";
-      $result = prepare_bind_execute($sqllink, $sql, "s", [$mapid]);
+    } else if ($group_id && $mapid) {
+      $sql = "SELECT r.*, g.name as group_name, g.uid 
+              FROM `record` r
+              JOIN `recordgroup` g ON r.group_id = g.id
+              WHERE `group_id` = ? AND `mapid` = ? AND `is_deleted` = 0";
+      $result = prepare_bind_execute($sqllink, $sql, "is", [$group_id, $mapid]);
     } else {
       return;
     }

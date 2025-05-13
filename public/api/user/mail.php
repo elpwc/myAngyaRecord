@@ -55,6 +55,7 @@ switch ($request_type) {
       } else {
         $email_result = send_verification_mail($email,  generate_verification_code($email), false);
         if ($email_result) {
+          http_response_code(200);
           echo json_encode(["res" => "ok"]);
         } else {
           echo json_encode(["res" => "email_failed"]);

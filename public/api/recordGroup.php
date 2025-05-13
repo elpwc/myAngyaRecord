@@ -21,48 +21,45 @@ switch ($request_type) {
       echo json_encode(["res" => "token_error"]);
       return;
     }
-    $sql = "INSERT INTO `collection` (`store_id`, `uid`) VALUES (?, ?)";
 
-    $params = [
-      (int)($data->store_id),
-      (int)($data->uid)
+    $insert_sql = "INSERT INTO `recordgroup` (`uid`, `name`, `desc`, `mapid`) VALUES (?, ?, ?, ?)";
+    $insert_params = [
+      (int)($data->uid),
+      escape_string($sqllink, $data->name),
+      escape_string($sqllink, $data->desc),
+      escape_string($sqllink, $data->mapid)
     ];
-
-    $result = prepare_bind_execute($sqllink, $sql, "ii", $params);
-    echo json_encode(["res" => $result !== false ? "ok" : "error"]);
+    $insert_result = prepare_bind_execute($sqllink, $insert_sql, "isss", $insert_params);
+    echo json_encode(["res" => $insert_result !== false ? "ok" : "error"]);
     break;
 
   case 'GET':
     if (!token_check()) {
-      echo json_encode(["res" => "token_error", "collections" => []]);
+      echo json_encode(["res" => "token_error"]);
       return;
     }
+
     $id = isset($_GET['id']) ? escape_string($sqllink, $_GET['id']) : null;
     $uid = isset($_GET['uid']) ? escape_string($sqllink, $_GET['uid']) : null;
-    $game_version = isset($_GET['game_version']) ? escape_string($sqllink, $_GET['game_version']) : null;
+    $mapid = isset($_GET['mapid']) ? escape_string($sqllink, $_GET['mapid']) : null;
 
     if ($id) {
-      $sql = "SELECT * FROM `collection` WHERE `id` = ? AND `is_deleted` = 0";
-      $result = prepare_bind_execute($sqllink, $sql, "s", [$id]);
-    } else if ($uid) {
-      $sql = "SELECT c.*, s.name as store_name, s.address , s.lat, s.lng, s.mapURL
-              FROM `collection` c 
-              JOIN `store` s ON c.store_id = s.id 
-              WHERE c.uid = ? AND c.is_deleted = 0 AND " . (($game_version === 'ja') ? "s.country = 'Japan'" : "s.country != 'Japan'");
-      $result = prepare_bind_execute($sqllink, $sql, "s", [$uid]);
+      // 指定id的单个地图
+      $sql = "SELECT * FROM `recordgroup` WHERE `id` = ? AND `is_deleted` = 0";
+      $result = prepare_bind_execute($sqllink, $sql, "i", [$id]);
     } else {
-      return;
+      // 符合条件的所有地图
+      $sql = "SELECT * FROM `recordgroup` WHERE `mapid` = ? AND `uid` = ? AND `is_deleted` = 0";
+      $result = prepare_bind_execute($sqllink, $sql, "si", [$mapid, $uid]);
     }
 
-    if ($result && mysqli_num_rows($result) > 0) {
-      $collections = [];
+    $groups = [];
+    if ($result) {
       while ($row = mysqli_fetch_assoc($result)) {
-        $collections[] = $row;
+        $groups[] = $row;
       }
-      echo json_encode(["res" => "ok", "collections" => $collections]);
-    } else {
-      echo json_encode(["res" => "not_exist", "collections" => []]);
     }
+    echo json_encode(["res" => "ok", "groups" => $groups]);
     break;
 
   case 'PATCH':
@@ -70,14 +67,15 @@ switch ($request_type) {
       echo json_encode(["res" => "token_error"]);
       return;
     }
-    $id = escape_string($sqllink, $data->id);
+    $id = (int)$data->id;
     $update_fields = [];
     $params = [];
     $types = "";
 
     $fields = [
-      'store_id' => 'i',
-      'uid' => 'i',
+      'name' => 's',
+      'desc' => 's',
+      'mapid' => 's',
       'is_deleted' => 'i'
     ];
 
@@ -91,9 +89,8 @@ switch ($request_type) {
 
     if (!empty($update_fields)) {
       $params[] = $id;
-      $types .= "s";
-
-      $sql = "UPDATE `collection` SET " . implode(', ', $update_fields) . " WHERE `id` = ?";
+      $types .= "i";
+      $sql = "UPDATE `recordgroup` SET " . implode(', ', $update_fields) . " WHERE `id` = ?";
       $result = prepare_bind_execute($sqllink, $sql, $types, $params);
       echo json_encode(["res" => $result !== false ? "ok" : "error"]);
     } else {
@@ -106,10 +103,9 @@ switch ($request_type) {
       echo json_encode(["res" => "token_error"]);
       return;
     }
-    $store_id = escape_string($sqllink, $data->store_id);
-    $uid = escape_string($sqllink, $data->uid);
-    $sql = "DELETE FROM `collection` WHERE `store_id` = ? AND `uid` = ?";
-    $result = prepare_bind_execute($sqllink, $sql, "ii", [$store_id, $uid]);
+    $id = (int)$data->id;
+    $sql = "UPDATE `recordgroup` SET `is_deleted` = 1 WHERE `id` = ?";
+    $result = prepare_bind_execute($sqllink, $sql, "i", [$id]);
     echo json_encode(["res" => $result !== false ? "ok" : "error"]);
     break;
 }
