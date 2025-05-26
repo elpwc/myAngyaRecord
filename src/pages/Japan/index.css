@@ -80,7 +80,7 @@
 
 /* 地图瓦片的背景色 */
 .leaflet-container {
-  background-color: #8dcee2 !important;
+  background-color: /*#8dcee2*/ white !important;
 }
 
 .groupSwitchContainer {

@@ -50,6 +50,7 @@ export default (props: P) => {
   const [isNewGroupModalOpen, setIsNewGroupModalOpen] = useState(false);
 
   const [currentLatLng, setcurrentLatLng] = useState(DEFAULT_LAT_LNG);
+  const [currentMapStyle, setcurrentMapStyle] = useState(2);
 
   const thisMapId = MapsId.JapanMuni;
 
@@ -136,6 +137,23 @@ export default (props: P) => {
     return null;
   };
 
+  const PaneSetter = () => {
+    const map = useMap();
+
+    useEffect(() => {
+      map.createPane('muni');
+      map.createPane('railways');
+      map.createPane('pref');
+      map.createPane('subpref');
+      map.getPane('muni')!.style.zIndex = '650';
+      map.getPane('railways')!.style.zIndex = '651';
+      map.getPane('pref')!.style.zIndex = '652';
+      map.getPane('subpref')!.style.zIndex = '653';
+    }, [map]);
+
+    return null;
+  };
+
   const MuniNameMarker = useCallback(
     ({
       center,
@@ -165,6 +183,7 @@ export default (props: P) => {
 
       return (
         <Marker
+          pane="muni"
           position={center}
           icon={divIcon({
             className: 'munilabels',
@@ -290,6 +309,7 @@ export default (props: P) => {
       >
         <ZoomListener />
         <MapCenterTracker />
+        <PaneSetter />
         <ScaleControl position="bottomleft" />
         <AttributionControl position="bottomright" prefix={'Dev by <a href="https://github.com/elpwc" target="_blank">@elpwc</a>'} />
         <TileLayer
@@ -306,9 +326,16 @@ export default (props: P) => {
 
                 return (
                   <Polygon
+                    pane="muni"
                     key={muniBorder.id}
                     className="muniBorder"
-                    pathOptions={{ fillColor: getFillcolor(records, muniBorder.id), color: getForecolor(records, muniBorder.id), opacity: 1, fillOpacity: 1, weight: 0.4 }}
+                    pathOptions={{
+                      fillColor: getFillcolor(currentMapStyle, records, muniBorder.id),
+                      color: getForecolor(currentMapStyle, records, muniBorder.id),
+                      opacity: 1,
+                      fillOpacity: currentTileMap !== 'blank' ? 0.6 : 1,
+                      weight: 0.4,
+                    }}
                     positions={muniBorder.coordinates}
                   >
                     <Popup closeOnClick>
@@ -344,6 +371,7 @@ export default (props: P) => {
             railwaysData.map(railwayLines => {
               return (
                 <Polyline
+                  pane="railways"
                   pathOptions={railwayLines.isJR ? { weight: 1.5, color: 'darkred', opacity: 1, fillOpacity: 1 } : { weight: 1, color: 'blue', opacity: 1, fillOpacity: 1 }}
                   positions={railwayLines.coordinates}
                   interactive={false}
@@ -358,9 +386,10 @@ export default (props: P) => {
               // 计算中心点
               const center = getBounds(prefBorder.coordinates);
               return (
-                <Polygon pathOptions={{ fillColor: '#ffffff33', opacity: 1, fillOpacity: 1.5, weight: 0.7, color: 'black' }} positions={prefBorder.coordinates} interactive={false}>
+                <Polygon pane="pref" pathOptions={{ fillColor: '#ffffff', opacity: 1, fillOpacity: 0, weight: 0.7, color: 'black' }} positions={prefBorder.coordinates} interactive={false}>
                   {currentZoom < 8 && layers.placename && (
                     <Marker
+                      pane="pref"
                       position={center as LatLngTuple}
                       icon={divIcon({
                         className: 'munilabels',
@@ -381,9 +410,10 @@ export default (props: P) => {
               // 计算中心点
               const center = getBounds(shinkouBorder.coordinates);
               return (
-                <Polygon pathOptions={{ fillColor: '#ffffff33', opacity: 1, fillOpacity: 1.5, weight: 0.7, color: 'black' }} positions={shinkouBorder.coordinates} interactive={false}>
+                <Polygon pane="subpref" pathOptions={{ fillColor: '#ffffff', opacity: 1, fillOpacity: 0, weight: 0.7, color: 'black' }} positions={shinkouBorder.coordinates} interactive={false}>
                   {currentZoom < 8 && layers.placename && (
                     <Marker
+                      pane="subpref"
                       position={center as LatLngTuple}
                       icon={divIcon({
                         className: 'munilabels',
