@@ -63,9 +63,27 @@ export const chihous_data = [
   },
 ];
 
+const getTheLargestPolygon = (coordinates: [number, number][][]) => {
+  return coordinates.reduce((largest, current) => {
+    const currentArea = Math.abs(
+      current.reduce((area, coord, index) => {
+        const nextCoord = current[(index + 1) % current.length];
+        return area + coord[0] * nextCoord[1] - nextCoord[0] * coord[1];
+      }, 0) / 2
+    );
+    const largestArea = Math.abs(
+      largest.reduce((area, coord, index) => {
+        const nextCoord = largest[(index + 1) % largest.length];
+        return area + coord[0] * nextCoord[1] - nextCoord[0] * coord[1];
+      }, 0) / 2
+    );
+    return currentArea > largestArea ? current : largest;
+  }, coordinates[0]);
+};
+
 // 计算多边形的中心点
 export const getBounds = (coordinates: [number, number][][]) => {
-  const bounds = coordinates[0].reduce(
+  const bounds = getTheLargestPolygon(coordinates).reduce(
     (bounds, coord) => {
       return [
         [Math.min(bounds[0][0], coord[0]), Math.min(bounds[0][1], coord[1])],
