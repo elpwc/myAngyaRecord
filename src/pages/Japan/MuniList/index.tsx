@@ -2,12 +2,41 @@ import { memo, useState } from 'react';
 import { chihous_data } from '../../../utils/map';
 import { Municipality } from '../../../utils/addr';
 import './index.css';
+import { Record } from '../../../utils/types';
+import { getPrefOfMuniById } from '../geojsonUtils';
+import { getFillcolor, getForecolor } from '../../../utils/serverUtils';
 
 interface Props {
   muniBorderData: { municipalities: Municipality[]; prefecture: string }[];
+  records: Record[];
+  currentMapStyle?: number;
 }
 
-const MuniList = ({ muniBorderData }: Props) => {
+const getStatusTextByLevel = (level: number): string => {
+  switch (level) {
+    case 5:
+      return '居住';
+    case 4:
+      return '宿泊';
+    case 3:
+      return '訪問';
+    case 2:
+      return '接地';
+    case 1:
+      return '通過';
+    case 0:
+      return '未踏';
+    default:
+      return '未踏';
+  }
+};
+
+const getStatusByMuniId = (muniId: string, records: Record[]): string => {
+  const record = records.find(r => r.admin_id === muniId);
+  return record ? getStatusTextByLevel(record.level) : '未踏';
+};
+
+const MuniList = ({ muniBorderData, records, currentMapStyle = 0 }: Props) => {
   const [expandedPrefectures, setExpandedPrefectures] = useState<string[]>([]);
   const togglePrefecture = (prefecture: string) => {
     setExpandedPrefectures(prev => (prev.includes(prefecture) ? prev.filter(p => p !== prefecture) : [...prev, prefecture]));
@@ -27,7 +56,28 @@ const MuniList = ({ muniBorderData }: Props) => {
                     return mp.prefecture === prefInChihou;
                   });
                   if (prefIndex !== -1) {
+                    const prefData = records.filter(record => getPrefOfMuniById(record.admin_id) === prefInChihou);
                     const prefMuniBorder = muniBorderData[prefIndex];
+                    const angyaStatus = {
+                      live: prefData.filter(muni => {
+                        return muni.level === 5;
+                      }).length,
+                      stay: prefData.filter(muni => {
+                        return muni.level === 4;
+                      }).length,
+                      visit: prefData.filter(muni => {
+                        return muni.level === 3;
+                      }).length,
+                      ground: prefData.filter(muni => {
+                        return muni.level === 2;
+                      }).length,
+                      pass: prefData.filter(muni => {
+                        return muni.level === 1;
+                      }).length,
+                      notReach: prefData.filter(muni => {
+                        return muni.level === 0;
+                      }).length,
+                    };
                     return (
                       <div key={prefMuniBorder.prefecture}>
                         <button
@@ -36,12 +86,12 @@ const MuniList = ({ muniBorderData }: Props) => {
                         >
                           <span>{prefMuniBorder.prefecture}</span>
                           <span className="prefDropdownButton-status">
-                            <span>居住{0}</span>
-                            <span>宿泊{0}</span>
-                            <span>訪問{0}</span>
-                            <span>接地{0}</span>
-                            <span>通過{0}</span>
-                            <span>未踏{0}</span>
+                            <span>居住{angyaStatus.live}</span>
+                            <span>宿泊{angyaStatus.stay}</span>
+                            <span>訪問{angyaStatus.visit}</span>
+                            <span>接地{angyaStatus.ground}</span>
+                            <span>通過{angyaStatus.pass}</span>
+                            <span>未踏{angyaStatus.notReach}</span>
                           </span>
                           <span className="prefDropDownButtonIcon">
                             {expandedPrefectures.includes(prefMuniBorder.prefecture) ? (
@@ -60,11 +110,13 @@ const MuniList = ({ muniBorderData }: Props) => {
                             <div key={muniBorder.id} className="municipalityItem">
                               <div className="municipalityName">{muniBorder.name}</div>
                               <div className="municipalityRegion">{(muniBorder.shinkoukyoku ?? '') + (muniBorder.gun_seireishi ?? '')}</div>
-                              <div className="municipalityStatus">未踏破</div>
+                              <div className="municipalityStatus" style={{backgroundColor: getFillcolor(currentMapStyle, records, muniBorder.id),
+                                          color: getForecolor(currentMapStyle, records, muniBorder.id)}}>{getStatusByMuniId(muniBorder.id, records)}</div>
                             </div>
                           ))}
                       </div>
                     );
+                                          
                   }
                   return <></>;
                 })}

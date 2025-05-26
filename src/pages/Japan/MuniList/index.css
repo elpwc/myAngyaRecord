@@ -17,16 +17,14 @@
   top: 0;
 }
 
-.prefDropdownButton:hover .prefDropDownButtonIcon{
+.prefDropdownButton:hover .prefDropDownButtonIcon {
   background: #e8e8e8;
   color: #868383;
 }
 
-
-.prefDropDownButtonIcon{
+.prefDropDownButtonIcon {
   color: #181717;
 }
-
 
 .municipalitiesList {
   width: 100%;
@@ -37,7 +35,6 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-
 .municipalityItem {
   padding: 1px 12px;
   display: grid;
@@ -45,6 +42,7 @@
   gap: 8px;
   border-bottom: 1px solid #eee;
   font-size: 12px;
+  background-color: rgb(173, 173, 173);
 }
 
 .municipalityItem:hover {

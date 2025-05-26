@@ -199,7 +199,7 @@ export default (props: P) => {
 
   return (
     <div style={{ height: '100%', width: '100%', position: 'relative', display: 'flex' }}>
-      <aside>
+      <aside style={{ boxShadow: '0px 0px 10px 0px rgb(136, 136, 136)', zIndex: 1145141919810 }}>
         <div>
           <div className="map-tiles-radio-group">
             {mapTiles.map(mapTile => (
@@ -272,7 +272,7 @@ export default (props: P) => {
           <div></div>
         )}
 
-        {recordGroup && <MuniList muniBorderData={muniBorderData} />}
+        {recordGroup && <MuniList muniBorderData={muniBorderData} records={records} currentMapStyle={currentMapStyle} />}
         <GroupListModal
           mapid={thisMapId}
           show={isGroupListModalOpen}
