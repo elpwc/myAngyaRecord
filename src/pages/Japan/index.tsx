@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router';
 import './index.css';
 import '../../../node_modules/leaflet/dist/leaflet.css';
@@ -7,7 +7,7 @@ import { chihous_data, getBounds, MapsId, mapTiles } from '../../utils/map';
 import { getMunicipalitiesData, getPrefecture_ShinkoukyokuData, getRailwaysData } from './geojsonUtils';
 import { Municipality, Prefecture, Railway } from '../../utils/addr';
 import MapPopup from '../../components/MapPopup';
-import { divIcon, LatLngTuple } from 'leaflet';
+import L, { divIcon, LatLngTuple } from 'leaflet';
 import { getFillcolor, getForecolor, getRecordGroups, getRecords, postRecord, postRecordGroup } from '../../utils/serverUtils';
 import MuniList from './MuniList';
 import { NewGroupModal } from '../../components/modals/NewGroupModal';
@@ -48,6 +48,8 @@ export default (props: P) => {
 
   const [isGroupListModalOpen, setIsGroupListModalOpen] = useState(false);
   const [isNewGroupModalOpen, setIsNewGroupModalOpen] = useState(false);
+
+  const [currentLatLng, setcurrentLatLng] = useState(DEFAULT_LAT_LNG);
 
   const thisMapId = MapsId.JapanMuni;
 
@@ -126,14 +128,55 @@ export default (props: P) => {
     useMapEvents({
       moveend: e => {
         const map = e.target;
-        const centerLatLng = map.getCenter();
-        c_lat(centerLatLng.lat);
-        c_lng(centerLatLng.lng);
+        setcurrentLatLng([map.getCenter().lat, map.getCenter().lng]);
+        c_lat(currentLatLng[0].toString());
+        c_lng(currentLatLng[1].toString());
       },
     });
-
     return null;
   };
+
+  const MuniNameMarker = useCallback(
+    ({
+      center,
+      muniBorder,
+      currentZoom,
+      layers,
+    }: {
+      center: LatLngTuple;
+      muniBorder: Municipality;
+      currentZoom: number;
+      layers: {
+        pref: boolean;
+        muni: boolean;
+        sinkoukyoku: boolean;
+        placename: boolean;
+        railways: boolean;
+      };
+    }) => {
+      const map = useMap();
+      const isInView = (() => {
+        const bounds = map.getBounds();
+        const point = L.latLng(center[0], center[1]);
+        return bounds.contains(point);
+      })();
+
+      if (!(currentZoom >= 8 && layers.placename && isInView)) return null;
+
+      return (
+        <Marker
+          position={center}
+          icon={divIcon({
+            className: 'munilabels',
+            html: `<span class="munilabels-specialCityName">${muniBorder.is_special_city_ward ? muniBorder.gun_seireishi : ''}</span><br /><span>${muniBorder.name}</span>`,
+            iconSize: [60, 20],
+            iconAnchor: [30, 10],
+          })}
+        />
+      );
+    },
+    [currentZoom, currentLatLng, layers]
+  );
 
   return (
     <div style={{ height: '100%', width: '100%', position: 'relative', display: 'flex' }}>
@@ -289,17 +332,7 @@ export default (props: P) => {
                         }}
                       />
                     </Popup>
-                    {currentZoom >= 8 && layers.placename && (
-                      <Marker
-                        position={center as LatLngTuple}
-                        icon={divIcon({
-                          className: 'munilabels',
-                          html: `<span class="munilabels-specialCityName">${muniBorder.is_special_city_ward ? muniBorder.gun_seireishi : ''}</span><br /><span>${muniBorder.name}</span>`,
-                          iconSize: [60, 20],
-                          iconAnchor: [30, 10],
-                        })}
-                      />
-                    )}
+                    <MuniNameMarker center={center as LatLngTuple} muniBorder={muniBorder} currentZoom={currentZoom} layers={layers} />
                   </Polygon>
                 );
               });
