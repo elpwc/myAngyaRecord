@@ -153,5 +153,5 @@ export const TODOFUKEN_LIST = [
 ];
 
 export const getPrefOfMuniById = (muniId: string) => {
-  return TODOFUKEN_LIST[Number(muniId.substring(0, 2))];
+  return TODOFUKEN_LIST[Number(muniId.substring(0, 2)) - 1];
 };
