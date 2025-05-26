@@ -1,6 +1,7 @@
 import React from 'react';
 import { useEffect } from 'react';
 import './index.css';
+import { useMap } from 'react-leaflet';
 
 interface P {
   addr: string;
@@ -16,7 +17,16 @@ const mapStyles = [
 let currentMapStyle = 2;
 
 export default ({ addr, name, onClick }: P) => {
-  useEffect(() => {}, []);
+  const thisMap = useMap();
+
+  const values = [
+    { name: '居住', value: 5, desc: '' },
+    { name: '宿泊', value: 4, desc: '' },
+    { name: '訪問', value: 3, desc: '' },
+    { name: '接地', value: 2, desc: '' },
+    { name: '通過', value: 1, desc: '' },
+    { name: '未踏', value: 0, desc: '' },
+  ];
 
   return (
     <div className="popup">
@@ -28,60 +38,21 @@ export default ({ addr, name, onClick }: P) => {
       </p>
 
       <div className="popupbuttoncontainer">
-        <button
-          className="popupbutton"
-          onClick={() => {
-            onClick(5);
-          }}
-          style={{ backgroundColor: mapStyles[currentMapStyle].bgcolor[0], color: mapStyles[currentMapStyle].color[0] }}
-        >
-          居住
-        </button>
-        <button
-          className="popupbutton"
-          onClick={() => {
-            onClick(4);
-          }}
-          style={{ backgroundColor: mapStyles[currentMapStyle].bgcolor[1], color: mapStyles[currentMapStyle].color[1] }}
-        >
-          宿泊
-        </button>
-        <button
-          className="popupbutton"
-          onClick={() => {
-            onClick(3);
-          }}
-          style={{ backgroundColor: mapStyles[currentMapStyle].bgcolor[2], color: mapStyles[currentMapStyle].color[2] }}
-        >
-          訪問
-        </button>
-        <button
-          className="popupbutton"
-          onClick={() => {
-            onClick(2);
-          }}
-          style={{ backgroundColor: mapStyles[currentMapStyle].bgcolor[3], color: mapStyles[currentMapStyle].color[3] }}
-        >
-          接地
-        </button>
-        <button
-          className="popupbutton"
-          onClick={() => {
-            onClick(1);
-          }}
-          style={{ backgroundColor: mapStyles[currentMapStyle].bgcolor[4], color: mapStyles[currentMapStyle].color[4] }}
-        >
-          通過
-        </button>
-        <button
-          className="popupbutton"
-          onClick={() => {
-            onClick(0);
-          }}
-          style={{ backgroundColor: mapStyles[currentMapStyle].bgcolor[5], color: mapStyles[currentMapStyle].color[5] }}
-        >
-          未踏
-        </button>
+        {values.map(value => {
+          return (
+            <button
+              key={value.name}
+              className="popupbutton"
+              onClick={() => {
+                onClick(value.value);
+                thisMap.closePopup();
+              }}
+              style={{ backgroundColor: mapStyles[currentMapStyle].bgcolor[5 - value.value], color: mapStyles[currentMapStyle].color[5 - value.value] }}
+            >
+              {value.name}
+            </button>
+          );
+        })}
       </div>
     </div>
   );

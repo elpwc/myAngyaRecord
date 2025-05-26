@@ -23,35 +23,32 @@ switch ($request_type) {
     }
 
     // 检查是否存在相同的记录
-    $check_sql = "SELECT * FROM `record` WHERE `mapid` = ? AND `admin_id` = ? AND `group_id` = ?";
+    $check_sql = "SELECT * FROM `record` WHERE `admin_id` = ? AND `group_id` = ?";
     $check_params = [
-      escape_string($sqllink, $data->mapid),
       escape_string($sqllink, $data->admin_id),
       (int)($data->group_id),
     ];
-    $check_result = prepare_bind_execute($sqllink, $check_sql, "ssi", $check_params);
+    $check_result = prepare_bind_execute($sqllink, $check_sql, "si", $check_params);
 
     if ($check_result && mysqli_num_rows($check_result) > 0) {
       // 如果记录存在，更新level值
-      $update_sql = "UPDATE `record` SET `level` = ? WHERE `mapid` = ? AND `admin_id` = ? AND `group_id` = ?";
+      $update_sql = "UPDATE `record` SET `level` = ? WHERE `admin_id` = ? AND `group_id` = ?";
       $update_params = [
         (int)($data->level),
-        escape_string($sqllink, $data->mapid),
         escape_string($sqllink, $data->admin_id),
         (int)($data->group_id)
       ];
-      $update_result = prepare_bind_execute($sqllink, $update_sql, "issi", $update_params);
+      $update_result = prepare_bind_execute($sqllink, $update_sql, "isi", $update_params);
       echo json_encode(["res" => $update_result !== false ? "ok" : "error"]);
     } else {
       // 如果记录不存在，插入新记录
-      $insert_sql = "INSERT INTO `record` (`mapid`, `admin_id`, `group_id`, `level`) VALUES (?, ?, ?, ?)";
+      $insert_sql = "INSERT INTO `record` ( `admin_id`, `group_id`, `level`) VALUES (?, ?, ?)";
       $insert_params = [
-        escape_string($sqllink, $data->mapid),
         escape_string($sqllink, $data->admin_id),
         (int)($data->group_id),
         (int)($data->level)
       ];
-      $insert_result = prepare_bind_execute($sqllink, $insert_sql, "ssii", $insert_params);
+      $insert_result = prepare_bind_execute($sqllink, $insert_sql, "sii", $insert_params);
       echo json_encode(["res" => $insert_result !== false ? "ok" : "error"]);
     }
     break;
@@ -62,23 +59,22 @@ switch ($request_type) {
       return;
     }
     $id = isset($_GET['id']) ? escape_string($sqllink, $_GET['id']) : null;
-    $group_id  = isset($_GET['group_id']) ? escape_string($sqllink, $_GET['group_id']) : null;
-    $mapid = isset($_GET['mapid']) ? escape_string($sqllink, $_GET['mapid']) : null;
+    $group_id = isset($_GET['group_id']) ? escape_string($sqllink, $_GET['group_id']) : null;
 
     if ($id) {
       $sql = "SELECT * FROM `record` WHERE `id` = ? AND `is_deleted` = 0";
-      $result = prepare_bind_execute($sqllink, $sql, "s", [$id]);
-    } else if ($group_id && $mapid) {
+      $result = prepare_bind_execute($sqllink, $sql, "i", [$id]);
+    } else if ($group_id) {
       $sql = "SELECT r.*, g.name as group_name, g.uid 
               FROM `record` r
               JOIN `recordgroup` g ON r.group_id = g.id
-              WHERE `group_id` = ? AND `mapid` = ? AND `is_deleted` = 0";
-      $result = prepare_bind_execute($sqllink, $sql, "is", [$group_id, $mapid]);
+              WHERE r.group_id = ? AND r.is_deleted = 0";
+      $result = prepare_bind_execute($sqllink, $sql, "i", [$group_id]);
     } else {
       return;
     }
 
-    if ($result && mysqli_num_rows($result) > 0) {
+    if ($result && mysqli_num_rows($result) >= 0) {
       $records = [];
       while ($row = mysqli_fetch_assoc($result)) {
         $records[] = $row;

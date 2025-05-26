@@ -1,18 +1,21 @@
-import React, { useState } from 'react';
-import { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router';
 import './index.css';
 import '../../../node_modules/leaflet/dist/leaflet.css';
-import { AttributionControl, MapContainer, Marker, Polygon, Polyline, Popup, ScaleControl, TileLayer, Tooltip, useMapEvents } from 'react-leaflet';
-import { chihous_data, getBounds, mapTiles } from '../../utils/map';
+import { AttributionControl, MapContainer, Marker, Polygon, Polyline, Popup, ScaleControl, TileLayer, Tooltip, useMap, useMapEvents } from 'react-leaflet';
+import { chihous_data, getBounds, MapsId, mapTiles } from '../../utils/map';
 import { getMunicipalitiesData, getPrefecture_ShinkoukyokuData, getRailwaysData } from './geojsonUtils';
 import { Municipality, Prefecture, Railway } from '../../utils/addr';
 import MapPopup from '../../components/MapPopup';
 import { divIcon, LatLngTuple } from 'leaflet';
-import request from '../../utils/request';
-import { c_uid } from '../../utils/cookies';
-import { getFillcolor, getForecolor, getRecordGroups, getRecords, postRecord } from '../../utils/serverUtils';
+import { getFillcolor, getForecolor, getRecordGroups, getRecords, postRecord, postRecordGroup } from '../../utils/serverUtils';
+import MuniList from './MuniList';
+import { NewGroupModal } from '../../components/modals/NewGroupModal';
+import { GroupListModal } from '../../components/modals/GroupListModal';
+import { Record, RecordGroup } from '../../utils/types';
+import moment from 'moment';
 import { isLogin } from '../../utils/userUtils';
+import { c_lat, c_lng, c_zoom } from '../../utils/cookies';
 
 interface P {}
 
@@ -21,6 +24,9 @@ export default (props: P) => {
   const navigate = useNavigate();
   const mylocation = useLocation();
 
+  const DEFAULT_LAT_LNG = [36.016142, 137.990904];
+  const DEFAULT_ZOOM = 5;
+
   // let currentId: string = params.id as string;
   const [currentTileMap, setCurrentTileMap] = useState('blank');
   const [layers, setLayers] = useState({
@@ -28,48 +34,55 @@ export default (props: P) => {
     muni: true,
     sinkoukyoku: true,
     placename: true,
-    railways: false,
+    railways: true,
   });
   const [prefBorderData, setprefBorderData]: [Prefecture[], any] = useState([]);
   const [shinkouBorderData, setshinkouBorderData]: [Prefecture[], any] = useState([]);
   const [railwaysData, setrailwaysData]: [Railway[], any] = useState([]);
   const [muniBorderData, setmuniBorderData]: [{ municipalities: Municipality[]; prefecture: string }[], any] = useState([]);
-  const [expandedPrefectures, setExpandedPrefectures] = useState<string[]>([]);
-  const [currentZoom, setCurrentZoom] = useState(5);
 
-  const [recordGroups, setrecordGroups] = useState([]);
-  const [records, setrecords] = useState([]);
+  const [currentZoom, setCurrentZoom] = useState(c_zoom() ? Number(c_zoom()) : DEFAULT_ZOOM);
 
-  
+  const [recordGroup, setrecordGroup] = useState<RecordGroup>();
+  const [records, setrecords] = useState<Record[]>([]);
+
+  const [isGroupListModalOpen, setIsGroupListModalOpen] = useState(false);
+  const [isNewGroupModalOpen, setIsNewGroupModalOpen] = useState(false);
+
+  const thisMapId = MapsId.JapanMuni;
+
   const refreshRecordGroups = () => {
-    if(isLogin()){
+    if (isLogin()) {
       getRecordGroups(
-        'japanmuni',
+        thisMapId,
         (data: any) => {
-          setrecords(data);
+          if (data && data.length > 0) {
+            setrecordGroup(data[0]);
+          }
         },
         errmsg => {
           alert(errmsg);
         }
       );
     }
-
   };
 
-
   const refreshRecords = () => {
-    if(isLogin()){
+    console.log(isLogin(), recordGroup?.id, isLogin() && recordGroup?.id);
+    if (isLogin() && recordGroup?.id) {
       getRecords(
-        'japanmuni',
+        recordGroup?.id,
         (data: any) => {
-          setrecords(data);
+          console.log(data);
+          if (data) {
+            setrecords(data);
+          }
         },
         errmsg => {
           alert(errmsg);
         }
       );
     }
-
   };
 
   useEffect(() => {
@@ -80,7 +93,12 @@ export default (props: P) => {
       setrailwaysData(await getRailwaysData());
     })();
     refreshRecordGroups();
+    refreshRecords();
   }, []);
+
+  useEffect(() => {
+    refreshRecords();
+  }, [recordGroup?.id]);
 
   const handleMapStyleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCurrentTileMap(e.target.value);
@@ -94,23 +112,32 @@ export default (props: P) => {
     }));
   };
 
-  const togglePrefecture = (prefecture: string) => {
-    setExpandedPrefectures(prev => (prev.includes(prefecture) ? prev.filter(p => p !== prefecture) : [...prev, prefecture]));
-  };
-
   const ZoomListener = () => {
     const map = useMapEvents({
       zoomend: () => {
+        c_zoom(map.getZoom().toString());
         setCurrentZoom(map.getZoom());
-        console.log(map.getZoom());
       },
     });
     return null;
   };
 
+  const MapCenterTracker = () => {
+    useMapEvents({
+      moveend: e => {
+        const map = e.target;
+        const centerLatLng = map.getCenter();
+        c_lat(centerLatLng.lat);
+        c_lng(centerLatLng.lng);
+      },
+    });
+
+    return null;
+  };
+
   return (
     <div style={{ height: '100%', width: '100%', position: 'relative', display: 'flex' }}>
-      <div>
+      <aside>
         <div>
           <div className="map-tiles-radio-group">
             {mapTiles.map(mapTile => (
@@ -147,59 +174,79 @@ export default (props: P) => {
             </label>
           </div>
         </div>
-        <div className="municipalitiesList">
-          {chihous_data.map(chihou => {
-            return (
-              <div key={chihou.name}>
-                <div className="municipalityItem" style={{ backgroundColor: chihou.color }}>
-                  {chihou.name}
-                </div>
-                <div>
-                  {muniBorderData.length > 0 &&
-                    chihou.pref.map(prefInChihou => {
-                      const prefIndex = muniBorderData.findIndex(mp => {
-                        return mp.prefecture === prefInChihou;
-                      });
-                      if (prefIndex !== -1) {
-                        const prefMuniBorder = muniBorderData[prefIndex];
-                        return (
-                          <div key={prefMuniBorder.prefecture}>
-                            <button
-                              className={'prefDropdownButton ' + (expandedPrefectures.includes(prefMuniBorder.prefecture) ? 'prefDropdownButtonOpen' : '')}
-                              onClick={() => togglePrefecture(prefMuniBorder.prefecture)}
-                            >
-                              <span>{prefMuniBorder.prefecture}</span>
-                              <span className="prefDropdownButton-status">
-                                <span>居住{0}</span>
-                                <span>宿泊{0}</span>
-                                <span>訪問{0}</span>
-                                <span>接地{0}</span>
-                                <span>通過{0}</span>
-                                <span>未踏{0}</span>
-                              </span>
-                              <span>{expandedPrefectures.includes(prefMuniBorder.prefecture) ? '▼' : '▶'}</span>
-                            </button>
-                            {expandedPrefectures.includes(prefMuniBorder.prefecture) &&
-                              prefMuniBorder.municipalities.map(muniBorder => (
-                                <div key={muniBorder.id} className="municipalityItem">
-                                  <div className="municipalityName">{muniBorder.name}</div>
-                                  <div className="municipalityRegion">{(muniBorder.shinkoukyoku ?? '') + (muniBorder.gun_seireishi ?? '')}</div>
-                                  <div className="municipalityStatus">未踏破</div>
-                                </div>
-                              ))}
-                          </div>
-                        );
-                      }
-                      return <></>;
-                    })}
-                </div>
-              </div>
+        {isLogin() ? (
+          <div className="groupSwitchContainer">
+            <div style={{ width: '100%', padding: '4px' }}>
+              {recordGroup && (
+                <>
+                  <div style={{ display: 'flex', gap: '6px' }}>
+                    <p>{recordGroup.name}</p>
+                    <p style={{ color: 'gray', fontSize: '12px', height: 'fit-content', alignSelf: 'end' }}>{recordGroup.desc}</p>
+                  </div>
+                  <time style={{ color: 'gray', fontSize: '10px', display: 'flex', gap: '10px' }}>
+                    <span>{`作成 ${moment(recordGroup.create_date).format('YYYY/MM/DD HH:mm:ss')}`}</span>
+                    <span>{`最後更新 ${moment(recordGroup.update_date).format('YYYY/MM/DD HH:mm:ss')}`}</span>
+                  </time>
+                </>
+              )}
+            </div>
+            <button className="styled-button flex" onClick={() => setIsGroupListModalOpen(true)} style={{ borderRight: 'none', borderTopRightRadius: '0px', borderBottomRightRadius: '0px' }}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                <path
+                  fillRule="evenodd"
+                  d="M15.817.113A.5.5 0 0 1 16 .5v14a.5.5 0 0 1-.402.49l-5 1a.5.5 0 0 1-.196 0L5.5 15.01l-4.902.98A.5.5 0 0 1 0 15.5v-14a.5.5 0 0 1 .402-.49l5-1a.5.5 0 0 1 .196 0L10.5.99l4.902-.98a.5.5 0 0 1 .415.103M10 1.91l-4-.8v12.98l4 .8zm1 12.98 4-.8V1.11l-4 .8zm-6-.8V1.11l-4 .8v12.98z"
+                />
+              </svg>
+              {recordGroup ? '地図切り替え' : '記録地図を開く'}
+            </button>
+            <button className="styled-button flex" onClick={() => setIsNewGroupModalOpen(true)} style={{ borderTopLeftRadius: '0px', borderBottomLeftRadius: '0px' }}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                <path fillRule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
+              </svg>
+              新規記録地図
+            </button>
+          </div>
+        ) : (
+          <div></div>
+        )}
+
+        {recordGroup && <MuniList muniBorderData={muniBorderData} />}
+        <GroupListModal
+          mapid={thisMapId}
+          show={isGroupListModalOpen}
+          onClose={() => setIsGroupListModalOpen(false)}
+          onSelect={(recordGroup: RecordGroup) => {
+            setrecordGroup(recordGroup);
+            setIsGroupListModalOpen(false);
+          }}
+        />
+        <NewGroupModal
+          show={isNewGroupModalOpen}
+          onClose={() => setIsNewGroupModalOpen(false)}
+          onOk={(name: string, desc: string) => {
+            postRecordGroup(
+              thisMapId,
+              name,
+              desc,
+              (data: any) => {
+                setIsNewGroupModalOpen(false);
+              },
+              errmsg => {
+                alert(errmsg);
+              }
             );
-          })}
-        </div>
-      </div>
-      <MapContainer center={[36.016142, 137.990904]} zoom={5} scrollWheelZoom={true} attributionControl={false} className="mapContainer">
+          }}
+        />
+      </aside>
+      <MapContainer
+        center={[c_lat() ? Number(c_lat()) : DEFAULT_LAT_LNG[0], c_lng() ? Number(c_lng()) : DEFAULT_LAT_LNG[1]]}
+        zoom={currentZoom}
+        scrollWheelZoom={true}
+        attributionControl={false}
+        className="mapContainer"
+      >
         <ZoomListener />
+        <MapCenterTracker />
         <ScaleControl position="bottomleft" />
         <AttributionControl position="bottomright" prefix={'Dev by <a href="https://github.com/elpwc" target="_blank">@elpwc</a>'} />
         <TileLayer
@@ -210,32 +257,35 @@ export default (props: P) => {
           /* 市区町村 */
           layers.muni &&
             muniBorderData.map(prefMuniBorder => {
-              return prefMuniBorder.municipalities.map(muniBorder => {
+              return prefMuniBorder.municipalities.map((muniBorder: Municipality) => {
                 // 计算中心点
                 const center = getBounds(muniBorder.coordinates);
 
                 return (
                   <Polygon
+                    key={muniBorder.id}
                     className="muniBorder"
                     pathOptions={{ fillColor: getFillcolor(records, muniBorder.id), color: getForecolor(records, muniBorder.id), opacity: 1, fillOpacity: 1, weight: 0.4 }}
                     positions={muniBorder.coordinates}
                   >
-                    <Popup>
+                    <Popup closeOnClick>
                       <MapPopup
                         addr={(muniBorder.pref ?? '') + (muniBorder.shinkoukyoku ?? '') + (muniBorder.gun_seireishi ?? '')}
                         name={muniBorder.name}
                         onClick={value => {
-                          postRecord(
-                            'japanmuni',
-                            muniBorder.id,
-                            value,
-                            () => {
-                              refreshRecords();
-                            },
-                            errmsg => {
-                              alert(errmsg);
-                            }
-                          );
+                          if (recordGroup?.id) {
+                            postRecord(
+                              recordGroup?.id,
+                              muniBorder.id,
+                              value,
+                              () => {
+                                refreshRecords();
+                              },
+                              errmsg => {
+                                alert(errmsg);
+                              }
+                            );
+                          }
                         }}
                       />
                     </Popup>

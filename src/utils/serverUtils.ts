@@ -1,11 +1,12 @@
 import { c_uid } from './cookies';
 import { mapStyles } from './mapStyles';
 import request from './request';
+import { Record } from './types';
 
-export const postRecord = async (mapid: string, admin_id: string, level: number, onOK: () => void, onError: (msg: string) => void) => {
+export const postRecord = async (group_id: number, admin_id: string, level: number, onOK: () => void, onError: (msg: string) => void) => {
   return request('/record.php', {
     method: 'POST',
-    data: { mapid: mapid, admin_id, uid: c_uid(), level },
+    data: { group_id: group_id, admin_id, uid: c_uid(), level },
   })
     .then(e => {
       switch (e.res) {
@@ -22,8 +23,8 @@ export const postRecord = async (mapid: string, admin_id: string, level: number,
     });
 };
 
-export const getRecords = async (mapid: string, onOK: (data: any) => void, onError: (msg: string) => void) => {
-  return request(`/record.php?mapid=${mapid}&uid=${c_uid()}`, {
+export const getRecords = async (group_id: number, onOK: (data: any) => void, onError: (msg: string) => void) => {
+  return request(`/record.php?group_id=${group_id}&uid=${c_uid()}`, {
     method: 'GET',
   })
     .then(e => {
@@ -40,7 +41,6 @@ export const getRecords = async (mapid: string, onOK: (data: any) => void, onErr
       console.log(e);
     });
 };
-
 
 export const getRecordGroups = async (mapid: string, onOK: (data: any) => void, onError: (msg: string) => void) => {
   return request(`/recordgroup.php?mapid=${mapid}&uid=${c_uid()}`, {
@@ -61,7 +61,47 @@ export const getRecordGroups = async (mapid: string, onOK: (data: any) => void, 
     });
 };
 
-export const getFillcolor = (records: any[], admin_id: string) => {
+export const postRecordGroup = async (mapid: string, name: string, desc: string, onOK: (data: any) => void, onError: (msg: string) => void) => {
+  return request(`/recordgroup.php`, {
+    method: 'POST',
+    data: { mapid, uid: c_uid(), name, desc },
+  })
+    .then(e => {
+      switch (e.res) {
+        case 'ok':
+          onOK(e.groups);
+          break;
+        default:
+          onError(e.res);
+          break;
+      }
+    })
+    .catch(e => {
+      console.log(e);
+    });
+};
+
+export const deleteRecordGroup = async (id: number, onOK: (data: any) => void, onError: (msg: string) => void) => {
+  return request(`/recordgroup.php`, {
+    method: 'POST',
+    data: { id, uid: c_uid() },
+  })
+    .then(e => {
+      switch (e.res) {
+        case 'ok':
+          onOK(e.groups);
+          break;
+        default:
+          onError(e.res);
+          break;
+      }
+    })
+    .catch(e => {
+      console.log(e);
+    });
+};
+
+export const getFillcolor = (records: Record[], admin_id: string) => {
   const res = records.findIndex(record => {
     return record.admin_id === admin_id;
   });
@@ -71,7 +111,7 @@ export const getFillcolor = (records: any[], admin_id: string) => {
   return mapStyles[0].bgcolor[records[res].level];
 };
 
-export const getForecolor = (records: any[], admin_id: string) => {
+export const getForecolor = (records: Record[], admin_id: string) => {
   const res = records.findIndex(record => {
     return record.admin_id === admin_id;
   });

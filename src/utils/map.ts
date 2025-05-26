@@ -4,6 +4,11 @@ export const getGeoJsonData = async (url: string) => {
   return await fetch(url).then(response => response.json());
 };
 
+export enum MapsId {
+  JapanMuni = 'japanmuni',
+  Numazu = 'numazu',
+}
+
 export const mapTiles = [
   { id: 'blank', name: '空白背景', url: '' },
   { id: 'default', name: '地図背景', url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' },

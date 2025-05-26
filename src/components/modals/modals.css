@@ -1,0 +1,15 @@
+.recordGroupsListItem {
+  padding: 6px;
+  cursor: pointer;
+  border-bottom: solid 1px gray;
+}
+
+.recordGroupsListItem:hover {
+  background-color: rgb(236, 236, 236);
+}
+
+.recordGroupsList {
+  min-height: 600px;
+  max-height: 1200px;
+  border-top: solid 1px gray;
+}

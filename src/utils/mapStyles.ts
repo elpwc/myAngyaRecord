@@ -1,5 +1,5 @@
 export const mapStyles = [
-  { name: 'classic', bgcolor: ['#d646d6', '#ff3d3d', '#ffa136', '#50ff50', '#bef7ff', 'white'], color: ['black', 'black', 'black', 'black', 'black', 'black'] },
-  { name: 'light', bgcolor: ['#ffabff', '#ff8686', '#ffdf72', '#a5ffa5', '#ceeaff', 'white'], color: ['black', 'black', 'black', 'black', 'black', 'black'] },
-  { name: 'dark', bgcolor: ['#d646d6', '#ff3d3d', '#faa429', '#43dd43', '#72c4ff', 'white'], color: ['black', 'black', 'black', 'black', 'black', 'black'] },
+  { name: 'classic', bgcolor: ['white', '#bef7ff', '#50ff50', '#ffa136', '#ff3d3d', '#d646d6'], color: ['black', 'black', 'black', 'black', 'black', 'black'] },
+  { name: 'light', bgcolor: ['white', '#ceeaff', '#a5ffa5', '#ffdf72', '#ff8686', '#ffabff'], color: ['black', 'black', 'black', 'black', 'black', 'black'] },
+  { name: 'dark', bgcolor: ['white', '#72c4ff', '#43dd43', '#faa429', '#ff3d3d', '#d646d6'], color: ['black', 'black', 'black', 'black', 'black', 'black'] },
 ];

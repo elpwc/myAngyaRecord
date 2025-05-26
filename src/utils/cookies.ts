@@ -50,8 +50,6 @@ export const c_uid = (value?: string): string => {
   }
 };
 
-//------------------------------------------------------------------------
-
 export const c_lat = (value?: string): string => {
   if (value !== null && value !== undefined) {
     cookie.save('lat', value ?? '', { path: '/' });
@@ -67,24 +65,6 @@ export const c_lng = (value?: string): string => {
     return value ?? '';
   } else {
     return cookie.load('lng') ?? '';
-  }
-};
-
-export const c_game = (value?: string): string => {
-  if (value !== null && value !== undefined) {
-    cookie.save('game', value ?? '', { path: '/' });
-    return value ?? '';
-  } else {
-    return cookie.load('game') ?? '';
-  }
-};
-
-export const c_gamever = (value?: string): string => {
-  if (value !== null && value !== undefined) {
-    cookie.save('gamever', value ?? '', { path: '/' });
-    return value ?? '';
-  } else {
-    return cookie.load('gamever') ?? '';
   }
 };
 

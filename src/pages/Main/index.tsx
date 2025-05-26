@@ -18,7 +18,7 @@ export default (props: P) => {
     { title: '日本', link: '/japan', disabled: false },
     { title: '中国本土', link: '/mainlandchina', disabled: true },
     { title: '台湾', link: '/taiwan', disabled: true },
-    { title: '韓国', link: '/taiwan' , disabled: true},
+    { title: '韓国', link: '/taiwan', disabled: true },
     { title: '沼津', link: '/numazu', disabled: false },
   ];
 
@@ -45,7 +45,9 @@ export default (props: P) => {
           <menu id="regionMenu">
             {menuItems.map(menuItem => (
               <div key={menuItem.title} className={`regionMenuItem ${menuItem.disabled ? 'regionMenuItem-disabled ' : ''}  ${mylocation.pathname.includes(menuItem.link) ? 'selected' : ''}`}>
-                <Link className={`regionMenuLink ${menuItem.disabled ? 'regionMenuLink-disabled ' : ''}`} to={menuItem.link}>{menuItem.title}</Link>
+                <Link className={`regionMenuLink ${menuItem.disabled ? 'regionMenuLink-disabled ' : ''}`} to={menuItem.link}>
+                  {menuItem.title}
+                </Link>
               </div>
             ))}
           </menu>
@@ -54,21 +56,21 @@ export default (props: P) => {
             {isLogin() ? (
               <>
                 <Link to="/user">{c_userName()}</Link>
-                <button
+                <Link to='/'
                   onClick={() => {
                     logout();
                   }}
                 >
-                  Logout
-                </button>
+                  ログアウト
+                </Link>
               </>
             ) : (
               <>
-                <Link to="/emailverify">Register</Link>
-                <Link to="/login">Login</Link>
+                <Link to="/emailverify">新規アカウント</Link>
+                <Link to="/login">ログイン</Link>
               </>
             )}
-            <Link to="/about">About</Link>
+            <Link to="/about">ﾌｨｰﾄﾞﾊﾞｯｸ</Link>
           </div>
         </header>
         <main>
