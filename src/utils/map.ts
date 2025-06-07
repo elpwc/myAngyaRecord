@@ -98,3 +98,7 @@ export const getBounds = (coordinates: [number, number][][]) => {
 
   return [(bounds[0][0] + bounds[1][0]) / 2, (bounds[0][1] + bounds[1][1]) / 2] as LatLngTuple;
 };
+
+export const getLabelPosition = (labelPos: [number, number], label: string, currentZoom: number) => {
+  return [labelPos[0], labelPos[1] + ((label.length * 0.2) / 13) * (18 - currentZoom)];
+};

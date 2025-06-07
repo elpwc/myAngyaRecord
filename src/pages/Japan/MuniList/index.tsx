@@ -3,9 +3,9 @@ import { chihous_data } from '../../../utils/map';
 import { Municipality } from '../../../utils/addr';
 import './index.css';
 import { Record } from '../../../utils/types';
-import { getPrefOfMuniById } from '../geojsonUtils';
 import { getFillcolor, getForecolor } from '../../../utils/serverUtils';
 import { mapStyles } from '../../../utils/mapStyles';
+import { getPrefNameOfMuniById } from '../geojsonUtils';
 
 interface Props {
   muniBorderData: { municipalities: Municipality[]; prefecture: string }[];
@@ -57,7 +57,7 @@ const MuniList = ({ muniBorderData, records, currentMapStyle = 0 }: Props) => {
                     return mp.prefecture === prefInChihou;
                   });
                   if (prefIndex !== -1) {
-                    const prefData = records.filter(record => getPrefOfMuniById(record.admin_id) === prefInChihou);
+                    const prefData = records.filter(record => getPrefNameOfMuniById(record.admin_id) === prefInChihou);
                     const prefMuniBorder = muniBorderData[prefIndex];
                     const angyaStatus = {
                       live: prefData.filter(muni => {

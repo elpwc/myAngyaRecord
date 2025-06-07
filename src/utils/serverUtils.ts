@@ -1,3 +1,4 @@
+import { getPrefIdOfMuniById } from '../pages/Japan/geojsonUtils';
 import { c_uid } from './cookies';
 import { mapStyles } from './mapStyles';
 import request from './request';
@@ -119,4 +120,36 @@ export const getForecolor = (mapStyle: number, records: Record[], admin_id: stri
     return mapStyles[mapStyle].color[0];
   }
   return mapStyles[mapStyle].color[records[res].level];
+};
+
+export const getTodofukenFillColor = (mapStyle: number, records: Record[], pref_id: number) => {
+  let maxRecordType = 0;
+  for (let i = 0; i < records.length; i++) {
+    if (getPrefIdOfMuniById(records[i].admin_id) === pref_id) {
+      if (records[i].level > maxRecordType) {
+        maxRecordType = records[i].level;
+        if (records[i].level === 5) {
+          break;
+        }
+      }
+    }
+  }
+
+  return mapStyles[mapStyle].bgcolor[maxRecordType];
+};
+
+export const getTodofukenForeColor = (mapStyle: number, records: Record[], pref_id: number) => {
+  let maxRecordType = 0;
+  for (let i = 0; i < records.length; i++) {
+    if (getPrefIdOfMuniById(records[i].admin_id) === pref_id) {
+      if (records[i].level > maxRecordType) {
+        maxRecordType = records[i].level;
+        if (records[i].level === 5) {
+          break;
+        }
+      }
+    }
+  }
+
+  return mapStyles[mapStyle].color[maxRecordType];
 };

@@ -11,9 +11,9 @@ import { getGeoJsonData } from '../../utils/map';
  */
 export const getPrefecture_ShinkoukyokuData = async (shinkoukyoku: boolean = false) => {
   const geojsondata = await getGeoJsonData(shinkoukyoku ? shinkoukyokuJson : prefJson);
-  return geojsondata.features.map((feature: any) => {
+  return geojsondata.features.map((feature: any, index: number) => {
     return {
-      id: feature.properties.name,
+      id: index,
       name: feature.properties.name,
       coordinates: feature.geometry.coordinates.map((area: any) => {
         if (typeof area[0][0] === 'number') {
@@ -27,6 +27,7 @@ export const getPrefecture_ShinkoukyokuData = async (shinkoukyoku: boolean = fal
           return [point[1], point[0]];
         });
       }),
+      labelPos: [feature.properties.label_point[1],feature.properties.label_point[0]]
     } as Prefecture;
   });
 };
@@ -152,6 +153,10 @@ export const TODOFUKEN_LIST = [
   '沖縄県',
 ];
 
-export const getPrefOfMuniById = (muniId: string) => {
-  return TODOFUKEN_LIST[Number(muniId.substring(0, 2)) - 1];
+export const getPrefIdOfMuniById = (muniId: string): number => {
+  return Number(muniId.substring(0, 2)) - 1;
+};
+
+export const getPrefNameOfMuniById = (muniId: string): string => {
+  return TODOFUKEN_LIST[getPrefIdOfMuniById(muniId)];
 };

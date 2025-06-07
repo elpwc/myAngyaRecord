@@ -1,8 +1,9 @@
 /** 都道府県 & 支庁 */
 export interface Prefecture {
-  id: string;
+  id: number;
   name: string;
   coordinates: [number, number][][];
+  labelPos: [number, number];
 }
 
 /** 市区町村 */

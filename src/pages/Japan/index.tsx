@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router';
 import './index.css';
 import '../../../node_modules/leaflet/dist/leaflet.css';
 import { AttributionControl, MapContainer, Marker, Polygon, Polyline, Popup, ScaleControl, TileLayer, Tooltip, useMap, useMapEvents } from 'react-leaflet';
-import { chihous_data, getBounds, MapsId, mapTiles } from '../../utils/map';
+import { chihous_data, getBounds, getLabelPosition, MapsId, mapTiles } from '../../utils/map';
 import { getMunicipalitiesData, getPrefecture_ShinkoukyokuData, getRailwaysData } from './geojsonUtils';
 import { Municipality, Prefecture, Railway } from '../../utils/addr';
 import MapPopup from '../../components/MapPopup';
 import L, { divIcon, LatLngTuple } from 'leaflet';
-import { getFillcolor, getForecolor, getRecordGroups, getRecords, postRecord, postRecordGroup } from '../../utils/serverUtils';
+import { getFillcolor, getForecolor, getRecordGroups, getRecords, getTodofukenFillColor, getTodofukenForeColor, postRecord, postRecordGroup } from '../../utils/serverUtils';
 import MuniList from './MuniList';
 import { NewGroupModal } from '../../components/modals/NewGroupModal';
 import { GroupListModal } from '../../components/modals/GroupListModal';
@@ -51,6 +51,10 @@ export default (props: P) => {
 
   const [currentLatLng, setcurrentLatLng] = useState(DEFAULT_LAT_LNG);
   const [currentMapStyle, setcurrentMapStyle] = useState(2);
+
+  const showTodofukenLevelColor = useMemo(() => layers.pref && !layers.muni, [layers.pref, layers.muni]);
+
+  const showSubprefectureLevelColor = useMemo(() => layers.pref && layers.sinkoukyoku && !layers.muni, [layers.pref, layers.muni]);
 
   const thisMapId = MapsId.JapanMuni;
 
@@ -120,6 +124,7 @@ export default (props: P) => {
       zoomend: () => {
         c_zoom(map.getZoom().toString());
         setCurrentZoom(map.getZoom());
+        console.log(map.getZoom());
       },
     });
     return null;
@@ -142,13 +147,13 @@ export default (props: P) => {
 
     useEffect(() => {
       map.createPane('muni');
-      map.createPane('railways');
       map.createPane('pref');
       map.createPane('subpref');
+      map.createPane('railways');
       map.getPane('muni')!.style.zIndex = '650';
-      map.getPane('railways')!.style.zIndex = '651';
       map.getPane('pref')!.style.zIndex = '652';
       map.getPane('subpref')!.style.zIndex = '653';
+      map.getPane('railways')!.style.zIndex = '654';
     }, [map]);
 
     return null;
@@ -242,7 +247,7 @@ export default (props: P) => {
               {recordGroup && (
                 <>
                   <div style={{ display: 'flex', gap: '6px' }}>
-                    <p>{recordGroup.name}</p>
+                    <p>記録名:{recordGroup.name}</p>
                     <p style={{ color: 'gray', fontSize: '12px', height: 'fit-content', alignSelf: 'end' }}>{recordGroup.desc}</p>
                   </div>
                   <time style={{ color: 'gray', fontSize: '10px', display: 'flex', gap: '10px' }}>
@@ -259,7 +264,7 @@ export default (props: P) => {
                   d="M15.817.113A.5.5 0 0 1 16 .5v14a.5.5 0 0 1-.402.49l-5 1a.5.5 0 0 1-.196 0L5.5 15.01l-4.902.98A.5.5 0 0 1 0 15.5v-14a.5.5 0 0 1 .402-.49l5-1a.5.5 0 0 1 .196 0L10.5.99l4.902-.98a.5.5 0 0 1 .415.103M10 1.91l-4-.8v12.98l4 .8zm1 12.98 4-.8V1.11l-4 .8zm-6-.8V1.11l-4 .8v12.98z"
                 />
               </svg>
-              {recordGroup ? '地図切り替え' : '記録地図を開く'}
+              {recordGroup ? '記録切り替え' : '記録を開く'}
             </button>
             <button className="styled-button flex" onClick={() => setIsNewGroupModalOpen(true)} style={{ borderTopLeftRadius: '0px', borderBottomLeftRadius: '0px' }}>
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
@@ -338,7 +343,7 @@ export default (props: P) => {
                     }}
                     positions={muniBorder.coordinates}
                   >
-                    <Popup closeOnClick>
+                    <Popup closeOnClick className="popupStyle">
                       <MapPopup
                         addr={(muniBorder.pref ?? '') + (muniBorder.shinkoukyoku ?? '') + (muniBorder.gun_seireishi ?? '')}
                         name={muniBorder.name}
@@ -369,33 +374,45 @@ export default (props: P) => {
           /* 铁道 */
           layers.railways &&
             railwaysData.map(railwayLines => {
-              return (
-                <Polyline
-                  pane="railways"
-                  pathOptions={railwayLines.isJR ? { weight: 1.5, color: 'darkred', opacity: 1, fillOpacity: 1 } : { weight: 1, color: 'blue', opacity: 1, fillOpacity: 1 }}
-                  positions={railwayLines.coordinates}
-                  interactive={false}
-                />
+              return railwayLines.isJR ? (
+                <>
+                  {/* 黑线 */}
+                  <Polyline pane="railways" positions={railwayLines.coordinates} pathOptions={{ weight: 1.5, color: 'black', opacity: 1, fillOpacity: 1, dashArray: '10,10' }} />
+                  {/* 白线 */}
+                  <Polyline pane="railways" positions={railwayLines.coordinates} pathOptions={{ weight: 1, color: 'white', opacity: 1, fillOpacity: 1, dashArray: '10,10', dashOffset: '10' }} />
+                </>
+              ) : (
+                <Polyline className="rail-line" pane="railways" positions={railwayLines.coordinates} pathOptions={{ weight: 1, color: 'darkred', opacity: 1, fillOpacity: 1 }} />
               );
             })
         }
         {
           /* 都道府县 */
           layers.pref &&
-            prefBorderData.map(prefBorder => {
+            prefBorderData.map((prefBorder: Prefecture) => {
               // 计算中心点
               const center = getBounds(prefBorder.coordinates);
               return (
-                <Polygon pane="pref" pathOptions={{ fillColor: '#ffffff', opacity: 1, fillOpacity: 0, weight: 0.7, color: 'black' }} positions={prefBorder.coordinates} interactive={false}>
-                  {currentZoom < 8 && layers.placename && (
+                <Polygon
+                  pane="pref"
+                  pathOptions={{
+                    fillColor: showTodofukenLevelColor ? getTodofukenFillColor(currentMapStyle, records, Number(prefBorder.id)) : '#ffffff',
+                    opacity: 1,
+                    fillOpacity: showTodofukenLevelColor ? (currentTileMap !== 'blank' ? 0.6 : 1) : 0,
+                    weight: 0.7,
+                    color: showTodofukenLevelColor ? getTodofukenForeColor(currentMapStyle, records, Number(prefBorder.id)) : 'black',
+                  }}
+                  positions={prefBorder.coordinates}
+                  interactive={false}
+                >
+                  {(showTodofukenLevelColor || (currentZoom < 8 && layers.placename)) && (
                     <Marker
                       pane="pref"
                       position={center as LatLngTuple}
                       icon={divIcon({
                         className: 'munilabels',
-                        html: `<span class="">${prefBorder.name}</span>`,
+                        html: `<p class="placeNameLabel">${prefBorder.name}</p>`,
                         iconSize: [60, 20],
-                        iconAnchor: [30, 10],
                       })}
                     />
                   )}

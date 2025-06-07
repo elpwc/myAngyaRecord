@@ -1,26 +1,44 @@
 .popup {
+	
+    width: fit-content;
 }
 
 .popuproute {
 	color: gray;
 }
 
+.popuptitleContainer{
+	padding: 5px 10px;
+	padding-right: 20px;
+	width: max-content;
+}
+
 .popuptitle {
 	font-size: 20px;
 	font-weight: bold;
+	display: flex;
+	flex-direction: row;
+	gap: 16px;
+	justify-content: space-between;
 }
 
 .popupbuttoncontainer {
 	display: flex;
-	flex-direction: row;
-	gap: 2px;
-	width: max-content;
+	flex-direction: column;
+	gap: 0px;
+	width: 100%;
 }
 
 .popupbutton {
-  border-width: 1px;
-  border-color: gray;
+  border-width: 0px;
+  border-color: rgb(255, 255, 255);
 	cursor: pointer;
   font-size: 15px;
-  padding: 2px 2px;
+  padding: 4px 2px;
+	width: 100%;
+	transition: all 0.1s;
+}
+
+.popupbutton:hover {
+	opacity: 0.8;
 }
