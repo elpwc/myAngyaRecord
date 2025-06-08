@@ -17,13 +17,17 @@ import moment from 'moment';
 import { isLogin } from '../../utils/userUtils';
 import { c_lat, c_lng, c_zoom } from '../../utils/cookies';
 import { LoginPanel } from '../../components/LoginPanel';
+import { useIsMobile } from '../../utils/hooks';
 
-interface P {}
+interface P {
+  openMobileAsideMenu: boolean;
+}
 
 export default (props: P) => {
   const params = useParams();
   const navigate = useNavigate();
   const mylocation = useLocation();
+  const isMobile = useIsMobile();
 
   const DEFAULT_LAT_LNG = [36.016142, 137.990904];
   const DEFAULT_ZOOM = 5;
@@ -209,7 +213,14 @@ export default (props: P) => {
 
   return (
     <div style={{ height: '100%', width: '100%', position: 'relative', display: 'flex' }}>
-      <aside style={{ boxShadow: '0px 0px 10px 0px rgb(136, 136, 136)', zIndex: 1145141919810 }}>
+      <aside
+        style={{
+          boxShadow: '0px 0px 10px 0px rgb(136, 136, 136)',
+          zIndex: 3500,
+          position: isMobile ? 'absolute' : 'unset',
+          display: (isMobile && props.openMobileAsideMenu) || !isMobile ? 'unset' : 'none',
+        }}
+      >
         <div>
           <div className="map-tiles-radio-group">
             {mapTiles.map(mapTile => (
@@ -248,7 +259,7 @@ export default (props: P) => {
         </div>
         {isLogin() ? (
           <div className="groupSwitchContainer">
-            <div style={{ width: '100%', padding: '4px' }}>
+            <div style={{ width: '100%', padding: '4px', backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
               {recordGroup && (
                 <>
                   <div style={{ display: 'flex', gap: '6px' }}>
@@ -312,6 +323,7 @@ export default (props: P) => {
           }}
         />
       </aside>
+
       <MapContainer
         center={[c_lat() ? Number(c_lat()) : DEFAULT_LAT_LNG[0], c_lng() ? Number(c_lng()) : DEFAULT_LAT_LNG[1]]}
         zoom={currentZoom}

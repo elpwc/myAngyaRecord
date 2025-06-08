@@ -70,8 +70,59 @@ header {
   padding: 4px 12px;
   border-radius: 4px;
   transition: background-color 0.2s;
+  width: max-content;
 }
 
 .rightMenu a:hover {
   background-color: rgba(255, 255, 255, 0.1);
+}
+
+header button {
+  color: white;
+  background-color: transparent;
+  border: none;
+  text-decoration: none;
+  font-size: 14px;
+  padding: 4px 12px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+header button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.header-menu-button {
+  color: white;
+  background-color: transparent;
+  border: none;
+  text-decoration: none;
+  font-size: 14px;
+  padding: 0;
+  margin: 0;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  width: max-content;
+}
+.header-menu-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.dropDownMenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #234285;
+  border: solid 1px white;
+  z-index: 5000;
+  min-width: 120px;
+}
+
+.dropDownMenu-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: #234285;
+  border: none;
+  padding: 8px 12px;
 }

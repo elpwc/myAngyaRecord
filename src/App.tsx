@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import { Navigate, Route, Routes } from 'react-router';
 import ErrorPage from './pages/ErrorPage';
@@ -12,12 +12,22 @@ import ResetPassword from './components/userSysCompo/ResetPassword';
 import Ranking from './pages/Ranking';
 
 function App() {
+  const [openMobileAsideMenu, setopenMobileAsideMenu] = useState(true);
   return (
     <div className="App">
       <Routes>
-        <Route path="" element={<Main />}>
+        <Route
+          path=""
+          element={
+            <Main
+              onMobileMenuClick={() => {
+                setopenMobileAsideMenu(!openMobileAsideMenu);
+              }}
+            />
+          }
+        >
           <Route index element={<Navigate to="/japan" replace />} />
-          <Route path="japan" element={<Japan />}></Route>
+          <Route path="japan" element={<Japan openMobileAsideMenu={openMobileAsideMenu} />}></Route>
           <Route path="numazu" element={<Numazu />}></Route>
 
           <Route path="ranking" element={<Ranking />}></Route>
