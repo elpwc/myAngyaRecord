@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Modal } from '../Modal';
-import { deleteRecordGroup, getRecordGroups, postRecordGroup } from '../../utils/serverUtils';
+import { deleteRecordGroup, getRecordGroups, patchRecordGroup, postRecordGroup } from '../../utils/serverUtils';
 import { MapsId } from '../../utils/map';
 import { RecordGroup } from '../../utils/types';
 import './modals.css';
 import moment from 'moment';
 import { DeleteGroupModal } from './DeleteGroupModal';
 import { NewGroupModal } from './NewGroupModal';
+import Toggle from '../Toggle';
 
 interface Props {
   show: boolean;
@@ -19,6 +20,8 @@ export const GroupListModal = ({ show, mapid, onClose, onSelect }: Props) => {
   const [recordGroups, setrecordGroups] = useState([]);
   const [showDeleteModal, setshowDeleteModal] = useState(false);
   const [showNewModal, setshowNewModal] = useState(false);
+  const [isPublicToggleDisable, setisPublicToggleDisable] = useState(false);
+  const [showNewModalToggleDisable, setshowNewModalToggleDisable] = useState(false);
 
   const refreshRecordGroups = () => {
     getRecordGroups(
@@ -70,11 +73,58 @@ export const GroupListModal = ({ show, mapid, onClose, onSelect }: Props) => {
               <div style={{ display: 'flex', gap: '4px' }}>
                 <div style={{ width: '100%' }}>
                   <p>{recordGroup.name}</p>
-                  <p>{recordGroup.desc.length === 0 ? '　' : recordGroup.desc}</p>
-                  <time style={{ color: 'gray', fontSize: '10px', display: 'flex', gap: '10px' }}>
-                    <span>{`作成 ${moment(recordGroup.create_date).format('YYYY/MM/DD HH:mm:ss')}`}</span>
-                    <span>{`最後更新 ${moment(recordGroup.update_date).format('YYYY/MM/DD HH:mm:ss')}`}</span>
-                  </time>
+                  <p style={{ fontSize: '12px', marginBottom: '5px' }}>{recordGroup.desc.length === 0 ? '　' : recordGroup.desc}</p>
+                  <div style={{ fontSize: '14px' }}>
+                    <label style={{ marginRight: '12px' }}>
+                      <Toggle
+                        disabled={isPublicToggleDisable}
+                        value={recordGroup.is_public}
+                        onChange={value => {
+                          setisPublicToggleDisable(true);
+                          patchRecordGroup(
+                            recordGroup.id,
+                            data => {
+                              refreshRecordGroups();
+                              setisPublicToggleDisable(false);
+                            },
+                            errormsg => {
+                              alert(errormsg);
+                              setisPublicToggleDisable(false);
+                            },
+                            { is_public: value }
+                          );
+                        }}
+                      />
+                      <span>ランキングに公開</span>
+                    </label>
+
+                    <label>
+                      <Toggle
+                        disabled={!recordGroup.is_public || showNewModalToggleDisable}
+                        value={recordGroup.show_lived_level}
+                        onChange={value => {
+                          setshowNewModalToggleDisable(true);
+                          patchRecordGroup(
+                            recordGroup.id,
+                            data => {
+                              refreshRecordGroups();
+                              setshowNewModalToggleDisable(false);
+                            },
+                            errormsg => {
+                              alert(errormsg);
+                              setshowNewModalToggleDisable(false);
+                            },
+                            { show_lived_level: value }
+                          );
+                        }}
+                      />
+                      <span style={{ color: recordGroup.is_public ? 'black' : 'lightgray' }}>公開の際は閲覧者に「居住」を「宿泊」様式で表示</span>
+                    </label>
+                    <time style={{ color: 'gray', fontSize: '10px', display: 'flex', gap: '10px' }}>
+                      <span>{`作成 ${moment(recordGroup.create_date).format('YYYY/MM/DD HH:mm:ss')}`}</span>
+                      <span>{`最後更新 ${moment(recordGroup.update_date).format('YYYY/MM/DD HH:mm:ss')}`}</span>
+                    </time>
+                  </div>
                 </div>
                 <button
                   className="singleIcon-button"
@@ -120,11 +170,13 @@ export const GroupListModal = ({ show, mapid, onClose, onSelect }: Props) => {
         onClose={() => {
           setshowNewModal(false);
         }}
-        onOk={(name: string, desc: string) => {
+        onOk={(name: string, desc: string, isPublic: boolean, showLivedLevel: boolean) => {
           postRecordGroup(
             mapid,
             name,
             desc,
+            isPublic,
+            showLivedLevel,
             (data: any) => {
               refreshRecordGroups();
               setshowNewModal(false);

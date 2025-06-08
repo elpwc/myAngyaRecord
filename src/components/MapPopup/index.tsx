@@ -2,6 +2,7 @@ import React from 'react';
 import { useEffect } from 'react';
 import './index.css';
 import { useMap } from 'react-leaflet';
+import { isLogin } from '../../utils/userUtils';
 
 interface P {
   addr: string;
@@ -43,24 +44,27 @@ export default ({ addr, name, onClick }: P) => {
           </a>
         </p>
       </div>
-
-      <div className="popupbuttoncontainer">
-        {values.map(value => {
-          return (
-            <button
-              key={value.name}
-              className="popupbutton"
-              onClick={() => {
-                onClick(value.value);
-                thisMap.closePopup();
-              }}
-              style={{ backgroundColor: mapStyles[currentMapStyle].bgcolor[5 - value.value], color: mapStyles[currentMapStyle].color[5 - value.value] }}
-            >
-              {value.name}
-            </button>
-          );
-        })}
-      </div>
+      {isLogin() ? (
+        <div className="popupbuttoncontainer">
+          {values.map(value => {
+            return (
+              <button
+                key={value.name}
+                className="popupbutton"
+                onClick={() => {
+                  onClick(value.value);
+                  thisMap.closePopup();
+                }}
+                style={{ backgroundColor: mapStyles[currentMapStyle].bgcolor[5 - value.value], color: mapStyles[currentMapStyle].color[5 - value.value] }}
+              >
+                {value.name}
+              </button>
+            );
+          })}
+        </div>
+      ) : (
+        <p style={{ width: '100%', textAlign: 'center', margin: '6px 0' }}>ログインして記録してください</p>
+      )}
     </div>
   );
 };

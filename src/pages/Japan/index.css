@@ -112,3 +112,27 @@
   margin: 0;
   width: fit-content !important;
 }
+
+.loginPanel {
+  width: 100%;
+}
+
+.loginPanel-linklist {
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.loginPanel-link {
+  text-decoration: none;
+  border: solid 1px gray;
+  border-radius: 4px;
+  padding: 4px 10px;
+  color: black;
+  background-color: white;
+  transition: all 0.1s;
+  width: max-content;
+}
+.loginPanel-link:hover {
+  background-color: rgb(221, 221, 221);
+}

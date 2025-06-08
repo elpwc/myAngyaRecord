@@ -16,6 +16,7 @@ import { Record, RecordGroup } from '../../utils/types';
 import moment from 'moment';
 import { isLogin } from '../../utils/userUtils';
 import { c_lat, c_lng, c_zoom } from '../../utils/cookies';
+import { LoginPanel } from '../../components/LoginPanel';
 
 interface P {}
 
@@ -276,7 +277,7 @@ export default (props: P) => {
             </button>
           </div>
         ) : (
-          <div></div>
+          <LoginPanel />
         )}
 
         {recordGroup && <MuniList muniBorderData={muniBorderData} records={records} currentMapStyle={currentMapStyle} />}
@@ -292,11 +293,13 @@ export default (props: P) => {
         <NewGroupModal
           show={isNewGroupModalOpen}
           onClose={() => setIsNewGroupModalOpen(false)}
-          onOk={(name: string, desc: string) => {
+          onOk={(name: string, desc: string, isPublic: boolean, showLivedLevel: boolean) => {
             postRecordGroup(
               thisMapId,
               name,
               desc,
+              isPublic,
+              showLivedLevel,
               (data: any) => {
                 setIsNewGroupModalOpen(false);
               },
