@@ -41,6 +41,31 @@ export const loginUser = async ({ email, password }: { email: string; password: 
   });
 };
 
+export const loginCurrentUser = async () => {
+  request<any>('/user/login.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: { email: c_userName(), password: c_pw() },
+  })
+    .then(e => {
+      const token = e.token;
+      const email = e.email;
+      const uid = e.uid;
+
+      c_token(token);
+      c_userName(email);
+      c_uid(uid);
+    })
+    .catch(e => {
+      console.log(e);
+      alert('login failed');
+
+      logout();
+    });
+};
+
 export const createUser = async ({ email, name, password, token }: { email: string; name: string; password: string; token: string }) => {
   return request<any>('/user/user.php', {
     method: 'POST',

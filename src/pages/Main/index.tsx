@@ -2,7 +2,7 @@ import React from 'react';
 import { useEffect } from 'react';
 import { Link, Outlet, useLocation, useNavigate, useParams } from 'react-router';
 import './index.css';
-import { isLogin, logout } from '../../utils/userUtils';
+import { isLogin, loginCurrentUser, logout } from '../../utils/userUtils';
 import { c_userName } from '../../utils/cookies';
 
 interface P {}
@@ -24,6 +24,9 @@ export default (props: P) => {
 
   useEffect(() => {
     // document.title = '';
+    if (isLogin()) {
+      loginCurrentUser();
+    }
   }, []);
 
   return (
@@ -56,7 +59,8 @@ export default (props: P) => {
             {isLogin() ? (
               <>
                 <Link to="/user">{c_userName()}</Link>
-                <Link to='/'
+                <Link
+                  to="/"
                   onClick={() => {
                     logout();
                   }}
