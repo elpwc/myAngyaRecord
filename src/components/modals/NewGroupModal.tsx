@@ -42,7 +42,7 @@ export const NewGroupModal = ({ show, isEdit = false, groupData, onClose, onOk }
           onOk?.(name, desc, isPublic, showLivedLevel);
         }
       }}
-      title={isEdit ? name + ' を修正' : '新規記録地図'}
+      title={isEdit ? name + ' を編集' : '新規記録地図'}
       showOkButton
       showCancelButton
     >
