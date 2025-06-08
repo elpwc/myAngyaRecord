@@ -1,19 +1,29 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Modal } from '../Modal';
 import Toggle from '../Toggle';
+import { RecordGroup } from '../../utils/types';
 
 interface Props {
   show: boolean;
+  isEdit?: boolean;
+  groupData?: RecordGroup;
   onClose: () => void;
   onOk?: (name: string, desc: string, isPublic: boolean, showLivedLevel: boolean) => void;
 }
 
-export const NewGroupModal = ({ show, onClose, onOk }: Props) => {
-  const [name, setname] = useState('');
-  const [desc, setdesc] = useState('');
+export const NewGroupModal = ({ show, isEdit = false, groupData, onClose, onOk }: Props) => {
+  const [name, setname] = useState(isEdit ? groupData?.name ?? '' : '');
+  const [desc, setdesc] = useState(isEdit ? groupData?.desc ?? '' : '');
   const [tips, setTips] = useState('');
-  const [isPublic, setisPublic] = useState(true);
-  const [showLivedLevel, setshowLivedLevel] = useState(false);
+  const [isPublic, setisPublic] = useState(isEdit ? groupData?.is_public ?? true : true);
+  const [showLivedLevel, setshowLivedLevel] = useState(isEdit ? groupData?.show_lived_level ?? false : false);
+
+  useEffect(() => {
+    setname(isEdit ? groupData?.name ?? '' : '');
+    setdesc(isEdit ? groupData?.desc ?? '' : '');
+    setisPublic(isEdit ? groupData?.is_public ?? true : true);
+    setshowLivedLevel(isEdit ? groupData?.show_lived_level ?? false : false);
+  }, [groupData]);
 
   return (
     <Modal
@@ -32,7 +42,7 @@ export const NewGroupModal = ({ show, onClose, onOk }: Props) => {
           onOk?.(name, desc, isPublic, showLivedLevel);
         }
       }}
-      title="新規記録地図"
+      title={isEdit ? name + ' を修正' : '新規記録地図'}
       showOkButton
       showCancelButton
     >
