@@ -146,15 +146,17 @@ export default (props: P) => {
     const map = useMap();
 
     useEffect(() => {
-      map.createPane('muni');
-      map.createPane('pref');
-      map.createPane('subpref');
-      map.createPane('railways');
-      map.getPane('muni')!.style.zIndex = '650';
-      map.getPane('pref')!.style.zIndex = '652';
-      map.getPane('subpref')!.style.zIndex = '653';
-      map.getPane('railways')!.style.zIndex = '654';
-    }, [map]);
+      if (map.getPane('muni') === undefined) {
+        map.createPane('muni');
+        map.createPane('pref');
+        map.createPane('subpref');
+        map.createPane('railways');
+        map.getPane('muni')!.style.zIndex = '650';
+        map.getPane('pref')!.style.zIndex = '652';
+        map.getPane('subpref')!.style.zIndex = '653';
+        map.getPane('railways')!.style.zIndex = '654';
+      }
+    }, []);
 
     return null;
   };
