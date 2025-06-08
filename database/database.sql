@@ -7,6 +7,8 @@ create table if not exists `recordgroup`(
     `desc` VARCHAR(300) NOT NULL,
     `mapid` VARCHAR(32) NOT NULL,
     `is_deleted` BOOLEAN DEFAULT FALSE,
+    `is_public` BOOLEAN DEFAULT FALSE,
+    `show_lived_level` BOOLEAN DEFAULT TRUE,
     `create_date` DATETIME DEFAULT CURRENT_TIMESTAMP,
     `update_date` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (`uid`) REFERENCES `user`(`id`)
