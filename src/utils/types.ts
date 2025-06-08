@@ -23,6 +23,8 @@ export interface RecordGroup {
   is_deleted: boolean;
   create_date: string;
   update_date: string;
+  is_public: boolean;
+  show_lived_level: boolean;
 }
 
 export interface Record {

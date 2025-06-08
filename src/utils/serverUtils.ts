@@ -62,10 +62,35 @@ export const getRecordGroups = async (mapid: string, onOK: (data: any) => void, 
     });
 };
 
-export const postRecordGroup = async (mapid: string, name: string, desc: string, onOK: (data: any) => void, onError: (msg: string) => void) => {
+export const postRecordGroup = async (mapid: string, name: string, desc: string, isPublic: boolean, showLivedLevel: boolean, onOK: (data: any) => void, onError: (msg: string) => void) => {
   return request(`/recordgroup.php`, {
     method: 'POST',
-    data: { mapid, uid: c_uid(), name, desc },
+    data: { mapid, uid: c_uid(), name, desc, is_public: isPublic, show_lived_level: showLivedLevel },
+  })
+    .then(e => {
+      switch (e.res) {
+        case 'ok':
+          onOK(e.groups);
+          break;
+        default:
+          onError(e.res);
+          break;
+      }
+    })
+    .catch(e => {
+      console.log(e);
+    });
+};
+
+export const patchRecordGroup = async (
+  id: number,
+  onOK: (data: any) => void,
+  onError: (msg: string) => void,
+  data: { name?: string; desc?: string; is_public?: boolean; show_lived_level?: boolean }
+) => {
+  return request(`/recordgroup.php`, {
+    method: 'PATCH',
+    data: { ...data, id, uid: c_uid() },
   })
     .then(e => {
       switch (e.res) {

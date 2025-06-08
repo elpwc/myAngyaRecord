@@ -10,7 +10,7 @@ $request_type = $_SERVER['REQUEST_METHOD'];
 $json = file_get_contents('php://input');
 $data = json_decode($json);
 
-$sqllink = @mysqli_connect(HOST, USER, PASS, DBNAME) or die('数据库连接出错');
+$sqllink = @mysqli_connect(HOST, USER, PASS, DBNAME) or die('Link to database failed');
 mysqli_set_charset($sqllink, 'utf8mb4');
 
 switch ($request_type) {
