@@ -56,6 +56,7 @@ export default (props: P) => {
           </menu>
 
           <div className="rightMenu">
+            <Link to="/ranking">ランキング</Link>
             {isLogin() ? (
               <>
                 <Link to="/user">{c_userName()}</Link>

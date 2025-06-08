@@ -9,6 +9,7 @@ import Login from './components/userSysCompo/Login';
 import EmailVerify from './components/userSysCompo/EmailVerify';
 import Register from './components/userSysCompo/Register';
 import ResetPassword from './components/userSysCompo/ResetPassword';
+import Ranking from './pages/Ranking';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="japan" element={<Japan />}></Route>
           <Route path="numazu" element={<Numazu />}></Route>
 
+          <Route path="ranking" element={<Ranking />}></Route>
 
           <Route path="login" element={<Login />}></Route>
           <Route path="emailverify" element={<EmailVerify />}></Route>
