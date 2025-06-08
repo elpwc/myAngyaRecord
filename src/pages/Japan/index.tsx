@@ -152,10 +152,12 @@ export default (props: P) => {
         map.createPane('pref');
         map.createPane('subpref');
         map.createPane('railways');
-        map.getPane('muni')!.style.zIndex = '-1145141919810';
-        map.getPane('pref')!.style.zIndex = '-1145141919809';
-        map.getPane('subpref')!.style.zIndex = '-1145141919808';
-        map.getPane('railways')!.style.zIndex = '-1145141919807';
+        map.createPane('muniNames');
+        map.getPane('muni')!.style.zIndex = '-114514810';
+        map.getPane('pref')!.style.zIndex = '-114514809';
+        map.getPane('subpref')!.style.zIndex = '-114514808';
+        map.getPane('railways')!.style.zIndex = '-114514807';
+        map.getPane('muniNames')!.style.zIndex = '-114514800';
       }
     }, []);
 
@@ -191,7 +193,7 @@ export default (props: P) => {
 
       return (
         <Marker
-          pane="muni"
+          pane="muniNames"
           position={center}
           icon={divIcon({
             className: 'munilabels',
