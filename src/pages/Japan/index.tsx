@@ -152,10 +152,10 @@ export default (props: P) => {
         map.createPane('pref');
         map.createPane('subpref');
         map.createPane('railways');
-        map.getPane('muni')!.style.zIndex = '650';
-        map.getPane('pref')!.style.zIndex = '652';
-        map.getPane('subpref')!.style.zIndex = '653';
-        map.getPane('railways')!.style.zIndex = '654';
+        map.getPane('muni')!.style.zIndex = '-1145141919810';
+        map.getPane('pref')!.style.zIndex = '-1145141919809';
+        map.getPane('subpref')!.style.zIndex = '-1145141919808';
+        map.getPane('railways')!.style.zIndex = '-1145141919807';
       }
     }, []);
 
