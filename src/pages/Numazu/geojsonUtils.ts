@@ -1,4 +1,4 @@
-import prefJson from '../../geojson/japan/numazu.geojson';
+import prefJson from '../../geojson/numazu/numazu.geojson';
 import { Prefecture } from '../../utils/addr';
 import { getGeoJsonData } from '../../utils/map';
 
