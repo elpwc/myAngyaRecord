@@ -152,16 +152,18 @@ export default (props: P) => {
 
     useEffect(() => {
       if (map.getPane('muni') === undefined) {
+        map.createPane('base');
         map.createPane('muni');
         map.createPane('pref');
         map.createPane('subpref');
         map.createPane('railways');
         map.createPane('muniNames');
-        map.getPane('muni')!.style.zIndex = '-114514810';
-        map.getPane('pref')!.style.zIndex = '-114514809';
-        map.getPane('subpref')!.style.zIndex = '-114514808';
-        map.getPane('railways')!.style.zIndex = '-114514807';
-        map.getPane('muniNames')!.style.zIndex = '-114514800';
+        map.getPane('base')!.style.zIndex = '90';
+        map.getPane('muni')!.style.zIndex = '95';
+        map.getPane('pref')!.style.zIndex = '96';
+        map.getPane('subpref')!.style.zIndex = '97';
+        map.getPane('railways')!.style.zIndex = '98';
+        map.getPane('muniNames')!.style.zIndex = '99';
       }
     }, []);
 
@@ -337,6 +339,7 @@ export default (props: P) => {
         <ScaleControl position="bottomleft" />
         <AttributionControl position="bottomright" prefix={'Dev by <a href="https://github.com/elpwc" target="_blank">@elpwc</a>'} />
         <TileLayer
+          pane="base"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url={mapTiles.find(tile => tile.id === currentTileMap)?.url || mapTiles[0].url}
         />
