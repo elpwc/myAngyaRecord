@@ -1,9 +1,9 @@
 .styled-button {
-  border: solid 1px #e0e0e0;
+  border: solid 1px #f1f1f1;
   border-radius: 4px;
   background-color: white;
   padding: 4px 8px;
-  box-shadow: 0 0 2px 0px #dddddd;
+  box-shadow: 0 0 1px 0px #dddddd;
   transition: all 0.1s;
 }
 
