@@ -74,7 +74,7 @@ export const GroupListModal = ({ show, mapid, onClose, onSelect }: Props) => {
                 <div style={{ width: '100%' }}>
                   <p>{recordGroup.name}</p>
                   <p style={{ fontSize: '12px', marginBottom: '5px' }}>{recordGroup.desc.length === 0 ? '　' : recordGroup.desc}</p>
-                  <div style={{ fontSize: '14px' }}>
+                  <div style={{ fontSize: '14px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
                     <label style={{ marginRight: '12px' }}>
                       <Toggle
                         disabled={isPublicToggleDisable}
