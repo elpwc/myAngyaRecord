@@ -77,6 +77,8 @@ export const GroupListModal = ({ show, mapid, onClose, onSelect }: Props) => {
                   <div style={{ fontSize: '14px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
                     <label style={{ marginRight: '12px' }}>
                       <Toggle
+                        size={0.8}
+                        bgColor="#234285"
                         disabled={isPublicToggleDisable}
                         value={recordGroup.is_public}
                         onChange={value => {
@@ -100,6 +102,8 @@ export const GroupListModal = ({ show, mapid, onClose, onSelect }: Props) => {
 
                     <label>
                       <Toggle
+                        size={0.8}
+                        bgColor="#234285"
                         disabled={!recordGroup.is_public || showNewModalToggleDisable}
                         value={recordGroup.show_lived_level}
                         onChange={value => {

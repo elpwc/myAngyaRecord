@@ -67,6 +67,7 @@ export const NewGroupModal = ({ show, isEdit = false, groupData, onClose, onOk }
         />
         <label>
           <Toggle
+            bgColor="#234285"
             value={isPublic}
             onChange={e => {
               setisPublic(e);
@@ -77,6 +78,7 @@ export const NewGroupModal = ({ show, isEdit = false, groupData, onClose, onOk }
 
         <label>
           <Toggle
+            bgColor="#234285"
             disabled={!isPublic}
             value={showLivedLevel}
             onChange={e => {
