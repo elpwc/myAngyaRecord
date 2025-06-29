@@ -8,23 +8,26 @@ type ToggleSwitchProps = {
   className?: string;
   size?: number;
   style?: React.CSSProperties;
+  bgColor?: string;
 };
 
 const WIDTH = 18;
+const BACKGROUND_COLOR = '#4a9bde';
 
-const Toggle: React.FC<ToggleSwitchProps> = ({ value, onChange, disabled = false, className = '', size = 1, style = {} }) => {
+const Toggle: React.FC<ToggleSwitchProps> = ({ value, onChange, disabled = false, className = '', size = 1, style = {}, bgColor = BACKGROUND_COLOR }) => {
   return (
     <label
       className={`toggle-switch ${disabled ? 'disabled' : ''} ${className}`}
       style={{
         ...style,
-        ['--width' as any]: `${WIDTH * 2 * size}px`,
-        ['--height' as any]: `${(WIDTH + 2) * size}px`,
-        ['--translateX' as any]: `${(WIDTH - 2) * size}px`,
-        ['--buttonWidth' as any]: `${WIDTH * size}px`,
-        ['--buttonHeight' as any]: `${WIDTH * size}px`,
-        ['--buttonLeft' as any]: `${1 * size}px`,
-        ['--buttonTop' as any]: `${1 * size}px`,
+        ['--width' as string]: `${WIDTH * 2 * size}px`,
+        ['--height' as string]: `${(WIDTH + 2) * size}px`,
+        ['--translateX' as string]: `${(WIDTH - 2) * size}px`,
+        ['--buttonWidth' as string]: `${WIDTH * size}px`,
+        ['--buttonHeight' as string]: `${WIDTH * size}px`,
+        ['--buttonLeft' as string]: `${1 * size}px`,
+        ['--buttonTop' as string]: `${1 * size}px`,
+        ['--bgColor' as string]: bgColor,
       }}
       onClick={e => {
         e.stopPropagation();
