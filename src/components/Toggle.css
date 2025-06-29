@@ -1,8 +1,8 @@
 .toggle-switch {
   position: relative;
   display: inline-block;
-  width: 36px;
-  height: 20px;
+  width: var(--width, 36px);
+  height: var(--height, 20px);
   cursor: pointer;
   margin-right: 4px;
 }
@@ -22,12 +22,12 @@
 }
 
 .toggle-switch .slider::before {
-  content: "";
+  content: '';
   position: absolute;
-  left: 1px;
-  top: 1px;
-  width: 18px;
-  height: 18px;
+  left: var(--buttonLeft, 1px);
+  top: var(--buttonTop, 1px);
+  width: var(--buttonWidth, 18px);
+  height: var(--buttonHeight, 18px);
   background-color: white;
   border-radius: 50%;
   transition: transform 0.1s;
@@ -39,7 +39,7 @@
 }
 
 .toggle-switch input:checked + .slider::before {
-  transform: translateX(16px);
+  transform: translateX(var(--translateX, 18px));
 }
 
 .toggle-switch.disabled {
