@@ -3,7 +3,9 @@ import { useEffect } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router';
 import './index.css';
 
-interface P {}
+interface P {
+  map: string;
+}
 
 export default (props: P) => {
   const params = useParams();
@@ -16,7 +18,5 @@ export default (props: P) => {
     // document.title = '';
   }, []);
 
-  return <>
-  
-  </>;
+  return <></>;
 };
