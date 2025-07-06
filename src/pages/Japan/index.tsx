@@ -444,7 +444,7 @@ export default (props: P) => {
                 >
                   {(showTodofukenLevelColor || (currentZoom < 8 && layers.placename)) && (
                     <Marker
-                      pane="pref"
+                      pane="muniNames"
                       position={center as LatLngTuple}
                       icon={divIcon({
                         className: 'munilabels',
@@ -478,7 +478,7 @@ export default (props: P) => {
                 >
                   {((showTodofukenLevelColor && showSubprefectureLevelColor) || (currentZoom < 8 && layers.placename)) && (
                     <Marker
-                      pane="subpref"
+                      pane="muniNames"
                       position={center as LatLngTuple}
                       icon={divIcon({
                         className: 'munilabels',
