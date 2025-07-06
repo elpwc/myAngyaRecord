@@ -1,6 +1,6 @@
 import { mapTiles } from '../utils/map';
 
-export const MapTilesSwitcher = ({ currentTileMap, onChange }: { currentTileMap: string; onChange: (e: React.ChangeEvent<HTMLInputElement>) => void }) => {
+export const MapBackgroundTilesSwitcher = ({ currentTileMap, onChange }: { currentTileMap: string; onChange: (e: React.ChangeEvent<HTMLInputElement>) => void }) => {
   return (
     <div className="map-tiles-radio-group">
       {mapTiles.map(mapTile => (
