@@ -29,6 +29,7 @@ import { isLogin } from '../../utils/userUtils';
 import { c_lat, c_lng, c_zoom } from '../../utils/cookies';
 import { LoginPanel } from '../../components/LoginPanel';
 import { useIsMobile } from '../../utils/hooks';
+import { MapTilesSwitcher } from '../../components/MapTilesSwitcher';
 
 interface P {
   openMobileAsideMenu: boolean;
@@ -123,7 +124,7 @@ export default (props: P) => {
     refreshRecords();
   }, [recordGroup?.id]);
 
-  const handleMapStyleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleMapTileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCurrentTileMap(e.target.value);
   };
 
@@ -235,14 +236,7 @@ export default (props: P) => {
         }}
       >
         <div>
-          <div className="map-tiles-radio-group">
-            {mapTiles.map(mapTile => (
-              <label key={mapTile.id}>
-                <input type="radio" value={mapTile.id} checked={currentTileMap === mapTile.id} onChange={handleMapStyleChange} />
-                <span>{mapTile.name}</span>
-              </label>
-            ))}
-          </div>
+          <MapTilesSwitcher currentTileMap={currentTileMap} onChange={handleMapTileChange} />
           <div className="map-tiles-checkbox-group">
             <label>
               <input type="checkbox" name="pref" checked={layers.pref} onChange={handleLayerChange} />
