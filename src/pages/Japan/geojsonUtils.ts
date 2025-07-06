@@ -92,23 +92,32 @@ export const getMunicipalitiesData = async (): Promise<
 };
 
 export const getRailwaysData = async () => {
+  const getRailwayCoordinates = (geometry: any) => {
+    const coordinates = geometry.coordinates;
+    switch (geometry.type) {
+      case 'LineString':
+        return coordinates.map((point: [number, number]) => {
+          return [point[1], point[0]];
+        });
+      case 'MultiLineString':
+        return coordinates.map((line: [number, number][]) => {
+          return line.map((point: [number, number]) => {
+            return [point[1], point[0]];
+          });
+        });
+      default:
+        return [];
+    }
+  };
+
   const geojsondata = await getGeoJsonData(railwaysJson);
   return geojsondata.features.map((railwayCompanyFeature: any) => {
     return {
-      companyName: railwayCompanyFeature.properties.name,
-      isJR: railwayCompanyFeature.properties.name.includes('旅客'),
-      coordinates: railwayCompanyFeature.geometry.coordinates.map((area: any) => {
-        if (typeof area[0][0] === 'number') {
-          // 只有一个polygon
-          return area.map((point: any) => {
-            return [point[1], point[0]];
-          });
-        }
-        // 有多个polygon
-        return area[0].map((point: any) => {
-          return [point[1], point[0]];
-        });
-      }),
+      railwayClassCd: railwayCompanyFeature.properties.r,
+      institutionTypeCd: railwayCompanyFeature.properties.t,
+      lineName: railwayCompanyFeature.properties.l,
+      companyName: railwayCompanyFeature.properties.c,
+      coordinates: getRailwayCoordinates(railwayCompanyFeature.geometry),
     } as Railway;
   });
 };

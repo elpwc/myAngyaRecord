@@ -5,7 +5,7 @@ import '../../../node_modules/leaflet/dist/leaflet.css';
 import { AttributionControl, MapContainer, Marker, Polygon, Polyline, Popup, ScaleControl, TileLayer, Tooltip, useMap, useMapEvents } from 'react-leaflet';
 import { chihous_data, getBounds, getLabelPosition, MapsId, mapTiles } from '../../utils/map';
 import { getMunicipalitiesData, getPrefecture_ShinkoukyokuData, getRailwaysData } from './geojsonUtils';
-import { Municipality, Prefecture, Railway } from '../../utils/addr';
+import { InstitutionTypeCd, Municipality, Prefecture, Railway, RailwayClassCd } from '../../utils/addr';
 import MapPopup from '../../components/MapPopup';
 import L, { divIcon, LatLngTuple } from 'leaflet';
 import {
@@ -407,12 +407,16 @@ export default (props: P) => {
           /* 铁道 */
           layers.railways &&
             railwaysData.map(railwayLines => {
-              return railwayLines.isJR ? (
+              return railwayLines.railwayClassCd === RailwayClassCd.NormalRailwayJR ? (
                 <>
-                  {/* 黑线 */}
-                  <Polyline pane="railways" positions={railwayLines.coordinates} pathOptions={{ weight: 1.5, color: 'black', opacity: 1, fillOpacity: 1, dashArray: '10,10' }} />
+                  {/* 铁道底色 */}
+                  <Polyline
+                    pane="railways"
+                    positions={railwayLines.coordinates}
+                    pathOptions={{ weight: 3, color: railwayLines.institutionTypeCd === InstitutionTypeCd.JRShinkansen ? '#037771' : '#4f4f4f', opacity: 1, fillOpacity: 1 }}
+                  />
                   {/* 白线 */}
-                  <Polyline pane="railways" positions={railwayLines.coordinates} pathOptions={{ weight: 1, color: 'white', opacity: 1, fillOpacity: 1, dashArray: '10,10', dashOffset: '10' }} />
+                  <Polyline pane="railways" positions={railwayLines.coordinates} pathOptions={{ weight: 1.5, color: 'white', opacity: 1, fillOpacity: 1, dashArray: '10,10', dashOffset: '10' }} />
                 </>
               ) : (
                 <Polyline className="rail-line" pane="railways" positions={railwayLines.coordinates} pathOptions={{ weight: 1, color: 'darkred', opacity: 1, fillOpacity: 1 }} />
