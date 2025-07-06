@@ -148,7 +148,7 @@ export const getForecolor = (mapStyle: number, records: Record[], admin_id: stri
   return mapStyles[mapStyle].color[records[res].level];
 };
 
-export const getTodofukenFillColor = (mapStyle: number, records: Record[], pref_id: number) => {
+export const getTodofukenFillColor = (mapStyle: number, records: Record[], pref_id: string) => {
   let maxRecordType = 0;
   for (let i = 0; i < records.length; i++) {
     if (getPrefIdOfMuniById(records[i].admin_id) === pref_id) {
@@ -164,7 +164,7 @@ export const getTodofukenFillColor = (mapStyle: number, records: Record[], pref_
   return mapStyles[mapStyle].bgcolor[maxRecordType];
 };
 
-export const getTodofukenForeColor = (mapStyle: number, records: Record[], pref_id: number) => {
+export const getTodofukenForeColor = (mapStyle: number, records: Record[], pref_id: string) => {
   let maxRecordType = 0;
   for (let i = 0; i < records.length; i++) {
     if (getPrefIdOfMuniById(records[i].admin_id) === pref_id) {

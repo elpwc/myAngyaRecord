@@ -429,11 +429,11 @@ export default (props: P) => {
                 <Polygon
                   pane="pref"
                   pathOptions={{
-                    fillColor: showTodofukenLevelColor ? getTodofukenFillColor(currentMapStyle, records, Number(prefBorder.id)) : '#ffffff',
+                    fillColor: showTodofukenLevelColor ? getTodofukenFillColor(currentMapStyle, records, prefBorder.id) : '#ffffff',
                     opacity: 1,
                     fillOpacity: showTodofukenLevelColor ? (currentTileMap !== 'blank' ? 0.6 : 1) : 0,
                     weight: 0.7,
-                    color: showTodofukenLevelColor ? getTodofukenForeColor(currentMapStyle, records, Number(prefBorder.id)) : 'black',
+                    color: showTodofukenLevelColor ? getTodofukenForeColor(currentMapStyle, records, prefBorder.id) : 'black',
                   }}
                   positions={prefBorder.coordinates}
                   interactive={false}
