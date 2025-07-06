@@ -1,5 +1,5 @@
 import prefJson from '../../geojson/japan/prefectures.geojson';
-import shinkoukyokuJson from '../../geojson/japan/hokkaido-branch.geojson';
+import shinkoukyokuJson from '../../geojson/japan/hokkaido-subpref.geojson';
 import railwaysJson from '../../geojson/japan/railways.geojson';
 import { Municipality, Prefecture, Railway } from '../../utils/addr';
 import { allPrefJsons } from './geojsonReader';
@@ -36,7 +36,12 @@ export const getPrefecture_ShinkoukyokuData = async (shinkoukyoku: boolean = fal
  * 获取市区町村数据
  * @returns any
  */
-export const getMunicipalitiesData = async () => {
+export const getMunicipalitiesData = async (): Promise<
+  {
+    prefecture: string;
+    municipalities: Municipality[];
+  }[]
+> => {
   return allPrefJsons.map(prefjsondata => {
     return {
       prefecture: prefjsondata[0],
@@ -164,4 +169,26 @@ export const getPrefIdOfMuniById = (muniId: string): number => {
 
 export const getPrefNameOfMuniById = (muniId: string): string => {
   return TODOFUKEN_LIST[getPrefIdOfMuniById(muniId)];
+};
+
+export const getSubPrefNameOfMuniById = (
+  munidata: {
+    prefecture: string;
+    municipalities: Municipality[];
+  }[],
+  muniId: string
+): string => {
+  const resMuni = munidata
+    .find(pref => {
+      return pref.prefecture === '北海道';
+    })!
+    .municipalities.find((muni: Municipality) => {
+      return muni.id === muniId;
+    });
+
+  if (resMuni?.shinkoukyoku) {
+    return resMuni.shinkoukyoku;
+  }
+
+  return '';
 };

@@ -8,7 +8,18 @@ import { getMunicipalitiesData, getPrefecture_ShinkoukyokuData, getRailwaysData 
 import { Municipality, Prefecture, Railway } from '../../utils/addr';
 import MapPopup from '../../components/MapPopup';
 import L, { divIcon, LatLngTuple } from 'leaflet';
-import { getFillcolor, getForecolor, getRecordGroups, getRecords, getTodofukenFillColor, getTodofukenForeColor, postRecord, postRecordGroup } from '../../utils/serverUtils';
+import {
+  getFillcolor,
+  getForecolor,
+  getRecordGroups,
+  getRecords,
+  getShinkoukyokuFillColor,
+  getShinkoukyokuForeColor,
+  getTodofukenFillColor,
+  getTodofukenForeColor,
+  postRecord,
+  postRecordGroup,
+} from '../../utils/serverUtils';
 import MuniList from './MuniList';
 import { NewGroupModal } from '../../components/modals/NewGroupModal';
 import { GroupListModal } from '../../components/modals/GroupListModal';
@@ -449,16 +460,26 @@ export default (props: P) => {
               // 计算中心点
               const center = getBounds(shinkouBorder.coordinates);
               return (
-                <Polygon pane="subpref" pathOptions={{ fillColor: '#ffffff', opacity: 1, fillOpacity: 0, weight: 0.7, color: 'black' }} positions={shinkouBorder.coordinates} interactive={false}>
-                  {currentZoom < 8 && layers.placename && (
+                <Polygon
+                  pane="subpref"
+                  pathOptions={{
+                    fillColor: showTodofukenLevelColor && showSubprefectureLevelColor ? getShinkoukyokuFillColor(currentMapStyle, records, muniBorderData, shinkouBorder.name) : '#ffffff',
+                    opacity: 1,
+                    fillOpacity: showTodofukenLevelColor && showSubprefectureLevelColor ? (currentTileMap !== 'blank' ? 0.6 : 1) : 0,
+                    weight: 0.7,
+                    color: showTodofukenLevelColor && showSubprefectureLevelColor ? getShinkoukyokuForeColor(currentMapStyle, records, muniBorderData, shinkouBorder.name) : 'black',
+                  }}
+                  positions={shinkouBorder.coordinates}
+                  interactive={false}
+                >
+                  {((showTodofukenLevelColor && showSubprefectureLevelColor) || (currentZoom < 8 && layers.placename)) && (
                     <Marker
                       pane="subpref"
                       position={center as LatLngTuple}
                       icon={divIcon({
                         className: 'munilabels',
-                        html: `<span class="">${shinkouBorder.name}</span>`,
+                        html: `<span class="placeNameLabel">${shinkouBorder.name}</span>`,
                         iconSize: [60, 20],
-                        iconAnchor: [30, 10],
                       })}
                     />
                   )}
