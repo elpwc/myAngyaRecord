@@ -44,6 +44,7 @@ export const MapInstance = ({
         setcurrentLatLng([map.getCenter().lat, map.getCenter().lng]);
         c_lat(currentLatLng[0].toString());
         c_lng(currentLatLng[1].toString());
+        //console.log([map.getCenter().lat, map.getCenter().lng]);
       },
     });
     return null;

@@ -28,8 +28,8 @@ export default (props: P) => {
   const mylocation = useLocation();
   const isMobile = useIsMobile();
 
-  const DEFAULT_LAT_LNG: [number, number] = [36.016142, 137.990904];
-  const DEFAULT_ZOOM = 5;
+  const DEFAULT_LAT_LNG: [number, number] = [35.07834157237541, 138.83469834814696];
+  const DEFAULT_ZOOM = 12;
 
   // let currentId: string = params.id as string;
   const [currentBackgroundTileMap, setcurrentBackgroundTileMap] = useState('blank');
