@@ -126,6 +126,25 @@ export const deleteRecordGroup = async (id: number, onOK: (data: any) => void, o
     });
 };
 
+export const getRanking = async (mapid: string, page: number, amountPerPage: number, onOK: (data: any) => void, onError: (msg: string) => void) => {
+  return request(`/ranking.php?mapid=${mapid}&page=${page}&amount=${amountPerPage}`, {
+    method: 'GET',
+  })
+    .then(e => {
+      switch (e.res) {
+        case 'ok':
+          onOK(e.ranking);
+          break;
+        default:
+          onError(e);
+          break;
+      }
+    })
+    .catch(e => {
+      console.log(e);
+    });
+};
+
 export const getFillcolor = (mapStyle: number, records: Record[], admin_id: string) => {
   const res = records.findIndex(record => {
     return record.admin_id === admin_id;

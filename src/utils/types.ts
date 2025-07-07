@@ -1,3 +1,5 @@
+import { MapsId } from './map';
+
 export type UserInfo = { name: string | undefined; token: string | undefined };
 
 export interface User {
@@ -19,7 +21,7 @@ export interface RecordGroup {
   uid: number;
   name: string;
   desc: string;
-  mapid: string;
+  mapid: MapsId;
   is_deleted: boolean;
   create_date: string;
   update_date: string;
@@ -37,4 +39,9 @@ export interface Record {
   is_deleted: boolean;
   create_date: string;
   update_date: string;
+}
+
+export interface Ranking extends RecordGroup {
+  username: string;
+  ranking: number;
 }
