@@ -6,6 +6,7 @@ import { mapTiles } from '../utils/map';
 export const MapInstance = ({
   defaultLatLng,
   defaultZoom,
+  backgroundTile,
   panes,
   onZoom,
   onMove,
@@ -13,14 +14,13 @@ export const MapInstance = ({
 }: {
   defaultLatLng: [number, number];
   defaultZoom: number;
+  backgroundTile: string;
   panes: string[];
   onZoom: (zoom: number) => void;
   onMove: (latlng: [number, number]) => void;
   tileList: JSX.Element;
 }) => {
   const [currentZoom, setCurrentZoom] = useState(c_zoom() ? Number(c_zoom()) : defaultZoom);
-
-  const [currentTileMap, setCurrentTileMap] = useState('blank');
   const [currentLatLng, setcurrentLatLng] = useState(defaultLatLng);
   const [currentMapStyle, setcurrentMapStyle] = useState(2);
 
@@ -30,7 +30,7 @@ export const MapInstance = ({
         onZoom(map.getZoom());
         c_zoom(map.getZoom().toString());
         setCurrentZoom(map.getZoom());
-        console.log(map.getZoom());
+        //console.log(map.getZoom());
       },
     });
     return null;
@@ -85,7 +85,7 @@ export const MapInstance = ({
       <TileLayer
         pane="base"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url={mapTiles.find(tile => tile.id === currentTileMap)?.url || mapTiles[0].url}
+        url={mapTiles.find(tile => tile.id === backgroundTile)?.url || mapTiles[0].url}
       />
       {tileList}
     </MapContainer>

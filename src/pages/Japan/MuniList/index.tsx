@@ -1,11 +1,11 @@
 import { memo, useState } from 'react';
 import { chihous_data } from '../../../utils/map';
-import { Municipality } from '../../../utils/addr';
 import './index.css';
 import { Record } from '../../../utils/types';
 import { getFillcolor, getForecolor } from '../../../utils/serverUtils';
 import { mapStyles } from '../../../utils/mapStyles';
 import { getPrefNameOfMuniById } from '../geojsonUtils';
+import { Municipality } from '../addr';
 
 interface Props {
   muniBorderData: { municipalities: Municipality[]; prefecture: string }[];

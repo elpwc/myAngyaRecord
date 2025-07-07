@@ -1,124 +1,272 @@
-import React, { useState } from 'react';
-import { useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router';
 import './index.css';
 import '../../../node_modules/leaflet/dist/leaflet.css';
-import { AttributionControl, MapContainer, Marker, Polygon, Polyline, Popup, ScaleControl, TileLayer, Tooltip, useMapEvents } from 'react-leaflet';
-import { chihous_data, getBounds, mapTiles } from '../../utils/map';
-import { getNumazuOoazaData } from './geojsonUtils';
-import { Municipality, Prefecture, Railway } from '../../utils/addr';
+import { Marker, Polygon, Popup, useMap } from 'react-leaflet';
+import { getBounds, MapsId } from '../../utils/map';
 import MapPopup from '../../components/MapPopup';
-import { divIcon, LatLngTuple } from 'leaflet';
+import L, { divIcon, LatLngTuple } from 'leaflet';
+import { getFillcolor, getForecolor, getRecordGroups, getRecords, postRecord } from '../../utils/serverUtils';
+import { Record, RecordGroup } from '../../utils/types';
+import { isLogin } from '../../utils/userUtils';
+import { c_zoom } from '../../utils/cookies';
+import { useIsMobile } from '../../utils/hooks';
+import { AsideBar, LayerCheckboxInfo } from '../../components/AsideBar';
+import { MapInstance } from '../../components/MapInstance';
+import { Ooaza, OoazaArea } from './addr';
+import { getNumazuAreaData, getNumazuOoazaData } from './geojsonUtils';
+import { getAreaFillColor, getAreaForeColor } from './utils';
+import MuniList from './MuniList';
 
-interface P {}
+interface P {
+  openMobileAsideMenu: boolean;
+}
 
 export default (props: P) => {
   const params = useParams();
   const navigate = useNavigate();
   const mylocation = useLocation();
+  const isMobile = useIsMobile();
+
+  const DEFAULT_LAT_LNG: [number, number] = [36.016142, 137.990904];
+  const DEFAULT_ZOOM = 5;
 
   // let currentId: string = params.id as string;
-  const [currentTileMap, setCurrentTileMap] = useState('blank');
+  const [currentBackgroundTileMap, setcurrentBackgroundTileMap] = useState('blank');
   const [layers, setLayers] = useState({
-    pref: true,
+    area: true,
+    ooaza: true,
     placename: true,
   });
-  const [prefBorderData, setprefBorderData]: [Prefecture[], any] = useState([]);
-  const [currentZoom, setCurrentZoom] = useState(5);
+  const [areaBorderData, setareaBorderData]: [OoazaArea[], any] = useState([]);
+  const [ooazaBorderData, setooazaBorderData]: [Ooaza[], any] = useState([]);
+
+  const [currentZoom, setCurrentZoom] = useState(c_zoom() ? Number(c_zoom()) : DEFAULT_ZOOM);
+
+  const [recordGroup, setrecordGroup] = useState<RecordGroup>();
+  const [records, setrecords] = useState<Record[]>([]);
+
+  const [currentLatLng, setcurrentLatLng] = useState(DEFAULT_LAT_LNG);
+  const [currentMapStyle, setcurrentMapStyle] = useState(2);
+
+  const showAreaLevelColor = useMemo(() => layers.area && !layers.ooaza, [layers.area, layers.ooaza]);
+
+  const thisMapId = MapsId.Numazu;
+
+  const refreshRecordGroups = () => {
+    if (isLogin()) {
+      getRecordGroups(
+        thisMapId,
+        (data: any) => {
+          if (data && data.length > 0) {
+            setrecordGroup(data[0]);
+          }
+        },
+        errmsg => {
+          alert(errmsg);
+        }
+      );
+    }
+  };
+
+  const refreshRecords = () => {
+    if (isLogin() && recordGroup?.id) {
+      getRecords(
+        recordGroup?.id,
+        (data: any) => {
+          if (data) {
+            setrecords(data);
+          }
+        },
+        errmsg => {
+          alert(errmsg);
+        }
+      );
+    }
+  };
 
   useEffect(() => {
     (async () => {
-      setprefBorderData(await getNumazuOoazaData());
+      setareaBorderData(await getNumazuAreaData());
+      setooazaBorderData(await getNumazuOoazaData());
     })();
+    refreshRecordGroups();
+    refreshRecords();
   }, []);
 
-  const handleMapStyleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCurrentTileMap(e.target.value);
+  useEffect(() => {
+    refreshRecords();
+  }, [recordGroup?.id]);
+
+  const handleMapBackgroundTileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setcurrentBackgroundTileMap(e.target.value);
   };
 
-  const handleLayerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, checked } = e.target;
+  const handleLayerChange = (name: string, checked: boolean) => {
     setLayers(prev => ({
       ...prev,
       [name]: checked,
     }));
   };
 
-  const ZoomListener = () => {
-    const map = useMapEvents({
-      zoomend: () => {
-        setCurrentZoom(map.getZoom());
-        console.log(map.getZoom());
-      },
-    });
-    return null;
-  };
+  const PANES = ['ooaza', 'area', 'muniNames'];
+
+  const MuniNameMarker = useCallback(
+    ({
+      center,
+      muniBorder,
+      currentZoom,
+      layers,
+    }: {
+      center: LatLngTuple;
+      muniBorder: Ooaza;
+      currentZoom: number;
+      layers: {
+        area: boolean;
+        ooaza: boolean;
+        placename: boolean;
+      };
+    }) => {
+      const map = useMap();
+      const isInView = (() => {
+        const bounds = map.getBounds();
+        const point = L.latLng(center[0], center[1]);
+        return bounds.contains(point);
+      })();
+
+      if (!(currentZoom >= 8 && layers.placename && isInView)) return null;
+
+      return (
+        <Marker
+          pane="muniNames"
+          position={center}
+          icon={divIcon({
+            className: 'munilabels',
+            html: `<span>${muniBorder.name}</span>`,
+            iconSize: [60, 20],
+            iconAnchor: [30, 10],
+          })}
+        />
+      );
+    },
+    [currentZoom, currentLatLng, layers]
+  );
+
+  const LAYERS: LayerCheckboxInfo[] = [
+    { name: 'area', title: '地区表示', checked: layers.area },
+    { name: 'ooaza', title: '大字表示', checked: layers.ooaza },
+    { name: 'placename', title: '地名表示', checked: layers.placename },
+  ];
 
   return (
     <div style={{ height: '100%', width: '100%', position: 'relative', display: 'flex' }}>
-      <div>
-        <div>
-          <div className="map-tiles-radio-group">
-            {mapTiles.map(mapTile => (
-              <label key={mapTile.id}>
-                <input type="radio" value={mapTile.id} checked={currentTileMap === mapTile.id} onChange={handleMapStyleChange} />
-                <span>{mapTile.name}</span>
-              </label>
-            ))}
-          </div>
-          <div className="map-tiles-checkbox-group">
-            <label>
-              <input type="checkbox" name="placename" checked={layers.placename} onChange={handleLayerChange} />
-              <span>地名表示</span>
-            </label>
-          </div>
-        </div>
-        <div className="municipalitiesList">
-          {prefBorderData.map(ooaza => {
-            return (
-              <div key={ooaza.id} className="municipalityItem">
-                <div className="municipalityName">{ooaza.name}</div>
-                <div className="municipalityStatus">未踏破</div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-      <MapContainer center={[36.016142, 137.990904]} zoom={5} scrollWheelZoom={true} attributionControl={false} className="mapContainer">
-        <ZoomListener />
-        <ScaleControl position="bottomleft" />
-        <AttributionControl position="bottomright" prefix={'Dev by <a href="https://github.com/elpwc" target="_blank">@elpwc</a>'} />
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url={mapTiles.find(tile => tile.id === currentTileMap)?.url || mapTiles[0].url}
-        />
-        {
-          /* 都道府县 */
-          layers.pref &&
-            prefBorderData.map(prefBorder => {
-              // 计算中心点
-              const center = getBounds(prefBorder.coordinates);
-              return (
-                <Polygon className="muniBorder" pathOptions={{ fillColor: '#ffffff33', opacity: 1, fillOpacity: 1.5, weight: 0.7, color: 'black' }} positions={prefBorder.coordinates}>
-                  <Popup>
-                    <MapPopup addr={'沼津市'} name={prefBorder.name} onClick={value => {}} />
-                  </Popup>
-                  {currentZoom >= 8 && layers.placename && (
-                    <Marker
-                      position={center as LatLngTuple}
-                      icon={divIcon({
-                        className: 'munilabels',
-                        html: `<span class="">${prefBorder.name}</span>`,
-                        iconSize: [60, 20],
-                        iconAnchor: [30, 10],
-                      })}
-                    />
-                  )}
-                </Polygon>
-              );
-            })
+      <AsideBar
+        currentRecordGroup={recordGroup}
+        thisMapId={thisMapId}
+        openMobileAsideMenu={props.openMobileAsideMenu}
+        currentTileMap={currentBackgroundTileMap}
+        layers={LAYERS}
+        list={<MuniList borderData={ooazaBorderData} areaData={areaBorderData} records={records} currentMapStyle={currentMapStyle} />}
+        onCurrentBackgroundTileMapChange={handleMapBackgroundTileChange}
+        onLayerChange={handleLayerChange}
+        onSelectRecordGroup={(recordGroup: RecordGroup) => {
+          setrecordGroup(recordGroup);
+        }}
+      />
+
+      <MapInstance
+        defaultLatLng={DEFAULT_LAT_LNG}
+        defaultZoom={DEFAULT_ZOOM}
+        backgroundTile={currentBackgroundTileMap}
+        panes={PANES}
+        onZoom={setCurrentZoom}
+        onMove={setcurrentLatLng}
+        tileList={
+          <>
+            {
+              /* 大字 */
+              layers.ooaza &&
+                ooazaBorderData.map((border: Ooaza) => {
+                  // 计算中心点
+                  const center = getBounds(border.coordinates);
+
+                  return (
+                    <Polygon
+                      pane="ooaza"
+                      key={border.id}
+                      className="muniBorder"
+                      pathOptions={{
+                        fillColor: getFillcolor(currentMapStyle, records, border.id),
+                        color: getForecolor(currentMapStyle, records, border.id),
+                        opacity: 1,
+                        fillOpacity: currentBackgroundTileMap !== 'blank' ? 0.6 : 1,
+                        weight: 0.4,
+                      }}
+                      positions={border.coordinates}
+                    >
+                      <Popup closeOnClick className="popupStyle">
+                        <MapPopup
+                          addr={border.area ?? ''}
+                          name={border.name}
+                          onClick={value => {
+                            if (recordGroup?.id) {
+                              postRecord(
+                                recordGroup?.id,
+                                border.id,
+                                value,
+                                () => {
+                                  refreshRecords();
+                                },
+                                errmsg => {
+                                  alert(errmsg);
+                                }
+                              );
+                            }
+                          }}
+                        />
+                      </Popup>
+                      <MuniNameMarker center={center as LatLngTuple} muniBorder={border} currentZoom={currentZoom} layers={layers} />
+                    </Polygon>
+                  );
+                })
+            }
+            {
+              /* 地区 */
+              layers.area &&
+                areaBorderData.map((border: OoazaArea) => {
+                  // 计算中心点
+                  const center = getBounds(border.coordinates);
+                  return (
+                    <Polygon
+                      pane="area"
+                      pathOptions={{
+                        fillColor: showAreaLevelColor ? getAreaFillColor(currentMapStyle, ooazaBorderData, records, border.name) : '#ffffff',
+                        opacity: 1,
+                        fillOpacity: showAreaLevelColor ? (currentBackgroundTileMap !== 'blank' ? 0.6 : 1) : 0,
+                        weight: 0.7,
+                        color: showAreaLevelColor ? getAreaForeColor(currentMapStyle, ooazaBorderData, records, border.name) : 'black',
+                      }}
+                      positions={border.coordinates}
+                      interactive={false}
+                    >
+                      {(showAreaLevelColor || (currentZoom < 8 && layers.placename)) && (
+                        <Marker
+                          pane="muniNames"
+                          position={center as LatLngTuple}
+                          icon={divIcon({
+                            className: 'munilabels',
+                            html: `<p class="placeNameLabel">${border.name}</p>`,
+                            iconSize: [60, 20],
+                          })}
+                        />
+                      )}
+                    </Polygon>
+                  );
+                })
+            }
+          </>
         }
-      </MapContainer>
+      />
     </div>
   );
 };

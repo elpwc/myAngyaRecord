@@ -5,20 +5,10 @@ import '../../../node_modules/leaflet/dist/leaflet.css';
 import { Marker, Polygon, Polyline, Popup, useMap } from 'react-leaflet';
 import { getBounds, MapsId } from '../../utils/map';
 import { getMunicipalitiesData, getPrefecture_ShinkoukyokuData, getRailwaysData } from './geojsonUtils';
-import { InstitutionTypeCd, Municipality, Prefecture, Railway, RailwayClassCd } from '../../utils/addr';
+import { InstitutionTypeCd, Railway, RailwayClassCd } from '../../utils/addr';
 import MapPopup from '../../components/MapPopup';
 import L, { divIcon, LatLngTuple } from 'leaflet';
-import {
-  getFillcolor,
-  getForecolor,
-  getRecordGroups,
-  getRecords,
-  getShinkoukyokuFillColor,
-  getShinkoukyokuForeColor,
-  getTodofukenFillColor,
-  getTodofukenForeColor,
-  postRecord,
-} from '../../utils/serverUtils';
+import { getFillcolor, getForecolor, getRecordGroups, getRecords, postRecord } from '../../utils/serverUtils';
 import MuniList from './MuniList';
 import { Record, RecordGroup } from '../../utils/types';
 import { isLogin } from '../../utils/userUtils';
@@ -26,6 +16,8 @@ import { c_zoom } from '../../utils/cookies';
 import { useIsMobile } from '../../utils/hooks';
 import { AsideBar, LayerCheckboxInfo } from '../../components/AsideBar';
 import { MapInstance } from '../../components/MapInstance';
+import { Municipality, Prefecture } from './addr';
+import { getShinkoukyokuFillColor, getShinkoukyokuForeColor, getTodofukenFillColor, getTodofukenForeColor } from './utils';
 
 interface P {
   openMobileAsideMenu: boolean;
@@ -41,7 +33,7 @@ export default (props: P) => {
   const DEFAULT_ZOOM = 5;
 
   // let currentId: string = params.id as string;
-  const [currentTileMap, setCurrentTileMap] = useState('blank');
+  const [currentBackgroundTileMap, setcurrentBackgroundTileMap] = useState('blank');
   const [layers, setLayers] = useState({
     pref: true,
     muni: true,
@@ -85,12 +77,10 @@ export default (props: P) => {
   };
 
   const refreshRecords = () => {
-    console.log(isLogin(), recordGroup?.id, isLogin() && recordGroup?.id);
     if (isLogin() && recordGroup?.id) {
       getRecords(
         recordGroup?.id,
         (data: any) => {
-          console.log(data);
           if (data) {
             setrecords(data);
           }
@@ -118,7 +108,7 @@ export default (props: P) => {
   }, [recordGroup?.id]);
 
   const handleMapBackgroundTileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCurrentTileMap(e.target.value);
+    setcurrentBackgroundTileMap(e.target.value);
   };
 
   const handleLayerChange = (name: string, checked: boolean) => {
@@ -187,7 +177,7 @@ export default (props: P) => {
         currentRecordGroup={recordGroup}
         thisMapId={thisMapId}
         openMobileAsideMenu={props.openMobileAsideMenu}
-        currentTileMap={currentTileMap}
+        currentTileMap={currentBackgroundTileMap}
         layers={LAYERS}
         list={<MuniList muniBorderData={muniBorderData} records={records} currentMapStyle={currentMapStyle} />}
         onCurrentBackgroundTileMapChange={handleMapBackgroundTileChange}
@@ -200,6 +190,7 @@ export default (props: P) => {
       <MapInstance
         defaultLatLng={DEFAULT_LAT_LNG}
         defaultZoom={DEFAULT_ZOOM}
+        backgroundTile={currentBackgroundTileMap}
         panes={PANES}
         onZoom={setCurrentZoom}
         onMove={setcurrentLatLng}
@@ -222,7 +213,7 @@ export default (props: P) => {
                           fillColor: getFillcolor(currentMapStyle, records, muniBorder.id),
                           color: getForecolor(currentMapStyle, records, muniBorder.id),
                           opacity: 1,
-                          fillOpacity: currentTileMap !== 'blank' ? 0.6 : 1,
+                          fillOpacity: currentBackgroundTileMap !== 'blank' ? 0.6 : 1,
                           weight: 0.4,
                         }}
                         positions={muniBorder.coordinates}
@@ -286,7 +277,7 @@ export default (props: P) => {
                       pathOptions={{
                         fillColor: showTodofukenLevelColor ? getTodofukenFillColor(currentMapStyle, records, prefBorder.id) : '#ffffff',
                         opacity: 1,
-                        fillOpacity: showTodofukenLevelColor ? (currentTileMap !== 'blank' ? 0.6 : 1) : 0,
+                        fillOpacity: showTodofukenLevelColor ? (currentBackgroundTileMap !== 'blank' ? 0.6 : 1) : 0,
                         weight: 0.7,
                         color: showTodofukenLevelColor ? getTodofukenForeColor(currentMapStyle, records, prefBorder.id) : 'black',
                       }}
@@ -320,7 +311,7 @@ export default (props: P) => {
                       pathOptions={{
                         fillColor: showTodofukenLevelColor && showSubprefectureLevelColor ? getShinkoukyokuFillColor(currentMapStyle, records, muniBorderData, shinkouBorder.name) : '#ffffff',
                         opacity: 1,
-                        fillOpacity: showTodofukenLevelColor && showSubprefectureLevelColor ? (currentTileMap !== 'blank' ? 0.6 : 1) : 0,
+                        fillOpacity: showTodofukenLevelColor && showSubprefectureLevelColor ? (currentBackgroundTileMap !== 'blank' ? 0.6 : 1) : 0,
                         weight: 0.7,
                         color: showTodofukenLevelColor && showSubprefectureLevelColor ? getShinkoukyokuForeColor(currentMapStyle, records, muniBorderData, shinkouBorder.name) : 'black',
                       }}

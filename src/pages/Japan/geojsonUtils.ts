@@ -1,9 +1,10 @@
 import prefJson from '../../geojson/japan/prefectures.geojson';
 import shinkoukyokuJson from '../../geojson/japan/hokkaido-subpref.geojson';
 import railwaysJson from '../../geojson/japan/railways.geojson';
-import { Municipality, Prefecture, Railway } from '../../utils/addr';
 import { allPrefJsons } from './geojsonReader';
 import { getGeoJsonData } from '../../utils/map';
+import { Municipality, Prefecture } from './addr';
+import { Railway } from '../../utils/addr';
 
 /**
  * 解析都道府县或者北海道振兴局数据

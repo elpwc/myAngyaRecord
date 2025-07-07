@@ -29,7 +29,7 @@ function App() {
           <Route index element={<Navigate to="/japan" replace />} />
           <Route path="japan" element={<Japan openMobileAsideMenu={openMobileAsideMenu} />}></Route>
           <Route path="japan/ranking" element={<Ranking map="japan" />}></Route>
-          <Route path="numazu" element={<Numazu />}></Route>
+          <Route path="numazu" element={<Numazu openMobileAsideMenu={openMobileAsideMenu} />}></Route>
 
           <Route path="login" element={<Login />}></Route>
           <Route path="emailverify" element={<EmailVerify />}></Route>
