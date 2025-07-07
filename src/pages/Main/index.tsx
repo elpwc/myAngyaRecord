@@ -82,7 +82,7 @@ export default (props: P) => {
             </menu>
 
             <menu className="rightMenu">
-              <Link to="/ranking">ランキング</Link>
+              <Link to={'/ranking' + menuItems[currentLocation].link}>ランキング</Link>
               {isLogin() ? (
                 <>
                   <Link to="/user">

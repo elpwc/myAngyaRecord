@@ -10,6 +10,7 @@ import EmailVerify from './components/userSysCompo/EmailVerify';
 import Register from './components/userSysCompo/Register';
 import ResetPassword from './components/userSysCompo/ResetPassword';
 import Ranking from './pages/Ranking';
+import { MapsId } from './utils/map';
 
 function App() {
   const [openMobileAsideMenu, setopenMobileAsideMenu] = useState(true);
@@ -28,7 +29,11 @@ function App() {
         >
           <Route index element={<Navigate to="/japan" replace />} />
           <Route path="japan" element={<Japan openMobileAsideMenu={openMobileAsideMenu} />}></Route>
-          <Route path="japan/ranking" element={<Ranking map="japan" />}></Route>
+          <Route path="ranking">
+            <Route index element={<Navigate to="japan" replace />} />
+            <Route path="japan" element={<Ranking mapId={MapsId.JapanMuni} />}></Route>
+            <Route path="numazu" element={<Ranking mapId={MapsId.Numazu} />}></Route>
+          </Route>
           <Route path="numazu" element={<Numazu openMobileAsideMenu={openMobileAsideMenu} />}></Route>
 
           <Route path="login" element={<Login />}></Route>
