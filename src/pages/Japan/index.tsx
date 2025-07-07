@@ -37,6 +37,7 @@ export default (props: P) => {
   const [layers, setLayers] = useState({
     pref: true,
     muni: true,
+    //ryouseikoku: true,
     sinkoukyoku: true,
     placename: true,
     railways: true,
@@ -166,6 +167,7 @@ export default (props: P) => {
   const LAYERS: LayerCheckboxInfo[] = [
     { name: 'pref', title: '都道府県表示', checked: layers.pref },
     { name: 'muni', title: '市区町村表示', checked: layers.muni },
+    // { name: 'ryouseikoku', title: '令制国表示', checked: layers.ryouseikoku },
     { name: 'sinkoukyoku', title: '北海道振興局表示', checked: layers.sinkoukyoku },
     { name: 'placename', title: '地名表示', checked: layers.placename },
     { name: 'railways', title: '全国鉄道路線', checked: layers.railways },
