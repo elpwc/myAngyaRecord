@@ -22,6 +22,7 @@ export interface RecordGroup {
   name: string;
   desc: string;
   mapid: MapsId;
+  score: number;
   is_deleted: boolean;
   create_date: string;
   update_date: string;
