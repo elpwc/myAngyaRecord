@@ -22,16 +22,24 @@ export default (props: P) => {
 
   const menuItems = [
     { title: '日本', link: '/japan', disabled: false },
+    { title: '沼津', link: '/numazu', disabled: false },
     { title: '中国本土', link: '/mainlandchina', disabled: true },
     { title: '台湾', link: '/taiwan', disabled: true },
-    { title: '韓国', link: '/taiwan', disabled: true },
-    { title: '沼津', link: '/numazu', disabled: false },
+    { title: '韓国', link: '/korea', disabled: true },
+    { title: 'ベトナム', link: '/vietnam', disabled: true },
+    { title: '香港', link: '/hongkong', disabled: true },
   ];
 
   useEffect(() => {
     // document.title = '';
     if (isLogin()) {
       loginCurrentUser();
+    }
+
+    for (let i = 0; i < menuItems.length; i++) {
+      if (menuItems[i].link === mylocation.pathname) {
+        setcurrentLocation(i);
+      }
     }
   }, []);
 
@@ -58,8 +66,13 @@ export default (props: P) => {
                   <Link
                     className={`regionMenuLink ${menuItem.disabled ? 'regionMenuLink-disabled ' : ''}`}
                     to={menuItem.link}
-                    onClick={() => {
-                      setcurrentLocation(index);
+                    aria-disabled={menuItem.disabled}
+                    onClick={e => {
+                      if (!menuItem.disabled) {
+                        setcurrentLocation(index);
+                      } else {
+                        e.preventDefault();
+                      }
                     }}
                   >
                     {menuItem.title}
