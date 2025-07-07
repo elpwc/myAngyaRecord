@@ -181,6 +181,8 @@ export default (props: P) => {
         panes={PANES}
         onZoom={setCurrentZoom}
         onMove={setcurrentLatLng}
+        doSaveLatLngToCookies={false}
+        doSaveZoomToCookies={false}
         tileList={
           <>
             {

@@ -11,6 +11,8 @@ export const MapInstance = ({
   onZoom,
   onMove,
   tileList,
+  doSaveZoomToCookies = true,
+  doSaveLatLngToCookies = true,
 }: {
   defaultLatLng: [number, number];
   defaultZoom: number;
@@ -19,16 +21,20 @@ export const MapInstance = ({
   onZoom: (zoom: number) => void;
   onMove: (latlng: [number, number]) => void;
   tileList: JSX.Element;
+  doSaveZoomToCookies?: boolean;
+  doSaveLatLngToCookies?: boolean;
 }) => {
-  const [currentZoom, setCurrentZoom] = useState(c_zoom() ? Number(c_zoom()) : defaultZoom);
-  const [currentLatLng, setcurrentLatLng] = useState(defaultLatLng);
+  const [currentZoom, setCurrentZoom] = useState(doSaveZoomToCookies ? (c_zoom() ? Number(c_zoom()) : defaultZoom) : defaultZoom);
+  const [currentLatLng, setcurrentLatLng] = useState(doSaveLatLngToCookies ? [c_lat() ? Number(c_lat()) : defaultLatLng[0], c_lng() ? Number(c_lng()) : defaultLatLng[1]] : defaultLatLng);
   const [currentMapStyle, setcurrentMapStyle] = useState(2);
 
   const ZoomListener = () => {
     const map = useMapEvents({
       zoomend: () => {
         onZoom(map.getZoom());
-        c_zoom(map.getZoom().toString());
+        if (doSaveZoomToCookies) {
+          c_zoom(map.getZoom().toString());
+        }
         setCurrentZoom(map.getZoom());
         //console.log(map.getZoom());
       },
@@ -42,8 +48,10 @@ export const MapInstance = ({
         const map = e.target;
         onMove([map.getCenter().lat, map.getCenter().lng]);
         setcurrentLatLng([map.getCenter().lat, map.getCenter().lng]);
-        c_lat(currentLatLng[0].toString());
-        c_lng(currentLatLng[1].toString());
+        if (doSaveLatLngToCookies) {
+          c_lat(currentLatLng[0].toString());
+          c_lng(currentLatLng[1].toString());
+        }
         //console.log([map.getCenter().lat, map.getCenter().lng]);
       },
     });
@@ -71,13 +79,7 @@ export const MapInstance = ({
   };
 
   return (
-    <MapContainer
-      center={[c_lat() ? Number(c_lat()) : defaultLatLng[0], c_lng() ? Number(c_lng()) : defaultLatLng[1]]}
-      zoom={currentZoom}
-      scrollWheelZoom={true}
-      attributionControl={false}
-      className="mapContainer"
-    >
+    <MapContainer center={[currentLatLng[0], currentLatLng[1]]} zoom={currentZoom} scrollWheelZoom={true} attributionControl={false} className="mapContainer">
       <ZoomListener />
       <MapCenterTracker />
       <PaneSetter />

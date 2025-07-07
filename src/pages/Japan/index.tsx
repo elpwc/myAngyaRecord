@@ -46,7 +46,7 @@ export default (props: P) => {
   const [railwaysData, setrailwaysData]: [Railway[], any] = useState([]);
   const [muniBorderData, setmuniBorderData]: [{ municipalities: Municipality[]; prefecture: string }[], any] = useState([]);
 
-  const [currentZoom, setCurrentZoom] = useState(c_zoom() ? Number(c_zoom()) : DEFAULT_ZOOM);
+  const [currentZoom, setCurrentZoom] = useState(DEFAULT_ZOOM);
 
   const [recordGroup, setrecordGroup] = useState<RecordGroup>();
   const [records, setrecords] = useState<Record[]>([]);
