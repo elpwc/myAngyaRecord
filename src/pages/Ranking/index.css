@@ -1,0 +1,97 @@
+.rankingListContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.RankingList {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.RankingListItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background-color: #fdfdfd;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.2s ease;
+}
+
+.RankingListItem:hover {
+  background-color: #f8f8f8;
+}
+
+.rankPosition {
+  font-size: 18px;
+  font-weight: bold;
+  color: #555;
+  margin-right: 16px;
+  text-align: center;
+}
+
+.rankInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rankInfoTop {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.rankInfoTop a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.rankInfoTop a:hover {
+  color: #007acc;
+}
+
+.rankDesc {
+  color: #777;
+  font-size: 14px;
+}
+
+.rankScore {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  width: 120px;
+  text-align: right;
+  margin-right: 12px;
+}
+
+.rankButton {
+  padding: 6px 12px;
+  border: none;
+  background-color: #007acc;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.rankButton:hover {
+  background-color: #005fa3;
+}
+
+.rankUserName {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
