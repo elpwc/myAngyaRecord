@@ -21,8 +21,6 @@ switch ($request_type) {
     $page = isset($_GET['page']) ? escape_string($sqllink, $_GET['page']) : 1;
     $amountPerPage = isset($_GET['amount']) ? escape_string($sqllink, $_GET['amount']) : null;
 
-    $score = getScore();
-
     $sql = "SELECT 
               rg.*, 
               u.name AS username,
