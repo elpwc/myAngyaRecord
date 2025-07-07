@@ -67,7 +67,7 @@ export const AsideBar = ({
         <MapBackgroundTilesSwitcher currentTileMap={currentTileMap} onChange={onCurrentBackgroundTileMapChange} />
         <div className="map-tiles-checkbox-group">
           {layers.map(layer => {
-            return <LayerCheckbox layer={layer} onChange={onLayerChange} />;
+            return <LayerCheckbox key={layer.name} layer={layer} onChange={onLayerChange} />;
           })}
         </div>
       </div>

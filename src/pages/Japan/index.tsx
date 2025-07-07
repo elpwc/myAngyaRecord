@@ -207,7 +207,7 @@ export default (props: P) => {
                     return (
                       <Polygon
                         pane="muni"
-                        key={muniBorder.id}
+                        key={'muni' + muniBorder.id}
                         className="muniBorder"
                         pathOptions={{
                           fillColor: getFillcolor(currentMapStyle, records, muniBorder.id),
@@ -248,20 +248,32 @@ export default (props: P) => {
             {
               /* 铁道 */
               layers.railways &&
-                railwaysData.map(railwayLines => {
+                railwaysData.map((railwayLines, index) => {
                   return railwayLines.railwayClassCd === RailwayClassCd.NormalRailwayJR ? (
                     <>
                       {/* 铁道底色 */}
                       <Polyline
+                        key={railwayLines.companyName + railwayLines.lineName + index.toString() + '1'}
                         pane="railways"
                         positions={railwayLines.coordinates}
                         pathOptions={{ weight: 3, color: railwayLines.institutionTypeCd === InstitutionTypeCd.JRShinkansen ? '#037771' : '#4f4f4f', opacity: 1, fillOpacity: 1 }}
                       />
                       {/* 白线 */}
-                      <Polyline pane="railways" positions={railwayLines.coordinates} pathOptions={{ weight: 1.5, color: 'white', opacity: 1, fillOpacity: 1, dashArray: '10,10', dashOffset: '10' }} />
+                      <Polyline
+                        key={railwayLines.companyName + railwayLines.lineName + index.toString() + '2'}
+                        pane="railways"
+                        positions={railwayLines.coordinates}
+                        pathOptions={{ weight: 1.5, color: 'white', opacity: 1, fillOpacity: 1, dashArray: '10,10', dashOffset: '10' }}
+                      />
                     </>
                   ) : (
-                    <Polyline className="rail-line" pane="railways" positions={railwayLines.coordinates} pathOptions={{ weight: 1, color: 'darkred', opacity: 1, fillOpacity: 1 }} />
+                    <Polyline
+                      key={railwayLines.companyName + railwayLines.lineName + index.toString()}
+                      className="rail-line"
+                      pane="railways"
+                      positions={railwayLines.coordinates}
+                      pathOptions={{ weight: 1, color: 'darkred', opacity: 1, fillOpacity: 1 }}
+                    />
                   );
                 })
             }
@@ -274,6 +286,7 @@ export default (props: P) => {
                   return (
                     <Polygon
                       pane="pref"
+                      key={'pref' + prefBorder.id}
                       pathOptions={{
                         fillColor: showTodofukenLevelColor ? getTodofukenFillColor(currentMapStyle, records, prefBorder.id) : '#ffffff',
                         opacity: 1,
@@ -308,6 +321,7 @@ export default (props: P) => {
                   return (
                     <Polygon
                       pane="subpref"
+                      key={'subpref' + shinkouBorder.id}
                       pathOptions={{
                         fillColor: showTodofukenLevelColor && showSubprefectureLevelColor ? getShinkoukyokuFillColor(currentMapStyle, records, muniBorderData, shinkouBorder.name) : '#ffffff',
                         opacity: 1,

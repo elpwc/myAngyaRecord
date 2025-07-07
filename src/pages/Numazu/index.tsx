@@ -238,6 +238,7 @@ export default (props: P) => {
                   const center = getBounds(border.coordinates);
                   return (
                     <Polygon
+                      key={border.id}
                       pane="area"
                       pathOptions={{
                         fillColor: showAreaLevelColor ? getAreaFillColor(currentMapStyle, ooazaBorderData, records, border.name) : '#ffffff',
