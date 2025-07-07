@@ -6,6 +6,7 @@ create table if not exists `recordgroup`(
     `name` VARCHAR(100) NOT NULL,
     `desc` VARCHAR(300) NOT NULL,
     `mapid` VARCHAR(32) NOT NULL,
+    `score` INT NOT NULL DEFAULT -1,
     `is_deleted` BOOLEAN DEFAULT FALSE,
     `is_public` BOOLEAN DEFAULT FALSE,
     `show_lived_level` BOOLEAN DEFAULT TRUE,

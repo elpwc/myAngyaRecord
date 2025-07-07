@@ -30,6 +30,23 @@ switch ($request_type) {
     ];
     $check_result = prepare_bind_execute($sqllink, $check_sql, "si", $check_params);
 
+    // 获取score
+    // $getScore_sql = "SELECT `score` FROM `recordGroup` WHERE `id` = ?";
+    // $getScore_params = [
+    //   (int)($data->group_id)
+    // ];
+    // $getScore_result = prepare_bind_execute($sqllink, $getScore_sql, "i", $getScore_params);
+
+    // $score = -2;
+    // if ($getScore_result && mysqli_num_rows($getScore_result) > 0) {
+    //   $records = [];
+    //   while ($row = mysqli_fetch_assoc($getScore_result)) {
+    //     $records[] = $row;
+    //   }
+    //   $score = $records[0]['score'];
+    // }
+
+
     if ($check_result && mysqli_num_rows($check_result) > 0) {
       // 如果记录存在，更新level值
       $update_sql = "UPDATE `record` SET `level` = ? WHERE `admin_id` = ? AND `group_id` = ?";
@@ -51,6 +68,30 @@ switch ($request_type) {
       $insert_result = prepare_bind_execute($sqllink, $insert_sql, "sii", $insert_params);
       echo json_encode(["res" => $insert_result !== false ? "ok" : "error"]);
     }
+
+    // 更新score
+    // 计算新的score
+    $check_sql = "SELECT * FROM `record` WHERE `group_id` = ?";
+    $check_params = [
+      (int)($data->group_id),
+    ];
+
+    $score = 0;
+    $check_result = prepare_bind_execute($sqllink, $check_sql, "i", $check_params);
+    if ($check_result && mysqli_num_rows($check_result) > 0) {
+      while ($row = mysqli_fetch_assoc($check_result)) {
+        $score += $row['level'];
+      }
+    }
+    // 更新
+    $update_sql = "UPDATE `recordGroup` SET `score` = ? WHERE `id` = ?";
+    $update_params = [
+      (int)($score),
+      (int)($data->group_id)
+    ];
+    $update_result = prepare_bind_execute($sqllink, $update_sql, "ii", $update_params);
+
+
     break;
 
   case 'GET':
