@@ -44,7 +44,7 @@ export default (props: P) => {
     switch (routes[1].toLowerCase()) {
       case 'ranking':
         setcurrentLocation('ranking');
-        if (routes[2] !== '') {
+        if (routes[2]) {
           currentMapPath = '/' + routes[2].toLowerCase();
         }
         break;
@@ -85,14 +85,12 @@ export default (props: P) => {
                 <div key={menuItem.title} className={`regionMenuItem ${menuItem.disabled ? 'regionMenuItem-disabled ' : ''}  ${index === currentMap ? 'selected' : ''}`}>
                   <Link
                     className={`regionMenuLink ${menuItem.disabled ? 'regionMenuLink-disabled ' : ''}`}
-                    to={currentLocation === 'ranking' ? '/ranking' + menuItem.link : menuItem.link}
+                    to={menuItem.link}
                     aria-disabled={menuItem.disabled}
                     onClick={e => {
                       if (!menuItem.disabled) {
                         setcurrentMap(index);
-                        if (currentLocation !== 'ranking') {
-                          setcurrentLocation('');
-                        }
+                        setcurrentLocation('');
                       } else {
                         e.preventDefault();
                       }
@@ -173,6 +171,7 @@ export default (props: P) => {
                         onClick={() => {
                           if (!menuItem.disabled) {
                             setcurrentMap(index);
+                            setcurrentLocation('');
                             navigate(menuItem.link);
                             setShowDropdown(false);
                           }
@@ -187,7 +186,9 @@ export default (props: P) => {
             </menu>
 
             <menu className="rightMenu">
-              <Link to="/ranking">ランキング</Link>
+              <Link to={'/ranking' + menuItems[currentMap === -1 ? 0 : currentMap].link} className={currentLocation === 'ranking' ? 'selected' : ''}>
+                ランキング
+              </Link>
               {isLogin() ? (
                 <button className="header-menu-button">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
