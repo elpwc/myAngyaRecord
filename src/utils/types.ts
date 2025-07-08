@@ -46,3 +46,8 @@ export interface Ranking extends RecordGroup {
   username: string;
   ranking: number;
 }
+
+export interface RankingResponse {
+  ranking: Ranking[];
+  total: number;
+}

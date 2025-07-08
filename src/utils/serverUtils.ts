@@ -1,7 +1,7 @@
 import { c_uid } from './cookies';
 import { mapStyles } from './mapStyles';
 import request from './request';
-import { Record } from './types';
+import { RankingResponse, Record } from './types';
 
 export const postRecord = async (group_id: number, admin_id: string, level: number, onOK: () => void, onError: (msg: string) => void) => {
   return request('/record.php', {
@@ -126,14 +126,14 @@ export const deleteRecordGroup = async (id: number, onOK: (data: any) => void, o
     });
 };
 
-export const getRanking = async (mapid: string, page: number, amountPerPage: number, onOK: (data: any) => void, onError: (msg: string) => void) => {
+export const getRanking = async (mapid: string, page: number, amountPerPage: number, onOK: (data: RankingResponse) => void, onError: (msg: string) => void) => {
   return request(`/ranking.php?mapid=${mapid}&page=${page}&amount=${amountPerPage}`, {
     method: 'GET',
   })
     .then(e => {
       switch (e.res) {
         case 'ok':
-          onOK(e.ranking);
+          onOK(e.rankingResponse);
           break;
         default:
           onError(e);

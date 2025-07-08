@@ -16,8 +16,11 @@ export default (props: P) => {
   const mylocation = useLocation();
   const isMobile = useIsMobile();
 
+  type Location = 'ranking' | 'user' | 'about' | '';
+
   // let currentId: string = params.id as string;
-  const [currentLocation, setcurrentLocation] = useState(0);
+  const [currentMap, setcurrentMap] = useState(-1);
+  const [currentLocation, setcurrentLocation] = useState<Location>('');
   const [showDropdown, setShowDropdown] = useState(false);
 
   const menuItems = [
@@ -36,12 +39,29 @@ export default (props: P) => {
       loginCurrentUser();
     }
 
+    let currentMapPath = mylocation.pathname.toLowerCase();
+    const routes = mylocation.pathname.split('/');
+    switch (routes[1].toLowerCase()) {
+      case 'ranking':
+        setcurrentLocation('ranking');
+        if (routes[2] !== '') {
+          currentMapPath = '/' + routes[2].toLowerCase();
+        }
+        break;
+      case 'user':
+      case 'about':
+        setcurrentLocation(routes[1].toLowerCase() as Location);
+        setcurrentMap(-1);
+        break;
+      default:
+        break;
+    }
     for (let i = 0; i < menuItems.length; i++) {
-      if (menuItems[i].link === mylocation.pathname) {
-        setcurrentLocation(i);
+      if (menuItems[i].link === currentMapPath) {
+        setcurrentMap(i);
       }
     }
-  }, []);
+  }, [mylocation]);
 
   return (
     <>
@@ -62,14 +82,17 @@ export default (props: P) => {
 
             <menu id="regionMenu">
               {menuItems.map((menuItem, index) => (
-                <div key={menuItem.title} className={`regionMenuItem ${menuItem.disabled ? 'regionMenuItem-disabled ' : ''}  ${index === currentLocation ? 'selected' : ''}`}>
+                <div key={menuItem.title} className={`regionMenuItem ${menuItem.disabled ? 'regionMenuItem-disabled ' : ''}  ${index === currentMap ? 'selected' : ''}`}>
                   <Link
                     className={`regionMenuLink ${menuItem.disabled ? 'regionMenuLink-disabled ' : ''}`}
-                    to={menuItem.link}
+                    to={currentLocation === 'ranking' ? '/ranking' + menuItem.link : menuItem.link}
                     aria-disabled={menuItem.disabled}
                     onClick={e => {
                       if (!menuItem.disabled) {
-                        setcurrentLocation(index);
+                        setcurrentMap(index);
+                        if (currentLocation !== 'ranking') {
+                          setcurrentLocation('');
+                        }
                       } else {
                         e.preventDefault();
                       }
@@ -82,10 +105,13 @@ export default (props: P) => {
             </menu>
 
             <menu className="rightMenu">
-              <Link to={'/ranking' + menuItems[currentLocation].link}>ランキング</Link>
+              <Link to={'/ranking' + menuItems[currentMap === -1 ? 0 : currentMap].link} className={currentLocation === 'ranking' ? 'selected' : ''}>
+                ランキング
+              </Link>
+
               {isLogin() ? (
                 <>
-                  <Link to="/user">
+                  <Link to="/user" className={currentLocation === 'user' ? 'selected' : ''}>
                     <span style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                         <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z" />
@@ -108,7 +134,9 @@ export default (props: P) => {
                   <Link to="/login">ログイン</Link>
                 </>
               )}
-              <Link to="/about">ﾌｨｰﾄﾞﾊﾞｯｸ</Link>
+              <Link to="/about" className={currentLocation === 'about' ? 'selected' : ''}>
+                ﾌｨｰﾄﾞﾊﾞｯｸ
+              </Link>
             </menu>
           </header>
         ) : (
@@ -125,7 +153,7 @@ export default (props: P) => {
               <div id="title">My行脚記録</div>
               <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
                 <button className="header-menu-button" onClick={() => setShowDropdown(prev => !prev)}>
-                  {menuItems[currentLocation].title}
+                  {menuItems[currentMap === -1 ? 0 : currentMap].title}
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                     <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
                   </svg>
@@ -135,16 +163,16 @@ export default (props: P) => {
                     {menuItems.map((menuItem, index) => (
                       <button
                         key={menuItem.title}
-                        className={`dropDownMenu-item${menuItem.disabled ? ' disabled' : ''}${index === currentLocation ? ' selected' : ''}`}
+                        className={`dropDownMenu-item${menuItem.disabled ? ' disabled' : ''}${index === (currentMap === -1 ? 0 : currentMap) ? ' selected' : ''}`}
                         style={{
                           cursor: menuItem.disabled ? 'not-allowed' : 'pointer',
                           color: menuItem.disabled ? '#aaa' : 'white',
-                          fontWeight: index === currentLocation ? 'bold' : 'normal',
+                          fontWeight: index === (currentMap === -1 ? 0 : currentMap) ? 'bold' : 'normal',
                         }}
                         disabled={menuItem.disabled}
                         onClick={() => {
                           if (!menuItem.disabled) {
-                            setcurrentLocation(index);
+                            setcurrentMap(index);
                             navigate(menuItem.link);
                             setShowDropdown(false);
                           }

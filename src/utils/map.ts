@@ -9,6 +9,17 @@ export enum MapsId {
   Numazu = 'numazu',
 }
 
+export const getMapTitleByMapsId = (mapsId: MapsId) => {
+  switch (mapsId) {
+    case MapsId.JapanMuni:
+      return '日本市町村';
+    case MapsId.Numazu:
+      return '沼津市';
+    default:
+      return '';
+  }
+};
+
 export const mapTiles = [
   { id: 'blank', name: '空白背景', url: '' },
   { id: 'default', name: '地図背景', url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' },

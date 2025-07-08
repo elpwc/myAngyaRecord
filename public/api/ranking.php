@@ -40,14 +40,50 @@ switch ($request_type) {
     $offset = ($page - 1) * $amountPerPage;
     $result = prepare_bind_execute($sqllink, $sql, "sii", [$mapid, $amountPerPage, $offset]);
 
+    $count_sql = "SELECT 
+                    COUNT(*) AS total
+                  FROM 
+                    `recordgroup`
+                  WHERE 
+                    mapid = ? 
+                    AND is_deleted = 0 
+                    AND is_public = 1;";
+    $count_result = prepare_bind_execute($sqllink, $count_sql, "s", [$mapid]);
+
     if ($result && mysqli_num_rows($result) >= 0) {
       $ranking = [];
       while ($row = mysqli_fetch_assoc($result)) {
         $ranking[] = $row;
       }
-      echo json_encode(["res" => "ok", "ranking" => $ranking]);
+
+      if ($count_result && mysqli_num_rows($count_result) >= 0) {
+        $total = 0;
+        while ($row = mysqli_fetch_assoc($count_result)) {
+          $total = $row['total'];
+        }
+
+        echo json_encode(
+          [
+            "res" => "ok",
+            "rankingResponse" =>
+            [
+              "ranking" => $ranking,
+              "total" => $total
+            ]
+          ]
+        );
+      }
     } else {
-      echo json_encode(["res" => "not_exist", "ranking" => []]);
+      echo json_encode(
+        [
+          "res" => "not_exist",
+          "rankingResponse" =>
+          [
+            "ranking" => [],
+            "total" => 0
+          ]
+        ]
+      );
     }
     break;
 }

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router';
 import './index.css';
-import { MapsId } from '../../utils/map';
+import { getMapTitleByMapsId, MapsId } from '../../utils/map';
 import { getRanking } from '../../utils/serverUtils';
 import { Ranking } from '../../utils/types';
 import Pagination from '../../components/Pagination';
@@ -23,6 +23,8 @@ export default (props: P) => {
   // let currentId: string = params.id as string;
 
   const [ranking, setRanking] = useState<Ranking[]>([]);
+  const [total, setTotal] = useState(0);
+  // 页数
   const [currentPage, setcurrentPage] = useState(1);
 
   const refreshRanking = (page: number) => {
@@ -31,7 +33,8 @@ export default (props: P) => {
       page,
       AMOUNT_PER_PAGE,
       res => {
-        setRanking(res);
+        setRanking(res.ranking);
+        setTotal(res.total);
       },
       () => {}
     );
@@ -40,7 +43,7 @@ export default (props: P) => {
   useEffect(() => {
     // document.title = '';
     refreshRanking(currentPage);
-  }, []);
+  }, [props.mapId]);
 
   const handlePageChange = (page: number) => {
     refreshRanking(page);
@@ -49,6 +52,9 @@ export default (props: P) => {
 
   return (
     <div className="rankingListContainer">
+      <h3>{getMapTitleByMapsId(props.mapId)}行脚の全国クランキング</h3>
+      <Pagination currentPage={currentPage} totalItems={total} itemsPerPage={AMOUNT_PER_PAGE} onPageChange={handlePageChange} />
+
       <ul className="RankingList" style={{ width: isMobile ? '95%' : '60%' }}>
         {ranking.map(rank => {
           return (
@@ -72,8 +78,6 @@ export default (props: P) => {
           );
         })}
       </ul>
-
-      <Pagination currentPage={currentPage} totalItems={100} itemsPerPage={AMOUNT_PER_PAGE} onPageChange={handlePageChange} />
     </div>
   );
 };
