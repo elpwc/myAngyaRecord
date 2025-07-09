@@ -11,6 +11,7 @@ import Register from './components/userSysCompo/Register';
 import ResetPassword from './components/userSysCompo/ResetPassword';
 import Ranking from './pages/Ranking';
 import { MapsId } from './utils/map';
+import Vietnam from './pages/Vietnam';
 
 function App() {
   const [openMobileAsideMenu, setopenMobileAsideMenu] = useState(true);
@@ -33,8 +34,10 @@ function App() {
             <Route index element={<Navigate to="japan" replace />} />
             <Route path="japan" element={<Ranking mapId={MapsId.JapanMuni} />}></Route>
             <Route path="numazu" element={<Ranking mapId={MapsId.Numazu} />}></Route>
+            <Route path="vietnam" element={<Ranking mapId={MapsId.Vietnam} />}></Route>
           </Route>
           <Route path="numazu" element={<Numazu openMobileAsideMenu={openMobileAsideMenu} />}></Route>
+          <Route path="vietnam" element={<Vietnam openMobileAsideMenu={openMobileAsideMenu} />}></Route>
 
           <Route path="login" element={<Login />}></Route>
           <Route path="emailverify" element={<EmailVerify />}></Route>

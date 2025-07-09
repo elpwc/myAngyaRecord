@@ -7,6 +7,7 @@ export const getGeoJsonData = async (url: string) => {
 export enum MapsId {
   JapanMuni = 'japanmuni',
   Numazu = 'numazu',
+  Vietnam = 'vietnam',
 }
 
 export const getMapTitleByMapsId = (mapsId: MapsId) => {
@@ -15,6 +16,8 @@ export const getMapTitleByMapsId = (mapsId: MapsId) => {
       return '日本市町村';
     case MapsId.Numazu:
       return '沼津市';
+    case MapsId.Vietnam:
+      return 'ベトナム';
     default:
       return '';
   }

@@ -29,7 +29,7 @@ export default (props: P) => {
     { title: '中国本土', link: '/mainlandchina', disabled: true },
     { title: '台湾', link: '/taiwan', disabled: true },
     { title: '韓国', link: '/korea', disabled: true },
-    { title: 'ベトナム', link: '/vietnam', disabled: true },
+    { title: 'ベトナム', link: '/vietnam', disabled: false },
     { title: '香港', link: '/hongkong', disabled: true },
   ];
 
