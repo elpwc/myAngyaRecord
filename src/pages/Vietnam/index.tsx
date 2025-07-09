@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router';
 import './index.css';
 import '../../../node_modules/leaflet/dist/leaflet.css';
-import { Marker, Polygon, Popup, useMap } from 'react-leaflet';
+import { Marker, Polygon, Polyline, Popup, useMap } from 'react-leaflet';
 import { getBounds, MapsId } from '../../utils/map';
 import MapPopup from '../../components/MapPopup';
 import L, { divIcon, LatLngTuple } from 'leaflet';
@@ -14,8 +14,9 @@ import { useIsMobile } from '../../utils/hooks';
 import { AsideBar, LayerCheckboxInfo } from '../../components/AsideBar';
 import { MapInstance } from '../../components/MapInstance';
 import { TinhVietnam } from './addr';
-import { getTinhVietnamData } from './geojsonUtils';
+import { getRailwaysData, getTinhVietnamData } from './geojsonUtils';
 import MuniList from './MuniList';
+import { Railway, RailwayType } from '../../utils/addr';
 
 interface P {
   openMobileAsideMenu: boolean;
@@ -39,6 +40,7 @@ export default (props: P) => {
     placename: true,
   });
   const [tinhBorderData, settinhBorderData]: [TinhVietnam[], any] = useState([]);
+  const [railwaysData, setrailwaysData]: [Railway[], any] = useState([]);
 
   const [currentZoom, setCurrentZoom] = useState(c_zoom() ? Number(c_zoom()) : DEFAULT_ZOOM);
 
@@ -83,6 +85,7 @@ export default (props: P) => {
   useEffect(() => {
     (async () => {
       settinhBorderData(await getTinhVietnamData());
+      setrailwaysData(await getRailwaysData());
     })();
     refreshRecordGroups();
     refreshRecords();
@@ -103,7 +106,7 @@ export default (props: P) => {
     }));
   };
 
-  const PANES = ['tinh', 'muniNames'];
+  const PANES = ['tinh', 'railways', 'muniNames'];
 
   const MuniNameMarker = useCallback(
     ({
@@ -180,7 +183,7 @@ export default (props: P) => {
         tileList={
           <>
             {
-              /* 大字 */
+              /* 省 */
               layers.tinh &&
                 tinhBorderData.map((border: TinhVietnam) => {
                   // 计算中心点
@@ -223,6 +226,38 @@ export default (props: P) => {
                       </Popup>
                       <MuniNameMarker center={center as LatLngTuple} muniBorder={border} currentZoom={currentZoom} layers={layers} />
                     </Polygon>
+                  );
+                })
+            }
+            {
+              /* 铁道 */
+              layers.railways &&
+                railwaysData.map((railwayLines, index) => {
+                  return railwayLines.type === RailwayType.highSpeedRailway || railwayLines.type === RailwayType.railway ? (
+                    <>
+                      {/* 铁道底色 */}
+                      <Polyline
+                        key={railwayLines.lineName + index.toString() + '1'}
+                        pane="railways"
+                        positions={railwayLines.coordinates}
+                        pathOptions={{ weight: 3, color: railwayLines.type === RailwayType.highSpeedRailway ? '#037771' : '#4f4f4f', opacity: 1, fillOpacity: 1 }}
+                      />
+                      {/* 白线 */}
+                      <Polyline
+                        key={railwayLines.lineName + index.toString() + '2'}
+                        pane="railways"
+                        positions={railwayLines.coordinates}
+                        pathOptions={{ weight: 1.5, color: 'white', opacity: 1, fillOpacity: 1, dashArray: '10,10', dashOffset: '10' }}
+                      />
+                    </>
+                  ) : (
+                    <Polyline
+                      key={railwayLines.lineName + index.toString()}
+                      className="rail-line"
+                      pane="railways"
+                      positions={railwayLines.coordinates}
+                      pathOptions={{ weight: 1, color: 'darkred', opacity: 1, fillOpacity: 1 }}
+                    />
                   );
                 })
             }

@@ -1,4 +1,6 @@
 import tinhVietnamJson from '../../geojson/vietnam/diaphantinhvn.geojson';
+import vietnamRailwaysJson from '../../geojson/vietnam/vietnamRailways.geojson';
+import { Railway } from '../../utils/addr';
 import { getGeoJsonData } from '../../utils/map';
 import { TinhVietnam } from './addr';
 
@@ -25,6 +27,35 @@ export const getTinhVietnamData = async () => {
         });
       }),
     } as TinhVietnam;
+  });
+};
+
+export const getRailwaysData = async () => {
+  const getRailwayCoordinates = (geometry: any) => {
+    const coordinates = geometry.coordinates;
+    switch (geometry.type) {
+      case 'LineString':
+        return coordinates.map((point: [number, number]) => {
+          return [point[1], point[0]];
+        });
+      case 'MultiLineString':
+        return coordinates.map((line: [number, number][]) => {
+          return line.map((point: [number, number]) => {
+            return [point[1], point[0]];
+          });
+        });
+      default:
+        return [];
+    }
+  };
+
+  const geojsondata = await getGeoJsonData(vietnamRailwaysJson);
+  return geojsondata.features.map((railwayFeature: any) => {
+    return {
+      type: railwayFeature.properties.type,
+      lineName: railwayFeature.properties.name,
+      coordinates: getRailwayCoordinates(railwayFeature.geometry),
+    } as Railway;
   });
 };
 

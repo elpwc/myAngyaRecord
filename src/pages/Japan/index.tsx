@@ -5,18 +5,16 @@ import '../../../node_modules/leaflet/dist/leaflet.css';
 import { Marker, Polygon, Polyline, Popup, useMap } from 'react-leaflet';
 import { getBounds, MapsId } from '../../utils/map';
 import { getMunicipalitiesData, getPrefecture_ShinkoukyokuData, getRailwaysData } from './geojsonUtils';
-import { InstitutionTypeCd, Railway, RailwayClassCd } from '../../utils/addr';
 import MapPopup from '../../components/MapPopup';
 import L, { divIcon, LatLngTuple } from 'leaflet';
 import { getFillcolor, getForecolor, getRecordGroups, getRecords, postRecord } from '../../utils/serverUtils';
 import MuniList from './MuniList';
 import { Record, RecordGroup } from '../../utils/types';
 import { isLogin } from '../../utils/userUtils';
-import { c_zoom } from '../../utils/cookies';
 import { useIsMobile } from '../../utils/hooks';
 import { AsideBar, LayerCheckboxInfo } from '../../components/AsideBar';
 import { MapInstance } from '../../components/MapInstance';
-import { Municipality, Prefecture } from './addr';
+import { InstitutionTypeCd, JapanRailway, Municipality, Prefecture, RailwayClassCd } from './addr';
 import { getShinkoukyokuFillColor, getShinkoukyokuForeColor, getTodofukenFillColor, getTodofukenForeColor } from './utils';
 
 interface P {
@@ -44,7 +42,7 @@ export default (props: P) => {
   });
   const [prefBorderData, setprefBorderData]: [Prefecture[], any] = useState([]);
   const [shinkouBorderData, setshinkouBorderData]: [Prefecture[], any] = useState([]);
-  const [railwaysData, setrailwaysData]: [Railway[], any] = useState([]);
+  const [railwaysData, setrailwaysData]: [JapanRailway[], any] = useState([]);
   const [muniBorderData, setmuniBorderData]: [{ municipalities: Municipality[]; prefecture: string }[], any] = useState([]);
 
   const [currentZoom, setCurrentZoom] = useState(DEFAULT_ZOOM);

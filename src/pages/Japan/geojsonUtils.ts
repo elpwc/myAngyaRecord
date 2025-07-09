@@ -3,8 +3,7 @@ import shinkoukyokuJson from '../../geojson/japan/hokkaido-subpref.geojson';
 import railwaysJson from '../../geojson/japan/railways.geojson';
 import { allPrefJsons } from './geojsonReader';
 import { getGeoJsonData } from '../../utils/map';
-import { Municipality, Prefecture } from './addr';
-import { Railway } from '../../utils/addr';
+import { JapanRailway, Municipality, Prefecture } from './addr';
 
 /**
  * 解析都道府县或者北海道振兴局数据
@@ -119,7 +118,7 @@ export const getRailwaysData = async () => {
       lineName: railwayCompanyFeature.properties.l,
       companyName: railwayCompanyFeature.properties.c,
       coordinates: getRailwayCoordinates(railwayCompanyFeature.geometry),
-    } as Railway;
+    } as JapanRailway;
   });
 };
 
