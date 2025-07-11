@@ -22,7 +22,7 @@ export const RecordGroupToolbar = ({
     <>
       <div className="groupSwitchContainer">
         <div style={{ width: '100%', padding: '4px', backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
-          {recordGroup && (
+          {recordGroup ? (
             <>
               <div style={{ display: 'flex', gap: '6px' }}>
                 <p>記録名:{recordGroup.name}</p>
@@ -33,6 +33,12 @@ export const RecordGroupToolbar = ({
                 <span>{`最後更新 ${moment(recordGroup.update_date).format('YYYY/MM/DD HH:mm:ss')}`}</span>
               </time>
             </>
+          ) : (
+            <p>
+              まだ記録がない
+              <br />
+              右のボタンで新規作成してください
+            </p>
           )}
         </div>
         <button className="styled-button flex" onClick={() => setIsGroupListModalOpen(true)} style={{ borderRight: 'none', borderTopRightRadius: '0px', borderBottomRightRadius: '0px' }}>
