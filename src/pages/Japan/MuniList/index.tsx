@@ -11,6 +11,8 @@ interface Props {
   muniBorderData: { municipalities: Municipality[]; prefecture: string }[];
   records: Record[];
   currentMapStyle?: number;
+  showCheckbox?: boolean;
+  onSelectedPrefChanged?: (pref: string[]) => void;
 }
 
 const getStatusTextByLevel = (level: number): string => {
@@ -37,8 +39,10 @@ const getStatusByMuniId = (muniId: string, records: Record[]): string => {
   return record ? getStatusTextByLevel(record.level) : '未踏';
 };
 
-const MuniList = ({ muniBorderData, records, currentMapStyle = 0 }: Props) => {
+const MuniList = ({ muniBorderData, records, currentMapStyle = 0, showCheckbox, onSelectedPrefChanged }: Props) => {
   const [expandedPrefectures, setExpandedPrefectures] = useState<string[]>([]);
+  const [selectedChihous, setSelectedChihous] = useState<string[]>([]);
+  const [selectedPrefectures, setSelectedPrefectures] = useState<string[]>([]);
   const togglePrefecture = (prefecture: string) => {
     setExpandedPrefectures(prev => (prev.includes(prefecture) ? prev.filter(p => p !== prefecture) : [...prev, prefecture]));
   };
@@ -47,8 +51,37 @@ const MuniList = ({ muniBorderData, records, currentMapStyle = 0 }: Props) => {
       {chihous_data.map(chihou => {
         return (
           <div key={chihou.name}>
-            <div className="municipalityItem" style={{ backgroundColor: chihou.color }}>
-              {chihou.name}
+            <div className="municipalityItem flex" style={{ backgroundColor: chihou.color }}>
+              {showCheckbox && (
+                <input
+                  type="checkbox"
+                  id={chihou.name}
+                  checked={selectedChihous.includes(chihou.name)}
+                  onClick={(e: React.MouseEvent<HTMLInputElement>) => {
+                    if (e.currentTarget.checked) {
+                      setSelectedChihous(prev => [...prev, chihou.name]);
+                      chihou.pref.forEach(pref => {
+                        if (!selectedPrefectures.includes(pref)) {
+                          setSelectedPrefectures(prev => [...prev, pref]);
+                        }
+                      });
+                      if (onSelectedPrefChanged) {
+                        onSelectedPrefChanged([...selectedPrefectures, ...chihou.pref]);
+                      }
+                    } else {
+                      setSelectedChihous(prev => prev.filter(c => c !== chihou.name));
+                      setSelectedPrefectures((prev: string[]) => prev.filter(pref => !chihou.pref.includes(pref)));
+                      if (onSelectedPrefChanged) {
+                        onSelectedPrefChanged(selectedPrefectures.filter(c => !chihou.pref.includes(c)));
+                      }
+                    }
+                  }}
+                />
+              )}
+
+              <span>
+                <label htmlFor={chihou.name}>{chihou.name}</label>
+              </span>
             </div>
             <div>
               {muniBorderData.length > 0 &&
@@ -85,7 +118,33 @@ const MuniList = ({ muniBorderData, records, currentMapStyle = 0 }: Props) => {
                             className={'prefDropdownButton ' + (expandedPrefectures.includes(prefMuniBorder.prefecture) ? 'prefDropdownButtonOpen' : '')}
                             onClick={() => togglePrefecture(prefMuniBorder.prefecture)}
                           >
-                            <span>{prefMuniBorder.prefecture}</span>
+                            <div className="flex">
+                              {showCheckbox && (
+                                <input
+                                  type="checkbox"
+                                  id={prefMuniBorder.prefecture}
+                                  checked={selectedPrefectures.includes(prefMuniBorder.prefecture)}
+                                  onClick={e => {
+                                    if (e.currentTarget.checked) {
+                                      if (!selectedPrefectures.includes(prefMuniBorder.prefecture)) {
+                                        setSelectedPrefectures(prev => [...prev, prefMuniBorder.prefecture]);
+                                      }
+                                      if (onSelectedPrefChanged) {
+                                        onSelectedPrefChanged([...selectedPrefectures, prefMuniBorder.prefecture]);
+                                      }
+                                    } else {
+                                      setSelectedPrefectures((prev: string[]) => prev.filter(pref => pref !== prefMuniBorder.prefecture));
+                                      if (onSelectedPrefChanged) {
+                                        onSelectedPrefChanged(selectedPrefectures.filter(c => c !== prefMuniBorder.prefecture));
+                                      }
+                                    }
+                                  }}
+                                />
+                              )}
+                              <span>
+                                <label htmlFor={prefMuniBorder.prefecture}>{prefMuniBorder.prefecture}</label>
+                              </span>
+                            </div>
                             <span className="prefDropdownButton-status">
                               <span>居住{angyaStatus.live}</span>
                               <span>宿泊{angyaStatus.stay}</span>

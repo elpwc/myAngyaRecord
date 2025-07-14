@@ -45,6 +45,8 @@ export default (props: P) => {
   const [railwaysData, setrailwaysData]: [JapanRailway[], any] = useState([]);
   const [muniBorderData, setmuniBorderData]: [{ municipalities: Municipality[]; prefecture: string }[], any] = useState([]);
 
+  const [muniListSelectedPrefectures, setMuniListSelectedPrefectures] = useState<string[]>([]);
+
   const [currentZoom, setCurrentZoom] = useState(DEFAULT_ZOOM);
 
   const [recordGroup, setrecordGroup] = useState<RecordGroup>();
@@ -179,7 +181,15 @@ export default (props: P) => {
         openMobileAsideMenu={props.openMobileAsideMenu}
         currentTileMap={currentBackgroundTileMap}
         layers={LAYERS}
-        list={<MuniList muniBorderData={muniBorderData} records={records} currentMapStyle={currentMapStyle} />}
+        list={
+          <MuniList
+            muniBorderData={muniBorderData}
+            records={records}
+            currentMapStyle={currentMapStyle}
+            showCheckbox={LAYERS.some(layer => layer.checked && layer.name === 'muni')}
+            onSelectedPrefChanged={setMuniListSelectedPrefectures}
+          />
+        }
         onCurrentBackgroundTileMapChange={handleMapBackgroundTileChange}
         onLayerChange={handleLayerChange}
         onSelectRecordGroup={(recordGroup: RecordGroup) => {
@@ -199,51 +209,58 @@ export default (props: P) => {
             {
               /* 市区町村 */
               layers.muni &&
-                muniBorderData.map(prefMuniBorder => {
-                  return prefMuniBorder.municipalities.map((muniBorder: Municipality) => {
-                    // 计算中心点
-                    const center = getBounds(muniBorder.coordinates);
+                muniBorderData
+                  .filter(prefMuniBorder => {
+                    if (muniListSelectedPrefectures.length === 0) {
+                      return true;
+                    }
+                    return muniListSelectedPrefectures.includes(prefMuniBorder.prefecture);
+                  })
+                  .map(prefMuniBorder => {
+                    return prefMuniBorder.municipalities.map((muniBorder: Municipality) => {
+                      // 计算中心点
+                      const center = getBounds(muniBorder.coordinates);
 
-                    return (
-                      <Polygon
-                        pane="muni"
-                        key={'muni' + muniBorder.id}
-                        className="muniBorder"
-                        pathOptions={{
-                          fillColor: getFillcolor(currentMapStyle, records, muniBorder.id),
-                          color: getForecolor(currentMapStyle, records, muniBorder.id),
-                          opacity: 1,
-                          fillOpacity: currentBackgroundTileMap !== 'blank' ? 0.6 : 1,
-                          weight: 0.4,
-                        }}
-                        positions={muniBorder.coordinates}
-                      >
-                        <Popup closeOnClick className="popupStyle">
-                          <MapPopup
-                            addr={(muniBorder.pref ?? '') + (muniBorder.shinkoukyoku ?? '') + (muniBorder.gun_seireishi ?? '')}
-                            name={muniBorder.name}
-                            onClick={value => {
-                              if (recordGroup?.id) {
-                                postRecord(
-                                  recordGroup?.id,
-                                  muniBorder.id,
-                                  value,
-                                  () => {
-                                    refreshRecords();
-                                  },
-                                  errmsg => {
-                                    alert(errmsg);
-                                  }
-                                );
-                              }
-                            }}
-                          />
-                        </Popup>
-                        <MuniNameMarker center={center as LatLngTuple} muniBorder={muniBorder} currentZoom={currentZoom} layers={layers} />
-                      </Polygon>
-                    );
-                  });
-                })
+                      return (
+                        <Polygon
+                          pane="muni"
+                          key={'muni' + muniBorder.id}
+                          className="muniBorder"
+                          pathOptions={{
+                            fillColor: getFillcolor(currentMapStyle, records, muniBorder.id),
+                            color: getForecolor(currentMapStyle, records, muniBorder.id),
+                            opacity: 1,
+                            fillOpacity: currentBackgroundTileMap !== 'blank' ? 0.6 : 1,
+                            weight: 0.4,
+                          }}
+                          positions={muniBorder.coordinates}
+                        >
+                          <Popup closeOnClick className="popupStyle">
+                            <MapPopup
+                              addr={(muniBorder.pref ?? '') + (muniBorder.shinkoukyoku ?? '') + (muniBorder.gun_seireishi ?? '')}
+                              name={muniBorder.name}
+                              onClick={value => {
+                                if (recordGroup?.id) {
+                                  postRecord(
+                                    recordGroup?.id,
+                                    muniBorder.id,
+                                    value,
+                                    () => {
+                                      refreshRecords();
+                                    },
+                                    errmsg => {
+                                      alert(errmsg);
+                                    }
+                                  );
+                                }
+                              }}
+                            />
+                          </Popup>
+                          <MuniNameMarker center={center as LatLngTuple} muniBorder={muniBorder} currentZoom={currentZoom} layers={layers} />
+                        </Polygon>
+                      );
+                    });
+                  })
             }
             {
               /* 铁道 */
