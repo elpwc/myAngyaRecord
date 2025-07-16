@@ -77,7 +77,7 @@ const MuniList = ({ areaData, borderData, records, currentMapStyle = 0 }: Props)
                 <div key={area.id}>
                   <div className="prefInfoContainer">
                     <button className={'prefDropdownButton ' + (expandedPrefectures.includes(area.name) ? 'prefDropdownButtonOpen' : '')} onClick={() => togglePrefecture(area.name)}>
-                      <span>{area.name}</span>
+                      <span>{area.name + '地区'}</span>
                       <span className="prefDropdownButton-status">
                         <span>居住{angyaStatus.live}</span>
                         <span>宿泊{angyaStatus.stay}</span>

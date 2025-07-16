@@ -208,7 +208,7 @@ export default (props: P) => {
                     >
                       <Popup closeOnClick className="popupStyle">
                         <MapPopup
-                          addr={border.area ?? ''}
+                          addr={border.area ? border.area + '地区' : ''}
                           name={border.name}
                           onClick={value => {
                             if (recordGroup?.id) {
