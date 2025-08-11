@@ -35,6 +35,14 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
+.municipalityAreaItem{
+  padding: 1px 12px;
+  gap: 8px;
+  border-bottom: 1px solid #eee;
+  font-size: 12px;
+  background-color: rgb(173, 173, 173);
+}
+
 .municipalityItem {
   padding: 1px 12px;
   display: flex;

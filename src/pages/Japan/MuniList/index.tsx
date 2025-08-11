@@ -51,7 +51,7 @@ const MuniList = ({ muniBorderData, records, currentMapStyle = 0, showCheckbox, 
       {chihous_data.map(chihou => {
         return (
           <div key={chihou.name}>
-            <div className="municipalityItem flex" style={{ backgroundColor: chihou.color }}>
+            <div className="municipalityAreaItem flex" style={{ backgroundColor: chihou.color }}>
               {showCheckbox && (
                 <input
                   type="checkbox"
