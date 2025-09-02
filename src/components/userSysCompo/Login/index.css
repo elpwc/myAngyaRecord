@@ -9,13 +9,11 @@
 
 .login-form {
   background: white;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  border-left-color: rgb(173, 173, 173);
-  border-top-color: rgb(173, 173, 173);
-  border-right-color: black;
-  border-bottom-color: black;
-  border-width: 3px;
+  box-shadow: 0 0 7px 1px rgba(0, 0, 0, 0.1);
+  border-color: rgb(173, 173, 173);
+  border-width: 1px;
   border-style: solid;
+  border-radius: 5px;
   padding: 2rem;
   max-width: 400px;
   display: flex;
@@ -37,11 +35,9 @@
   width: 100%;
   padding: 0.5rem 0.5rem;
   box-sizing: border-box;
-  border-left-color: black;
-  border-top-color: black;
-  border-right-color: rgb(173, 173, 173);
-  border-bottom-color: rgb(173, 173, 173);
-  border-width: 3px;
+  border-color: rgb(132, 132, 132);
+  border-radius: 3px;
+  border-width: 1px;
   border-style: solid;
   margin-top: 0.5rem;
   transition: all 0.3s ease;
@@ -59,13 +55,29 @@
   padding: 0.7rem;
   font-weight: 500;
   cursor: pointer;
+  background-color: white;
+  border-color: rgb(132, 132, 132);
+  border-radius: 3px;
+  border-width: 1px;
+  border-style: solid;
+}
+
+
+.login-button:hover{
+  background-color: #f0f0f0;
 }
 
 .login-tip {
   text-align: center;
   margin-top: 0.75rem;
-  color: #ef4444;
-  min-height: 1.5rem;
+  color: #222222;
+  min-height: 1rem;
+}
+
+.login-form-checkbox-container{
+  display: flex;
+  align-items: center;
+  font-size: 0.8rem;
 }
 
 .auto-login-checkbox {
@@ -86,4 +98,15 @@
 .login-form-footer-buttons-container {
   display: flex;
   justify-content: space-between;
+}
+
+.login-form-footer-link {
+  color: #898989;
+  text-decoration: none;
+  font-size: 0.7rem;
+  cursor: pointer;
+}
+
+.login-form-footer-link:hover {
+  color: #2c2c2c;
 }

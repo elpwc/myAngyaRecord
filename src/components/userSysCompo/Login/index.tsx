@@ -26,7 +26,7 @@ export default (props: P) => {
   const [tip, settip]: [string, any] = useState('');
 
   useEffect(() => {
-    document.title = 'Otogemap - Login';
+    document.title = 'My行脚記録 - ログイン';
   }, []);
 
   return (
@@ -66,10 +66,10 @@ export default (props: P) => {
 
                       break;
                     case 'fail':
-                      settip('EMAIL不存在 or PASSWORD不正、失敗');
+                      settip('入力したメールが存在しません。或いはパスワードが違います');
                       break;
                     default:
-                      settip('ERROR');
+                      settip('エラー');
                       break;
                   }
                 })
@@ -78,39 +78,43 @@ export default (props: P) => {
                   console.log(e);
                 });
             } else {
-              settip('Email入力!');
+              settip('メールを入力してください');
             }
           } else {
-            settip('Password入力!');
+            settip('パスワードを入力してください!');
           }
         }}
       >
         {({ values }) => (
           <Form className="login-form">
-            <label className="">
-              <Field id="email" name="email" className="login-input" placeholder="Email" />
+            <label className="login-form-item-container">
+              <Field id="email" name="email" className="login-input" placeholder="メール" />
             </label>
 
-            <label className="">
-              <Field type="password" id="password" name="password" className="login-input" placeholder="Password" />
+            <label className="login-form-item-container">
+              <Field type="password" id="password" name="password" className="login-input" placeholder="パスワード" />
             </label>
 
             <div className="login-form-item-container">
-              <label className="">
+              <label className="login-form-checkbox-container">
                 <Field type="checkbox" name="autoLogin" className="auto-login-checkbox" />
-                <span className="auto-login-label">次回自動LOGIN</span>
+                <span className="auto-login-label">次回からオートログイン</span>
               </label>
             </div>
 
             <div className="login-form-item-container">
               <button type="submit" className="retro-button login-button" disabled={!buttonAvailable}>
-                LOGIN
+                ログイン
               </button>
               <div className="login-tip">{tip}</div>
             </div>
             <div className="login-form-item-container login-form-footer-buttons-container">
-              <Link to="/emailverify">新Account</Link>
-              <Link to={'/emailverify?email=' + values.email + '&forgetpassword=1'}>Password忘却</Link>
+              <Link className="login-form-footer-link" to="/emailverify">
+                アカウント作成
+              </Link>
+              <Link className="login-form-footer-link" to={'/emailverify?email=' + values.email + '&forgetpassword=1'}>
+                パスワード忘れた
+              </Link>
             </div>
           </Form>
         )}

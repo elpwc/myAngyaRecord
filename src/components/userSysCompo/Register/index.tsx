@@ -42,7 +42,7 @@ export default (props: P) => {
   };
 
   useEffect(() => {
-    document.title = 'Otogemap - Register';
+    document.title = 'My行脚記録 - アカウント作成';
   }, []);
 
   return (
@@ -61,7 +61,7 @@ export default (props: P) => {
                   switch (res) {
                     case 'ok':
                       resetForm();
-                      settip('作成完了Nya♡');
+                      settip('作成完了');
                       setTimeout(() => {
                         sethasRequestSend(true);
 
@@ -69,16 +69,16 @@ export default (props: P) => {
                       }, 1000);
                       break;
                     case 'exist':
-                      settip('EMAIL既存在');
+                      settip('メールは既に存在します');
                       break;
                     case 'email_verify_failed':
-                      settip('認証失敗');
+                      settip('メール認証失敗');
                       break;
                     case 'database_error':
-                      settip('DATABASE書込失敗');
+                      settip('データベース書込失敗');
                       break;
                     default:
-                      settip('ERROR');
+                      settip('エラー');
                       break;
                   }
                 })
@@ -86,33 +86,35 @@ export default (props: P) => {
                   setbuttonAvailable(true);
                 });
             } else {
-              settip('Nickname入力！');
+              settip('ニックネームを入力してください');
             }
           } else {
-            settip('Password不一致');
+            settip('再入力したパスワードが一致しません');
           }
         }}
       >
         {({ values }) => (
-          <Form className="register-form">
-            <div className="register-form-item-container">
+          <Form className="login-form">
+            <div className="login-form-item-container">
               <p>{email}</p>
             </div>
-            <label className="register-form-item-container">
-              <Field type="password" id="password" name="password" className="register-input" placeholder="Password" />
+            <label className="login-form-item-container">
+              <Field type="password" id="password" name="password" className="login-input" placeholder="パスワード" />
             </label>
-            <label className="register-form-item-container">
-              <Field type="password" id="password2" name="password2" className="register-input" placeholder="Password二回目" />
+            <label className="login-form-item-container">
+              <Field type="password" id="password2" name="password2" className="login-input" placeholder="同じパスワード再入力" />
             </label>
-            <label className="register-form-item-container">
-              <Field id="name" name="name" className="register-input" placeholder="Nickname" />
+            <label className="login-form-item-container">
+              <Field id="name" name="name" className="login-input" placeholder="ニックネーム" />
             </label>
-            <div className="register-form-item-container">
-              <button type="submit" className="retro-button register-button" disabled={!buttonAvailable}>
-                ACCOUNT作成
+            <div className="login-form-item-container">
+              <button type="submit" className="retro-button login-button" disabled={!buttonAvailable}>
+                アカウント作成
               </button>
-              <div className="register-tip">{tip}</div>
-              <Link to="/login">LOGIN</Link>
+              <div className="login-tip">{tip}</div>
+              <Link className="login-form-footer-link" to="/login">
+                ログイン
+              </Link>
             </div>
           </Form>
         )}

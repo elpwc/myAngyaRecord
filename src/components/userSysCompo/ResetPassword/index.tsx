@@ -54,7 +54,7 @@ export default (props: P) => {
   }, [mylocation.search]);
 
   useEffect(() => {
-    document.title = 'Otogemap - Register';
+    document.title = 'My行脚記録 - パスワード再設定';
   }, []);
 
   return (
@@ -78,7 +78,7 @@ export default (props: P) => {
                     }, 1000);
                     break;
                   default:
-                    settip('ERROR');
+                    settip('エラー');
                     break;
                 }
               })
@@ -86,29 +86,31 @@ export default (props: P) => {
                 setbuttonAvailable(true);
               });
           } else {
-            settip('Password不一致');
+            settip('再入力したパスワードが一致しません');
           }
         }}
       >
         {({ values }) => (
-          <Form className="register-form">
-            <label className="register-form-item-container">{email}</label>
+          <Form className="login-form">
+            <label className="login-form-item-container">{email}</label>
             {hasRequestSend ? (
-              <p>RESET完了!</p>
+              <p>再設定完了</p>
             ) : (
               <>
-                <label className="register-form-item-container">
-                  <Field type="password" id="password" name="password" className="register-input" placeholder="Password" />
+                <label className="login-form-item-container">
+                  <Field type="password" id="password" name="password" className="register-input" placeholder="パスワード" />
                 </label>
-                <label className="register-form-item-container">
-                  <Field type="password" id="password2" name="password2" className="register-input" placeholder="Password二回目" />
+                <label className="login-form-item-container">
+                  <Field type="password" id="password2" name="password2" className="register-input" placeholder="同じパスワード再入力" />
                 </label>
-                <div className="register-form-item-container">
-                  <button type="submit" className="retro-button register-button" disabled={!buttonAvailable}>
-                    RESET Password
+                <div className="login-form-item-container">
+                  <button type="submit" className="retro-button login-button" disabled={!buttonAvailable}>
+                    パスワード再設定
                   </button>
-                  <div className="register-tip">{tip}</div>
-                  <Link to="/login">LOGIN</Link>
+                  <div className="login-tip">{tip}</div>
+                  <Link className="login-form-footer-link" to="/login">
+                    ログイン
+                  </Link>
                 </div>
               </>
             )}
