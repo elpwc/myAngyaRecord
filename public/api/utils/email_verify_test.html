@@ -1,0 +1,56 @@
+<div class="container">
+  <style>
+    p {
+      margin: 0;
+    }
+
+    .container {
+      background: white;
+      box-shadow: 0 0 7px 1px rgba(0, 0, 0, 0.1);
+      border-color: rgb(173, 173, 173);
+      border-width: 1px;
+      border-style: solid;
+      border-radius: 5px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      height: fit-content;
+      align-items: center;
+    }
+
+    .button {
+      color: black;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 10px 0;
+      cursor: pointer;
+      padding: 10px 20px;
+      width: auto;
+      background-color: white;
+      border-color: rgb(132, 132, 132);
+      border-radius: 3px;
+      border-width: 1px;
+      border-style: solid;
+    }
+
+    .text {
+      font-size: 16px;
+      margin: 10px 0;
+      text-align: center;
+      color: #333;
+    }
+  </style>
+  <p class="text">' . ($isForgetPassword ? '下の「アカウント認証」で、パスワード再設定してください：<br /><br />
+    Click the link below to reset your password:' : 'My行脚記録を使っていただいてありがとうございます！<br />
+    下の「アカウント認証」で、作成を完成してください：<br /><br />
+    Click the link below to complete your registration:') . '
+  </p>
+  <a class="button" href="' . $url . '" target="_blank">アカウント認証</a><br /><br />
+  <p style="color: rgb(0, 0, 0)">' . date('Y-m-d H:i:s') . '</p><br />
+  <p style="font-size: 10px; color: rgb(155, 155, 155);width: 100%; overflow-wrap: break-word;">Button URL: <a
+      href="' . $url . '">' . $url . '</a>
+  </p>
+</div>

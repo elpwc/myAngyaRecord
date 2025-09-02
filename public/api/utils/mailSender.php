@@ -24,7 +24,7 @@ function sendMail($addr, $subject, $body)
     $mail->Encoding = 'base64';
 
     // 邮件信息
-    $mail->setFrom(EMAIL_USER, 'Otogemap 引誘地図');
+    $mail->setFrom(EMAIL_USER, 'elpwc.com');
     $mail->addAddress($addr);
     $mail->isHTML(true);
     $mail->Subject = $subject;

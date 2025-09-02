@@ -83,55 +83,27 @@ function send_verification_mail($target, $verify_code, $isForgetPassword = false
 
   $res =  sendMail(
     $target,
-    "全国引誘地図 ACCOUNT認証",
+    "My行脚記録 ACCOUNT認証",
     '
-        <div class="container">
+<div class="container">
   <style>
     p {
       margin: 0;
     }
 
     .container {
+      background: white;
+      box-shadow: 0 0 7px 1px rgba(0, 0, 0, 0.1);
+      border-color: rgb(173, 173, 173);
+      border-width: 1px;
+      border-style: solid;
+      border-radius: 5px;
       padding: 20px;
       display: flex;
-      align-items: center;
-      gap: 20px;
       flex-direction: column;
-      background: #f0f0f0;
-      border: 2px solid;
-      border-color: #d6d6d6 #808080 #808080 #d6d6d6;
-      box-shadow: 1px 1px 0 0 #000000;
-    }
-
-    .retro-button {
-      background-color: rgb(247, 247, 247);
-      border-left-color: rgb(212, 212, 212);
-      border-top-color: rgb(212, 212, 212);
-      border-right-color: #505050;
-      border-bottom-color: #505050;
-      border-width: 3px;
-      border-style: solid;
-    }
-
-    @media (any-hover: hover) {
-      .retro-button:hover {
-        border-left-width: 2px;
-        border-top-width: 2px;
-        border-right-width: 4px;
-        border-bottom-width: 4px;
-      }
-    }
-
-    .retro-button:active {
-      border-left-width: 4px;
-      border-top-width: 4px;
-      border-right-width: 2px;
-      border-bottom-width: 2px;
-      border-left-color: #505050;
-      border-top-color: #505050;
-      border-right-color: rgb(212, 212, 212);
-      border-bottom-color: rgb(212, 212, 212);
-      background-color: rgb(241, 241, 241);
+      gap: 16px;
+      height: fit-content;
+      align-items: center;
     }
 
     .button {
@@ -144,6 +116,11 @@ function send_verification_mail($target, $verify_code, $isForgetPassword = false
       cursor: pointer;
       padding: 10px 20px;
       width: auto;
+      background-color: white;
+      border-color: rgb(132, 132, 132);
+      border-radius: 3px;
+      border-width: 1px;
+      border-style: solid;
     }
 
     .text {
@@ -152,28 +129,17 @@ function send_verification_mail($target, $verify_code, $isForgetPassword = false
       text-align: center;
       color: #333;
     }
-
-    .header {
-      font-size: 20px;
-      font-weight: bold;
-      color: #333;
-      text-align: center;
-      margin-bottom: 20px;
-      width: 100%;
-      border-bottom: solid 1px #dcdcdc;
-    }
   </style>
-  <div class="header">
-    <p>Otogemap - 全国引誘地図<br />ACCOUNT認証</p>
-  </div>
-  <p class="text">' . ($isForgetPassword ? '下之「ACCOUNT認証」link訪問後、PASSWORD RESET可能：<br /><br />
-    Click the link below to reset your password:' : '全国引誘地図之ACCOUNT作成大感謝謝謝茄子！<br />
-    下之「ACCOUNT認証」link訪問後、ACCOUNT作成完了：<br /><br />
+  <p class="text">' . ($isForgetPassword ? '下の「アカウント認証」で、パスワード再設定してください：<br /><br />
+    Click the link below to reset your password:' : 'My行脚記録を使っていただいてありがとうございます！<br />
+    下の「アカウント認証」で、作成を完成してください：<br /><br />
     Click the link below to complete your registration:') . '
   </p>
-  <a class="button retro-button" href="' . $url . '" target="_blank">ACCOUNT認証</a>
-  <p style="color: rgb(0, 0, 0)">' . date('Y-m-d H:i:s') . '</p>
-  <p style="font-size: 10px; color: rgb(155, 155, 155);width: 100%; overflow-wrap: break-word;">Button URL: ' . $url . '</p>
+  <a class="button" href="' . $url . '" target="_blank">アカウント認証</a><br /><br />
+  <p style="color: rgb(0, 0, 0)">' . date('Y-m-d H:i:s') . '</p><br />
+  <p style="font-size: 10px; color: rgb(155, 155, 155);width: 100%; overflow-wrap: break-word;">Button URL: <a
+      href="' . $url . '">' . $url . '</a>
+  </p>
 </div>
         '
   );
