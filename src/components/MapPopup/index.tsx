@@ -7,6 +7,8 @@ import { isLogin } from '../../utils/userUtils';
 interface P {
   addr: string;
   name: string;
+  /* 記録がないと記録できない */
+  hasOpenningRecordGroup: boolean;
   onClick: (value: number) => void;
 }
 const mapStyles = [
@@ -17,7 +19,7 @@ const mapStyles = [
 
 let currentMapStyle = 2;
 
-export default ({ addr, name, onClick }: P) => {
+export default ({ addr, name, hasOpenningRecordGroup, onClick }: P) => {
   const thisMap = useMap();
 
   const values = [
@@ -44,27 +46,32 @@ export default ({ addr, name, onClick }: P) => {
           </a>
         </p>
       </div>
-      {isLogin() ? (
-        <div className="popupbuttoncontainer">
-          {values.map(value => {
-            return (
-              <button
-                key={value.name}
-                className="popupbutton"
-                onClick={() => {
-                  onClick(value.value);
-                  thisMap.closePopup();
-                }}
-                style={{ backgroundColor: mapStyles[currentMapStyle].bgcolor[5 - value.value], color: mapStyles[currentMapStyle].color[5 - value.value] }}
-              >
-                {value.name}
-              </button>
-            );
-          })}
-        </div>
-      ) : (
-        <p style={{ width: '100%', textAlign: 'center', margin: '6px 0' }}>ログインして記録してください</p>
-      )}
+      <div className="popupbuttoncontainer">
+        {values.map(value => {
+          return (
+            <button
+              key={value.name}
+              className="popupbutton"
+              onClick={() => {
+                if (isLogin()) {
+                  if (hasOpenningRecordGroup) {
+                    // 記録がある場合のみ処理を続行
+                    onClick(value.value);
+                  } else {
+                    alert('まず記録を開くか・作成してください');
+                  }
+                } else {
+                  alert('まずログインしてから記録してください');
+                }
+                thisMap.closePopup();
+              }}
+              style={{ backgroundColor: mapStyles[currentMapStyle].bgcolor[5 - value.value], color: mapStyles[currentMapStyle].color[5 - value.value] }}
+            >
+              {value.name}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 };

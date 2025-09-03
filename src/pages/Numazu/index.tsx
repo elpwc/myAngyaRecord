@@ -210,6 +210,7 @@ export default (props: P) => {
                         <MapPopup
                           addr={border.area ? border.area + '地区' : ''}
                           name={border.name}
+                          hasOpenningRecordGroup={!!recordGroup?.id}
                           onClick={value => {
                             if (recordGroup?.id) {
                               postRecord(

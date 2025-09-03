@@ -71,7 +71,7 @@ export const AsideBar = ({
           })}
         </div>
       </div>
-      {isLogin() ? <RecordGroupToolbar recordGroup={currentRecordGroup} thisMapId={thisMapId} onSelectRecordGroup={onSelectRecordGroup} /> : <LoginPanel />}
+      {isLogin() ? <RecordGroupToolbar recordGroup={currentRecordGroup} thisMapId={thisMapId} onSelectRecordGroup={onSelectRecordGroup} /> : <LoginPanel direction="column" />}
 
       {currentRecordGroup && list}
     </aside>

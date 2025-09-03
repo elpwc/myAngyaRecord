@@ -239,6 +239,7 @@ export default (props: P) => {
                             <MapPopup
                               addr={(muniBorder.pref ?? '') + (muniBorder.shinkoukyoku ?? '') + (muniBorder.gun_seireishi ?? '')}
                               name={muniBorder.name}
+                              hasOpenningRecordGroup={!!recordGroup?.id}
                               onClick={value => {
                                 if (recordGroup?.id) {
                                   postRecord(

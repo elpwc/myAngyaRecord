@@ -207,6 +207,7 @@ export default (props: P) => {
                         <MapPopup
                           addr={''}
                           name={border.name}
+                          hasOpenningRecordGroup={!!recordGroup?.id}
                           onClick={value => {
                             if (recordGroup?.id) {
                               postRecord(
