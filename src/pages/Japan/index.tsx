@@ -16,6 +16,7 @@ import { AsideBar, LayerCheckboxInfo } from '../../components/AsideBar';
 import { MapInstance } from '../../components/MapInstance';
 import { InstitutionTypeCd, JapanRailway, Municipality, Prefecture, RailwayClassCd } from './addr';
 import { getShinkoukyokuFillColor, getShinkoukyokuForeColor, getTodofukenFillColor, getTodofukenForeColor } from './utils';
+import { c_uid } from '../../utils/cookies';
 
 interface P {
   openMobileAsideMenu: boolean;
@@ -242,6 +243,34 @@ export default (props: P) => {
                               hasOpenningRecordGroup={!!recordGroup?.id}
                               onClick={value => {
                                 if (recordGroup?.id) {
+                                  console.log(123, value);
+                                  const t_records = records;
+                                  if (t_records.findIndex(r => r.admin_id === muniBorder.id) === -1) {
+                                    t_records.push({
+                                      admin_id: muniBorder.id,
+                                      level: value,
+                                      group_id: recordGroup.id,
+                                      group_name: recordGroup.name,
+                                      id: records.length,
+                                      is_deleted: false,
+                                      uid: Number(c_uid()),
+                                      create_date: new Date().toISOString().replace('T', ' ').substring(0, 19),
+                                      update_date: new Date().toISOString().replace('T', ' ').substring(0, 19),
+                                    });
+                                  } else {
+                                    for (let i = 0; i < t_records.length; i++) {
+                                      console.log(0, t_records[i]);
+                                      if (t_records[i].admin_id === muniBorder.id) {
+                                        console.log(1234, t_records[i]);
+                                        t_records[i].level = value;
+                                        break;
+                                      }
+                                    }
+                                  }
+                                  console.log(t_records)
+                                  setrecords(t_records);
+                                  //setrecords(prevRecords => prevRecords.map(record => (record.admin_id === muniBorder.id ? { ...record, level: value } : record)));
+                                  console.log(456);
                                   postRecord(
                                     recordGroup?.id,
                                     muniBorder.id,
@@ -250,6 +279,7 @@ export default (props: P) => {
                                       refreshRecords();
                                     },
                                     errmsg => {
+                                      refreshRecords();
                                       alert(errmsg);
                                     }
                                   );
