@@ -52,7 +52,7 @@ export default (props: P) => {
 
   return (
     <div className="rankingListContainer">
-      <h3>{getMapTitleByMapsId(props.mapId)}行脚の全国クランキング</h3>
+      <h3>{getMapTitleByMapsId(props.mapId)}行脚ランキング</h3>
       <Pagination currentPage={currentPage} totalItems={total} itemsPerPage={AMOUNT_PER_PAGE} onPageChange={handlePageChange} />
 
       <ul className="RankingList" style={{ width: isMobile ? '95%' : '60%' }}>
