@@ -7,7 +7,7 @@ function token_check()
 {
 
   $headers = apache_request_headers();
-  $auth_header = isset($headers['Authorization']) ? $headers['Authorization'] : '';
+  $auth_header = isset($headers['authorization']) ? $headers['authorization'] : '';
 
   // 本地调试沒有apache时获取bearer
   if ($auth_header === '') {
