@@ -23,6 +23,15 @@ export const c_autoLogin = (state?: boolean): boolean => {
   }
 };
 
+export const c_userNickName = (userName?: string): string => {
+  if (userName !== null && userName !== undefined) {
+    cookie.save('userNickName', userName ?? '', { path: '/' });
+    return userName ?? '';
+  } else {
+    return cookie.load('userNickName') ?? '';
+  }
+};
+
 export const c_userName = (userName?: string): string => {
   if (userName !== null && userName !== undefined) {
     cookie.save('userName', userName ?? '', { path: '/' });
