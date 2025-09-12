@@ -253,7 +253,7 @@ export default (props: P) => {
                       positions={border.coordinates}
                       interactive={false}
                     >
-                      {(showAreaLevelColor || (currentZoom < 8 && layers.placename)) && (
+                      {((showAreaLevelColor && layers.placename) || (currentZoom < 8 && layers.placename)) && (
                         <Marker
                           pane="muniNames"
                           position={center as LatLngTuple}
