@@ -132,9 +132,6 @@ export default (props: P) => {
                   <Link to="/login">ログイン</Link>
                 </>
               )}
-              <Link to="/about" className={currentLocation === 'about' ? 'selected' : ''}>
-                ﾌｨｰﾄﾞﾊﾞｯｸ
-              </Link>
             </menu>
           </header>
         ) : (
