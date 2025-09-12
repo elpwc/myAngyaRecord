@@ -34,7 +34,23 @@ export default (props: P) => {
   ];
 
   useEffect(() => {
-    // document.title = '';
+    switch (currentLocation) {
+      case 'ranking':
+        document.title = 'My行脚記録 - ' + (currentMap === -1 ? '日本' : menuItems[currentMap].title) + 'ランキング';
+        break;
+      case 'user':
+        document.title = 'My行脚記録 - ユーザー';
+        break;
+      case 'about':
+        document.title = 'My行脚記録 - このサイトについて';
+        break;
+      default:
+        document.title = 'My行脚記録 - ' + (currentMap === -1 ? '日本' : menuItems[currentMap].title);
+        break;
+    }
+  }, [currentLocation, currentMap]);
+
+  useEffect(() => {
     if (isLogin()) {
       loginCurrentUser();
     }

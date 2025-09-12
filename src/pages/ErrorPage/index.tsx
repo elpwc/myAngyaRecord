@@ -13,7 +13,7 @@ export default (props: P) => {
   // let currentId: string = params.id as string;
 
   useEffect(() => {
-    document.title = 'OtogeMap - 404';
+    document.title = 'My行脚記録 - 404';
   }, []);
 
   return (
