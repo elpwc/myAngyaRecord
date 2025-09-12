@@ -6,6 +6,7 @@ import { RecordGroup } from '../utils/types';
 import { MapsId } from '../utils/map';
 import { LoginPanel } from './LoginPanel';
 import { JSX } from 'react';
+import { motion } from 'framer-motion';
 
 export interface LayerCheckboxInfo {
   name: string;
@@ -55,12 +56,17 @@ export const AsideBar = ({
 }) => {
   const isMobile = useIsMobile();
   return (
-    <aside
+    <motion.aside
       style={{
         boxShadow: '0px 0px 10px 0px rgb(136, 136, 136)',
         zIndex: 3500,
         position: isMobile ? 'absolute' : 'unset',
-        display: (isMobile && openMobileAsideMenu) || !isMobile ? 'unset' : 'none',
+      }}
+      initial="closed"
+      animate={(isMobile && openMobileAsideMenu) || !isMobile ? 'open' : 'closed'}
+      variants={{
+        open: { x: 0, opacity: 1, display: 'unset', transition: { duration: 0.15 } },
+        closed: { x: '-100%', opacity: 0, transition: { duration: 0.15 }, transitionEnd: { display: 'none' } },
       }}
     >
       <div>
@@ -74,6 +80,6 @@ export const AsideBar = ({
       {isLogin() ? <RecordGroupToolbar recordGroup={currentRecordGroup} thisMapId={thisMapId} onSelectRecordGroup={onSelectRecordGroup} /> : <LoginPanel direction="column" />}
 
       {currentRecordGroup && list}
-    </aside>
+    </motion.aside>
   );
 };
