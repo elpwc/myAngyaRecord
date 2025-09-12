@@ -1,6 +1,6 @@
 import React from 'react';
 import { useEffect } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router';
+import { Link, useLocation, useNavigate, useParams } from 'react-router';
 import './index.css';
 
 interface P {}
@@ -20,9 +20,16 @@ export default (props: P) => {
     <>
       <div style={{ textAlign: 'center' }}>
         <div style={{ fontSize: '20px', fontWeight: 'bold' }}>
-          にゃんにゃんぐるぐる
+          404
           <br />
-          404だにゃー
+          訪問しようとしているURLはこのサイトに存在しません
+          <br />
+          もしくはサイト管理者に削除されました
+          <br />
+          <br />
+          <Link to="/" style={{ color: '#007bff' }}>
+            トップページへ
+          </Link>
         </div>
       </div>
     </>
