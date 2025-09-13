@@ -61,6 +61,7 @@ export const AsideBar = ({
         boxShadow: '0px 0px 10px 0px rgb(136, 136, 136)',
         zIndex: 3500,
         position: isMobile ? 'absolute' : 'unset',
+        height: '100%',
       }}
       initial="closed"
       animate={(isMobile && openMobileAsideMenu) || !isMobile ? 'open' : 'closed'}
@@ -77,7 +78,13 @@ export const AsideBar = ({
           })}
         </div>
       </div>
-      {isLogin() ? <RecordGroupToolbar recordGroup={currentRecordGroup} thisMapId={thisMapId} onSelectRecordGroup={onSelectRecordGroup} /> : <LoginPanel direction="column" />}
+      {isLogin() ? (
+        <RecordGroupToolbar recordGroup={currentRecordGroup} thisMapId={thisMapId} onSelectRecordGroup={onSelectRecordGroup} />
+      ) : (
+        <div style={{ height: '100%', backgroundColor: '#ffffffa1' }}>
+          <LoginPanel direction="column" />
+        </div>
+      )}
 
       {currentRecordGroup && list}
     </motion.aside>
