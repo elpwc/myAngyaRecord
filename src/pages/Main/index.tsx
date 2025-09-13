@@ -6,6 +6,7 @@ import { isLogin, loginCurrentUser, logout } from '../../utils/userUtils';
 import { c_userNickName } from '../../utils/cookies';
 import { useIsMobile } from '../../utils/hooks';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useHint } from '../../components/HintProvider';
 
 interface P {
   onMobileMenuClick: () => void;
@@ -16,6 +17,7 @@ export default (props: P) => {
   const navigate = useNavigate();
   const mylocation = useLocation();
   const isMobile = useIsMobile();
+  const hint = useHint();
 
   type Location = 'ranking' | 'user' | 'about' | '';
 
@@ -146,6 +148,7 @@ export default (props: P) => {
                     to="/"
                     onClick={() => {
                       logout();
+                      hint('bottom', 'ログアウトしました', '#2563eb');
                     }}
                   >
                     ログアウト
@@ -203,6 +206,7 @@ export default (props: P) => {
                                 setcurrentLocation('');
                                 navigate(menuItem.link);
                                 setShowDropdown(false);
+                                hint('bottom', menuItem.title + '地図に切り替えました', '#2563eb');
                               }
                             }}
                           >
