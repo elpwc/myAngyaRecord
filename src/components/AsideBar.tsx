@@ -58,6 +58,7 @@ export const AsideBar = ({
   return (
     <motion.aside
       style={{
+        borderRight: '1px solid #ccc',
         zIndex: 3500,
         position: isMobile ? 'absolute' : 'unset',
         height: '100%',
