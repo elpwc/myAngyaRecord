@@ -94,8 +94,10 @@ header button {
   transition: background-color 0.2s;
 }
 
-header button:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+@media (any-hover: hover) {
+  header button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
 }
 
 .header-menu-button {

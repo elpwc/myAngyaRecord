@@ -7,9 +7,11 @@
   transition: all 0.1s;
 }
 
-.styled-button:hover {
-  box-shadow: 0 0 2px 0px #8d8d8d;
-  opacity: 0.7;
+@media (any-hover: hover) {
+  .styled-button:hover {
+    box-shadow: 0 0 2px 0px #8d8d8d;
+    opacity: 0.7;
+  }
 }
 
 .styled-button2 {
@@ -22,9 +24,11 @@
   transition: all 0.1s;
 }
 
-.styled-button2:hover {
-  box-shadow: 0 0 2px 0px #8d8d8d;
-  opacity: 0.7;
+@media (any-hover: hover) {
+  .styled-button2:hover {
+    box-shadow: 0 0 2px 0px #8d8d8d;
+    opacity: 0.7;
+  }
 }
 
 .primary-button {
@@ -32,8 +36,10 @@
   background-color: #007aff;
 }
 
-.primary-button:hover {
-  opacity: 0.9;
+@media (any-hover: hover) {
+  .primary-button:hover {
+    opacity: 0.9;
+  }
 }
 
 .singleIcon-button {
@@ -45,8 +51,10 @@
   height: fit-content;
 }
 
-.singleIcon-button:hover {
-  background-color: rgb(218, 218, 218);
+@media (any-hover: hover) {
+  .singleIcon-button:hover {
+    background-color: rgb(218, 218, 218);
+  }
 }
 
 input[type='text'] {
