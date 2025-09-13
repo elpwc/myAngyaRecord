@@ -109,8 +109,8 @@ export default (props: P) => {
     refreshRecords();
   }, [recordGroup?.id]);
 
-  const handleMapBackgroundTileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setcurrentBackgroundTileMap(e.target.value);
+  const handleMapBackgroundTileChange = (id: string) => {
+    setcurrentBackgroundTileMap(id);
   };
 
   const handleLayerChange = (name: string, checked: boolean) => {

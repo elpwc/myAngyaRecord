@@ -1,5 +1,5 @@
 import { useIsMobile } from '../utils/hooks';
-import { MapBackgroundTilesSwitcher } from './MapBackgroundTilesSwitcher';
+import { MapBackgroundTilesSwitcher } from './MapBackgroundTilesSwitcher/MapBackgroundTilesSwitcher';
 import { isLogin } from '../utils/userUtils';
 import { RecordGroupToolbar } from './RecordGroupToolbar';
 import { RecordGroup } from '../utils/types';
@@ -49,7 +49,7 @@ export const AsideBar = ({
   layers: LayerCheckboxInfo[];
   list: JSX.Element;
   /** 当底图改变时 */
-  onCurrentBackgroundTileMapChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onCurrentBackgroundTileMapChange: (id: string) => void;
   /** 当图层改变时 */
   onLayerChange: (name: string, checked: boolean) => void;
   onSelectRecordGroup: (recordGroup: RecordGroup) => void;
@@ -58,7 +58,6 @@ export const AsideBar = ({
   return (
     <motion.aside
       style={{
-        boxShadow: '0px 0px 10px 0px rgb(136, 136, 136)',
         zIndex: 3500,
         position: isMobile ? 'absolute' : 'unset',
         height: '100%',
