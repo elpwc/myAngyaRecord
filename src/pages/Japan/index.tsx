@@ -166,12 +166,12 @@ export default (props: P) => {
   );
 
   const LAYERS: LayerCheckboxInfo[] = [
-    { name: 'pref', title: '都道府県表示', checked: layers.pref },
-    { name: 'muni', title: '市区町村表示', checked: layers.muni },
-    // { name: 'ryouseikoku', title: '令制国表示', checked: layers.ryouseikoku },
-    { name: 'sinkoukyoku', title: '北海道振興局表示', checked: layers.sinkoukyoku },
+    { name: 'pref', title: '都道府県界', checked: layers.pref },
+    { name: 'muni', title: '市区町村界', checked: layers.muni },
+    // { name: 'ryouseikoku', title: '令制国界', checked: layers.ryouseikoku },
+    { name: 'sinkoukyoku', title: '北海道振興局界', checked: layers.sinkoukyoku },
     { name: 'placename', title: '地名表示', checked: layers.placename },
-    { name: 'railways', title: '全国鉄道路線', checked: layers.railways },
+    { name: 'railways', title: '鉄道路線', checked: layers.railways },
   ];
 
   return (

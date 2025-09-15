@@ -150,9 +150,9 @@ export default (props: P) => {
   );
 
   const LAYERS: LayerCheckboxInfo[] = [
-    { name: 'tinh', title: '省を表示', checked: layers.tinh },
+    { name: 'tinh', title: '省界', checked: layers.tinh },
     { name: 'placename', title: '地名表示', checked: layers.placename },
-    { name: 'railways', title: '鉄道表示', checked: layers.railways },
+    { name: 'railways', title: '鉄道路線', checked: layers.railways },
   ];
 
   return (

@@ -153,8 +153,8 @@ export default (props: P) => {
   );
 
   const LAYERS: LayerCheckboxInfo[] = [
-    { name: 'area', title: '地区表示', checked: layers.area },
-    { name: 'ooaza', title: '大字表示', checked: layers.ooaza },
+    { name: 'area', title: '地区境界', checked: layers.area },
+    { name: 'ooaza', title: '大字境界', checked: layers.ooaza },
     { name: 'placename', title: '地名表示', checked: layers.placename },
   ];
 
