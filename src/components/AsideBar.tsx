@@ -82,7 +82,9 @@ export const AsideBar = ({
         <RecordGroupToolbar recordGroup={currentRecordGroup} thisMapId={thisMapId} onSelectRecordGroup={onSelectRecordGroup} />
       ) : (
         <div style={{ height: '100%', backgroundColor: '#ffffffa1' }}>
-          <LoginPanel direction="column" />
+          <div style={{ padding: '10px', borderRadius: '5px', backgroundColor: 'white', margin: '20px', border: 'solid 1px #c1c1c1', paddingBottom: '30px' }}>
+            <LoginPanel direction="column" />
+          </div>
         </div>
       )}
 
