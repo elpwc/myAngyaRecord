@@ -352,7 +352,7 @@ export default (props: P) => {
                       positions={shinkouBorder.coordinates}
                       interactive={false}
                     >
-                      {((showTodofukenLevelColor && showSubprefectureLevelColor) || (currentZoom < 8 && layers.placename)) && (
+                      {((showTodofukenLevelColor && showSubprefectureLevelColor && layers.placename) || (currentZoom < 8 && layers.placename)) && (
                         <Marker
                           pane="muniNames"
                           position={center as LatLngTuple}
