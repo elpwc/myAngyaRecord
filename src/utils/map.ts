@@ -24,9 +24,9 @@ export const getMapTitleByMapsId = (mapsId: MapsId) => {
 };
 
 export const mapTiles = [
-  { id: 'blank', name: '空白背景', url: '' },
-  { id: 'default', name: '地図背景', url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' },
-  { id: 'satellite', name: '衛星背景', url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}' },
+  { id: 'blank', name: '白地図', url: '' },
+  { id: 'default', name: '道路地図', url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' },
+  { id: 'satellite', name: '写真', url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}' },
 ];
 
 export const chihous_data = [
