@@ -1,0 +1,50 @@
+.RecordStatusDropdown-motion-select {
+  position: relative;
+  width: 100px;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* 按钮样式 */
+.RecordStatusDropdown-select-btn {
+  width: 100%;
+  padding: 2px 12px;
+  border-radius: 8px;
+  border: none;
+  background: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.RecordStatusDropdown-select-btn:hover {
+  background: #f3f3f3;
+}
+
+.RecordStatusDropdown-select-options {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  z-index: 10;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border: solid 1px #8a8a8a;
+}
+
+.RecordStatusDropdown-select-option {
+  padding: 4px 10px;
+  font-size: 14px;
+  color: #fff;
+  cursor: pointer;
+  user-select: none;
+  transition: opacity 0.2s ease;
+}
+
+.RecordStatusDropdown-select-option:hover {
+  opacity: 0.85;
+}
