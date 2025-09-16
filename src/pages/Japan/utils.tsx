@@ -1,9 +1,9 @@
-import { mapStyles } from '../../utils/mapStyles';
+import { getCurrentFillColorByLevel, getCurrentForeColorByLevel } from '../../utils/serverUtils';
 import { Record } from '../../utils/types';
 import { Municipality } from './addr';
 import { getPrefIdOfMuniById, getSubPrefNameOfMuniById } from './geojsonUtils';
 
-export const getTodofukenFillColor = (mapStyle: number, records: Record[], pref_id: string) => {
+export const getTodofukenFillColor = (records: Record[], pref_id: string) => {
   let maxRecordType = 0;
   for (let i = 0; i < records.length; i++) {
     if (getPrefIdOfMuniById(records[i].admin_id) === pref_id) {
@@ -16,10 +16,10 @@ export const getTodofukenFillColor = (mapStyle: number, records: Record[], pref_
     }
   }
 
-  return mapStyles[mapStyle].bgcolor[maxRecordType];
+  return getCurrentFillColorByLevel(maxRecordType);
 };
 
-export const getTodofukenForeColor = (mapStyle: number, records: Record[], pref_id: string) => {
+export const getTodofukenForeColor = (records: Record[], pref_id: string) => {
   let maxRecordType = 0;
   for (let i = 0; i < records.length; i++) {
     if (getPrefIdOfMuniById(records[i].admin_id) === pref_id) {
@@ -32,11 +32,10 @@ export const getTodofukenForeColor = (mapStyle: number, records: Record[], pref_
     }
   }
 
-  return mapStyles[mapStyle].color[maxRecordType];
+  return getCurrentForeColorByLevel(maxRecordType);
 };
 
 export const getShinkoukyokuFillColor = (
-  mapStyle: number,
   records: Record[],
   munidata: {
     prefecture: string;
@@ -57,11 +56,10 @@ export const getShinkoukyokuFillColor = (
     }
   }
 
-  return mapStyles[mapStyle].bgcolor[maxRecordType];
+  return getCurrentFillColorByLevel(maxRecordType);
 };
 
 export const getShinkoukyokuForeColor = (
-  mapStyle: number,
   records: Record[],
   munidata: {
     prefecture: string;
@@ -81,5 +79,5 @@ export const getShinkoukyokuForeColor = (
     }
   }
 
-  return mapStyles[mapStyle].color[maxRecordType];
+  return getCurrentForeColorByLevel(maxRecordType);
 };

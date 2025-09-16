@@ -6,7 +6,7 @@ import { Marker, Polygon, Popup, useMap } from 'react-leaflet';
 import { getBounds, MapsId } from '../../utils/map';
 import MapPopup from '../../components/MapPopup';
 import L, { divIcon, LatLngTuple } from 'leaflet';
-import { getFillcolor, getForecolor, getRecordGroups, getRecords, postRecord } from '../../utils/serverUtils';
+import { getCurrentFillColorByRecords, getCurrentForeColorByRecords, getRecordGroups, getRecords, postRecord } from '../../utils/serverUtils';
 import { Record, RecordGroup } from '../../utils/types';
 import { isLogin } from '../../utils/userUtils';
 import { c_zoom } from '../../utils/cookies';
@@ -47,7 +47,6 @@ export default (props: P) => {
   const [records, setrecords] = useState<Record[]>([]);
 
   const [currentLatLng, setcurrentLatLng] = useState(DEFAULT_LAT_LNG);
-  const [currentMapStyle, setcurrentMapStyle] = useState(2);
 
   const showAreaLevelColor = useMemo(() => layers.area && !layers.ooaza, [layers.area, layers.ooaza]);
 
@@ -158,6 +157,28 @@ export default (props: P) => {
     { name: 'placename', title: '地名表示', checked: layers.placename },
   ];
 
+  /**
+   * 对DB中的自治体行脚记录进行修改
+   * @param muniId
+   * @param status
+   */
+  const changeRecordStatus = (muniId: string, status: number) => {
+    if (recordGroup?.id) {
+      postRecord(
+        recordGroup?.id,
+        muniId,
+        status,
+        () => {
+          refreshRecords();
+        },
+        errmsg => {
+          refreshRecords();
+          alert(errmsg);
+        }
+      );
+    }
+  };
+
   return (
     <div style={{ height: '100%', width: '100%', position: 'relative', display: 'flex' }}>
       <AsideBar
@@ -166,7 +187,7 @@ export default (props: P) => {
         openMobileAsideMenu={props.openMobileAsideMenu}
         currentTileMap={currentBackgroundTileMap}
         layers={LAYERS}
-        list={<MuniList borderData={ooazaBorderData} areaData={areaBorderData} records={records} currentMapStyle={currentMapStyle} />}
+        list={<MuniList borderData={ooazaBorderData} areaData={areaBorderData} records={records} onChangeStatus={changeRecordStatus} />}
         onCurrentBackgroundTileMapChange={handleMapBackgroundTileChange}
         onLayerChange={handleLayerChange}
         onSelectRecordGroup={(recordGroup: RecordGroup) => {
@@ -198,8 +219,8 @@ export default (props: P) => {
                       key={border.id}
                       className="muniBorder"
                       pathOptions={{
-                        fillColor: getFillcolor(currentMapStyle, records, border.id),
-                        color: getForecolor(currentMapStyle, records, border.id),
+                        fillColor: getCurrentFillColorByRecords(records, border.id),
+                        color: getCurrentForeColorByRecords(records, border.id),
                         opacity: 1,
                         fillOpacity: currentBackgroundTileMap !== 'blank' ? 0.6 : 1,
                         weight: 0.4,
@@ -212,19 +233,7 @@ export default (props: P) => {
                           name={border.name}
                           hasOpenningRecordGroup={!!recordGroup?.id}
                           onClick={value => {
-                            if (recordGroup?.id) {
-                              postRecord(
-                                recordGroup?.id,
-                                border.id,
-                                value,
-                                () => {
-                                  refreshRecords();
-                                },
-                                errmsg => {
-                                  alert(errmsg);
-                                }
-                              );
-                            }
+                            changeRecordStatus(border.id, value);
                           }}
                         />
                       </Popup>
@@ -244,11 +253,11 @@ export default (props: P) => {
                       key={border.id}
                       pane="area"
                       pathOptions={{
-                        fillColor: showAreaLevelColor ? getAreaFillColor(currentMapStyle, ooazaBorderData, records, border.name) : '#ffffff',
+                        fillColor: showAreaLevelColor ? getAreaFillColor(ooazaBorderData, records, border.name) : '#ffffff',
                         opacity: 1,
                         fillOpacity: showAreaLevelColor ? (currentBackgroundTileMap !== 'blank' ? 0.6 : 1) : 0,
                         weight: 0.7,
-                        color: showAreaLevelColor ? getAreaForeColor(currentMapStyle, ooazaBorderData, records, border.name) : 'black',
+                        color: showAreaLevelColor ? getAreaForeColor(ooazaBorderData, records, border.name) : 'black',
                       }}
                       positions={border.coordinates}
                       interactive={false}

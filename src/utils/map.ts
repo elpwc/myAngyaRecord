@@ -1,4 +1,5 @@
 import { LatLngTuple } from 'leaflet';
+import { Record } from './types';
 
 export const getGeoJsonData = async (url: string) => {
   return await fetch(url).then(response => response.json());
@@ -28,6 +29,44 @@ export const mapTiles = [
   { id: 'default', name: '道路地図', url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' },
   { id: 'satellite', name: '写真', url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}' },
 ];
+
+export const recordStatus = [
+  { name: '居住', value: 5, desc: '' },
+  { name: '宿泊', value: 4, desc: '' },
+  { name: '訪問', value: 3, desc: '' },
+  { name: '接地', value: 2, desc: '' },
+  { name: '通過', value: 1, desc: '' },
+  { name: '未踏', value: 0, desc: '' },
+];
+
+export const getStatusTextByLevel = (level: number): string => {
+  switch (level) {
+    case 5:
+      return '居住';
+    case 4:
+      return '宿泊';
+    case 3:
+      return '訪問';
+    case 2:
+      return '接地';
+    case 1:
+      return '通過';
+    case 0:
+      return '未踏';
+    default:
+      return '未踏';
+  }
+};
+
+export const getStatusByMuniId = (muniId: string, records: Record[]): string => {
+  const record = records.find(r => r.admin_id === muniId);
+  return record ? getStatusTextByLevel(record.level) : '未踏';
+};
+
+export const getStatusLevelByMuniId = (muniId: string, records: Record[]): number => {
+  const record = records.find(r => r.admin_id === muniId);
+  return record ? record.level : 0;
+};
 
 export const chihous_data = [
   {

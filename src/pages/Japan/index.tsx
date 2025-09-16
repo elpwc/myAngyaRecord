@@ -7,7 +7,7 @@ import { getBounds, MapsId } from '../../utils/map';
 import { getMunicipalitiesData, getPrefecture_ShinkoukyokuData, getRailwaysData } from './geojsonUtils';
 import MapPopup from '../../components/MapPopup';
 import L, { divIcon, LatLngTuple } from 'leaflet';
-import { getFillcolor, getForecolor, getRecordGroups, getRecords, postRecord } from '../../utils/serverUtils';
+import {  getCurrentFillColorByRecords, getCurrentForeColorByRecords, getRecordGroups, getRecords, postRecord } from '../../utils/serverUtils';
 import MuniList from './MuniList';
 import { Record, RecordGroup } from '../../utils/types';
 import { isLogin } from '../../utils/userUtils';
@@ -32,7 +32,7 @@ export default (props: P) => {
   const DEFAULT_ZOOM = 5;
 
   // let currentId: string = params.id as string;
-  const [currentBackgroundTileMap, setcurrentBackgroundTileMap] = useState('blank');
+  const [currentBackgroundTileMap, setcurrentBackgroundTileMap] = useState('default');
   const [layers, setLayers] = useState({
     pref: true,
     muni: true,
@@ -54,7 +54,6 @@ export default (props: P) => {
   const [records, setrecords] = useState<Record[]>([]);
 
   const [currentLatLng, setcurrentLatLng] = useState(DEFAULT_LAT_LNG);
-  const [currentMapStyle, setcurrentMapStyle] = useState(2);
 
   const showTodofukenLevelColor = useMemo(() => layers.pref && !layers.muni, [layers.pref, layers.muni]);
 
@@ -174,6 +173,28 @@ export default (props: P) => {
     { name: 'railways', title: '鉄道路線', checked: layers.railways },
   ];
 
+  /**
+   * 对DB中的自治体行脚记录进行修改
+   * @param muniId 
+   * @param status 
+   */
+  const changeRecordStatus = (muniId: string, status: number) => {
+    if (recordGroup?.id) {
+      postRecord(
+        recordGroup?.id,
+        muniId,
+        status,
+        () => {
+          refreshRecords();
+        },
+        errmsg => {
+          refreshRecords();
+          alert(errmsg);
+        }
+      );
+    }
+  };
+
   return (
     <div style={{ height: '100%', width: '100%', position: 'relative', display: 'flex' }}>
       <AsideBar
@@ -186,9 +207,9 @@ export default (props: P) => {
           <MuniList
             muniBorderData={muniBorderData}
             records={records}
-            currentMapStyle={currentMapStyle}
             showCheckbox={LAYERS.some(layer => layer.checked && layer.name === 'muni')}
             onSelectedPrefChanged={setMuniListSelectedPrefectures}
+            onChangeStatus={changeRecordStatus}
           />
         }
         onCurrentBackgroundTileMapChange={handleMapBackgroundTileChange}
@@ -228,8 +249,8 @@ export default (props: P) => {
                           key={'muni' + muniBorder.id}
                           className="muniBorder"
                           pathOptions={{
-                            fillColor: getFillcolor(currentMapStyle, records, muniBorder.id),
-                            color: getForecolor(currentMapStyle, records, muniBorder.id),
+                            fillColor: getCurrentFillColorByRecords(records, muniBorder.id),
+                            color: getCurrentForeColorByRecords(records, muniBorder.id),
                             opacity: 1,
                             fillOpacity: currentBackgroundTileMap !== 'blank' ? 0.6 : 1,
                             weight: 0.4,
@@ -242,20 +263,7 @@ export default (props: P) => {
                               name={muniBorder.name}
                               hasOpenningRecordGroup={!!recordGroup?.id}
                               onClick={value => {
-                                if (recordGroup?.id) {
-                                  postRecord(
-                                    recordGroup?.id,
-                                    muniBorder.id,
-                                    value,
-                                    () => {
-                                      refreshRecords();
-                                    },
-                                    errmsg => {
-                                      refreshRecords();
-                                      alert(errmsg);
-                                    }
-                                  );
-                                }
+                                changeRecordStatus(muniBorder.id, value);
                               }}
                             />
                           </Popup>
@@ -308,11 +316,11 @@ export default (props: P) => {
                       pane="pref"
                       key={'pref' + prefBorder.id}
                       pathOptions={{
-                        fillColor: showTodofukenLevelColor ? getTodofukenFillColor(currentMapStyle, records, prefBorder.id) : '#ffffff',
+                        fillColor: showTodofukenLevelColor ? getTodofukenFillColor( records, prefBorder.id) : '#ffffff',
                         opacity: 1,
                         fillOpacity: showTodofukenLevelColor ? (currentBackgroundTileMap !== 'blank' ? 0.6 : 1) : 0,
                         weight: 0.7,
-                        color: showTodofukenLevelColor ? getTodofukenForeColor(currentMapStyle, records, prefBorder.id) : 'black',
+                        color: showTodofukenLevelColor ? getTodofukenForeColor( records, prefBorder.id) : 'black',
                       }}
                       positions={prefBorder.coordinates}
                       interactive={false}
@@ -343,11 +351,11 @@ export default (props: P) => {
                       pane="subpref"
                       key={'subpref' + shinkouBorder.id}
                       pathOptions={{
-                        fillColor: showTodofukenLevelColor && showSubprefectureLevelColor ? getShinkoukyokuFillColor(currentMapStyle, records, muniBorderData, shinkouBorder.name) : '#ffffff',
+                        fillColor: showTodofukenLevelColor && showSubprefectureLevelColor ? getShinkoukyokuFillColor( records, muniBorderData, shinkouBorder.name) : '#ffffff',
                         opacity: 1,
                         fillOpacity: showTodofukenLevelColor && showSubprefectureLevelColor ? (currentBackgroundTileMap !== 'blank' ? 0.6 : 1) : 0,
                         weight: 0.7,
-                        color: showTodofukenLevelColor && showSubprefectureLevelColor ? getShinkoukyokuForeColor(currentMapStyle, records, muniBorderData, shinkouBorder.name) : 'black',
+                        color: showTodofukenLevelColor && showSubprefectureLevelColor ? getShinkoukyokuForeColor( records, muniBorderData, shinkouBorder.name) : 'black',
                       }}
                       positions={shinkouBorder.coordinates}
                       interactive={false}

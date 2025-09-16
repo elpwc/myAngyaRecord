@@ -6,7 +6,7 @@ import { Marker, Polygon, Polyline, Popup, useMap } from 'react-leaflet';
 import { getBounds, MapsId } from '../../utils/map';
 import MapPopup from '../../components/MapPopup';
 import L, { divIcon, LatLngTuple } from 'leaflet';
-import { getFillcolor, getForecolor, getRecordGroups, getRecords, postRecord } from '../../utils/serverUtils';
+import { getCurrentFillColorByRecords, getCurrentForeColorByRecords, getRecordGroups, getRecords, postRecord } from '../../utils/serverUtils';
 import { Record, RecordGroup } from '../../utils/types';
 import { isLogin } from '../../utils/userUtils';
 import { c_zoom } from '../../utils/cookies';
@@ -155,6 +155,28 @@ export default (props: P) => {
     { name: 'railways', title: '鉄道路線', checked: layers.railways },
   ];
 
+  /**
+   * 对DB中的自治体行脚记录进行修改
+   * @param muniId
+   * @param status
+   */
+  const changeRecordStatus = (muniId: string, status: number) => {
+    if (recordGroup?.id) {
+      postRecord(
+        recordGroup?.id,
+        muniId,
+        status,
+        () => {
+          refreshRecords();
+        },
+        errmsg => {
+          refreshRecords();
+          alert(errmsg);
+        }
+      );
+    }
+  };
+
   return (
     <div style={{ height: '100%', width: '100%', position: 'relative', display: 'flex' }}>
       <AsideBar
@@ -163,7 +185,7 @@ export default (props: P) => {
         openMobileAsideMenu={props.openMobileAsideMenu}
         currentTileMap={currentBackgroundTileMap}
         layers={LAYERS}
-        list={<MuniList borderData={tinhBorderData} records={records} currentMapStyle={currentMapStyle} />}
+        list={<MuniList borderData={tinhBorderData} records={records} onChangeStatus={changeRecordStatus} />}
         onCurrentBackgroundTileMapChange={handleMapBackgroundTileChange}
         onLayerChange={handleLayerChange}
         onSelectRecordGroup={(recordGroup: RecordGroup) => {
@@ -195,8 +217,8 @@ export default (props: P) => {
                       key={border.id}
                       className="muniBorder"
                       pathOptions={{
-                        fillColor: getFillcolor(currentMapStyle, records, border.id),
-                        color: getForecolor(currentMapStyle, records, border.id),
+                        fillColor: getCurrentFillColorByRecords(records, border.id),
+                        color: getCurrentForeColorByRecords(records, border.id),
                         opacity: 1,
                         fillOpacity: currentBackgroundTileMap !== 'blank' ? 0.6 : 1,
                         weight: 0.4,
@@ -209,19 +231,7 @@ export default (props: P) => {
                           name={border.name}
                           hasOpenningRecordGroup={!!recordGroup?.id}
                           onClick={value => {
-                            if (recordGroup?.id) {
-                              postRecord(
-                                recordGroup?.id,
-                                border.id,
-                                value,
-                                () => {
-                                  refreshRecords();
-                                },
-                                errmsg => {
-                                  alert(errmsg);
-                                }
-                              );
-                            }
+                            changeRecordStatus(border.id, value);
                           }}
                         />
                       </Popup>

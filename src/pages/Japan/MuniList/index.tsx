@@ -1,45 +1,23 @@
 import { memo, useState } from 'react';
-import { chihous_data } from '../../../utils/map';
+import { chihous_data, getStatusByMuniId, getStatusLevelByMuniId, recordStatus } from '../../../utils/map';
 import './index.css';
 import { Record } from '../../../utils/types';
-import { getFillcolor, getForecolor } from '../../../utils/serverUtils';
 import { mapStyles } from '../../../utils/mapStyles';
 import { getPrefNameOfMuniById } from '../geojsonUtils';
 import { Municipality } from '../addr';
+import Dropdown from '../../../components/Dropdown';
+import RecordStatusDropdown from '../../../components/RecordStatusDropdown';
+import { getCurrentFillColorByLevel, getCurrentFillColorByRecords, getCurrentForeColorByRecords } from '../../../utils/serverUtils';
 
 interface Props {
   muniBorderData: { municipalities: Municipality[]; prefecture: string }[];
   records: Record[];
-  currentMapStyle?: number;
   showCheckbox?: boolean;
   onSelectedPrefChanged?: (pref: string[]) => void;
+  onChangeStatus?: (muniId: string, level: number) => void;
 }
 
-const getStatusTextByLevel = (level: number): string => {
-  switch (level) {
-    case 5:
-      return '居住';
-    case 4:
-      return '宿泊';
-    case 3:
-      return '訪問';
-    case 2:
-      return '接地';
-    case 1:
-      return '通過';
-    case 0:
-      return '未踏';
-    default:
-      return '未踏';
-  }
-};
-
-const getStatusByMuniId = (muniId: string, records: Record[]): string => {
-  const record = records.find(r => r.admin_id === muniId);
-  return record ? getStatusTextByLevel(record.level) : '未踏';
-};
-
-const MuniList = ({ muniBorderData, records, currentMapStyle = 0, showCheckbox, onSelectedPrefChanged }: Props) => {
+const MuniList = ({ muniBorderData, records, showCheckbox, onSelectedPrefChanged, onChangeStatus }: Props) => {
   const [expandedPrefectures, setExpandedPrefectures] = useState<string[]>([]);
   const [selectedChihous, setSelectedChihous] = useState<string[]>([]);
   const [selectedPrefectures, setSelectedPrefectures] = useState<string[]>([]);
@@ -58,6 +36,7 @@ const MuniList = ({ muniBorderData, records, currentMapStyle = 0, showCheckbox, 
                   id={chihou.name}
                   checked={selectedChihous.includes(chihou.name)}
                   onClick={(e: React.MouseEvent<HTMLInputElement>) => {
+                    e.stopPropagation();
                     if (e.currentTarget.checked) {
                       setSelectedChihous(prev => [...prev, chihou.name]);
                       chihou.pref.forEach(pref => {
@@ -114,17 +93,15 @@ const MuniList = ({ muniBorderData, records, currentMapStyle = 0, showCheckbox, 
                     return (
                       <div key={prefMuniBorder.prefecture}>
                         <div className="prefInfoContainer">
-                          <button
-                            className={'prefDropdownButton ' + (expandedPrefectures.includes(prefMuniBorder.prefecture) ? 'prefDropdownButtonOpen' : '')}
-                            onClick={() => togglePrefecture(prefMuniBorder.prefecture)}
-                          >
-                            <div className="flex">
+                          <div className="flex" style={{ padding: '0 4px', justifyContent: 'space-between' }}>
+                            <span>
                               {showCheckbox && (
                                 <input
                                   type="checkbox"
                                   id={prefMuniBorder.prefecture}
                                   checked={selectedPrefectures.includes(prefMuniBorder.prefecture)}
                                   onClick={e => {
+                                    e.stopPropagation();
                                     if (e.currentTarget.checked) {
                                       if (!selectedPrefectures.includes(prefMuniBorder.prefecture)) {
                                         setSelectedPrefectures(prev => [...prev, prefMuniBorder.prefecture]);
@@ -141,10 +118,18 @@ const MuniList = ({ muniBorderData, records, currentMapStyle = 0, showCheckbox, 
                                   }}
                                 />
                               )}
-                              <span>
-                                <label htmlFor={prefMuniBorder.prefecture}>{prefMuniBorder.prefecture}</label>
-                              </span>
-                            </div>
+                              <label htmlFor={prefMuniBorder.prefecture} style={{ padding: '0 4px' }}>
+                                {prefMuniBorder.prefecture}
+                              </label>
+                            </span>
+                            <span style={{ color: '#7f8ebb', paddingRight: '10px' }}>
+                              {Math.round(((angyaStatus.live + angyaStatus.stay + angyaStatus.visit + angyaStatus.ground + angyaStatus.pass) / prefMuniBorder.municipalities.length) * 100)}%
+                            </span>
+                          </div>
+                          <button
+                            className={'prefDropdownButton ' + (expandedPrefectures.includes(prefMuniBorder.prefecture) ? 'prefDropdownButtonOpen' : '')}
+                            onClick={() => togglePrefecture(prefMuniBorder.prefecture)}
+                          >
                             <span className="prefDropdownButton-status">
                               <span>居住{angyaStatus.live}</span>
                               <span>宿泊{angyaStatus.stay}</span>
@@ -189,7 +174,7 @@ const MuniList = ({ muniBorderData, records, currentMapStyle = 0, showCheckbox, 
                                   style={{
                                     width: `${widthPercent}%`,
                                     height: '100%',
-                                    background: mapStyles[currentMapStyle].bgcolor[level],
+                                    background: getCurrentFillColorByLevel(level),
                                     transition: 'width 0.3s',
                                   }}
                                 />
@@ -201,12 +186,12 @@ const MuniList = ({ muniBorderData, records, currentMapStyle = 0, showCheckbox, 
                               <div key={muniBorder.id} className="municipalityItem">
                                 <div className="municipalityName">{muniBorder.name}</div>
                                 <div className="municipalityRegion">{(muniBorder.shinkoukyoku ?? '') + (muniBorder.gun_seireishi ?? '')}</div>
-                                <div
-                                  className="municipalityStatus"
-                                  style={{ backgroundColor: getFillcolor(currentMapStyle, records, muniBorder.id), color: getForecolor(currentMapStyle, records, muniBorder.id) }}
-                                >
-                                  {getStatusByMuniId(muniBorder.id, records)}
-                                </div>
+                                <RecordStatusDropdown
+                                  value={getStatusLevelByMuniId(muniBorder.id, records)}
+                                  onChange={(value: number) => {
+                                    onChangeStatus?.(muniBorder.id, Number(value));
+                                  }}
+                                />
                               </div>
                             ))}
                         </div>

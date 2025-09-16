@@ -1,44 +1,20 @@
 import { memo, useState } from 'react';
-import { chihous_data } from '../../../utils/map';
 import './index.css';
 import { Record } from '../../../utils/types';
-import { getFillcolor, getForecolor } from '../../../utils/serverUtils';
-import { mapStyles } from '../../../utils/mapStyles';
 import { Ooaza, OoazaArea } from '../addr';
 import { getOoazaInstanceById } from '../geojsonUtils';
+import { getCurrentFillColorByLevel, getCurrentFillColorByRecords, getCurrentForeColorByRecords } from '../../../utils/serverUtils';
+import { getStatusByMuniId, getStatusLevelByMuniId } from '../../../utils/map';
+import RecordStatusDropdown from '../../../components/RecordStatusDropdown';
 
 interface Props {
   areaData: OoazaArea[];
   borderData: Ooaza[];
   records: Record[];
-  currentMapStyle?: number;
+  onChangeStatus?: (muniId: string, level: number) => void;
 }
 
-const getStatusTextByLevel = (level: number): string => {
-  switch (level) {
-    case 5:
-      return '居住';
-    case 4:
-      return '宿泊';
-    case 3:
-      return '訪問';
-    case 2:
-      return '接地';
-    case 1:
-      return '通過';
-    case 0:
-      return '未踏';
-    default:
-      return '未踏';
-  }
-};
-
-const getStatusByMuniId = (muniId: string, records: Record[]): string => {
-  const record = records.find(r => r.admin_id === muniId);
-  return record ? getStatusTextByLevel(record.level) : '未踏';
-};
-
-const MuniList = ({ areaData, borderData, records, currentMapStyle = 0 }: Props) => {
+const MuniList = ({ areaData, borderData, records, onChangeStatus }: Props) => {
   const [expandedPrefectures, setExpandedPrefectures] = useState<string[]>([]);
   const togglePrefecture = (prefecture: string) => {
     setExpandedPrefectures(prev => (prev.includes(prefecture) ? prev.filter(p => p !== prefecture) : [...prev, prefecture]));
@@ -122,7 +98,7 @@ const MuniList = ({ areaData, borderData, records, currentMapStyle = 0 }: Props)
                             style={{
                               width: `${widthPercent}%`,
                               height: '100%',
-                              background: mapStyles[currentMapStyle].bgcolor[level],
+                              background: getCurrentFillColorByLevel(level),
                               transition: 'width 0.3s',
                             }}
                           />
@@ -133,9 +109,12 @@ const MuniList = ({ areaData, borderData, records, currentMapStyle = 0 }: Props)
                       areaAllOoazaData.map(ooaza => (
                         <div key={ooaza.id} className="municipalityItem">
                           <div className="municipalityName">{ooaza.name}</div>
-                          <div className="municipalityStatus" style={{ backgroundColor: getFillcolor(currentMapStyle, records, ooaza.id), color: getForecolor(currentMapStyle, records, ooaza.id) }}>
-                            {getStatusByMuniId(ooaza.id, records)}
-                          </div>
+                          <RecordStatusDropdown
+                            value={getStatusLevelByMuniId(ooaza.id, records)}
+                            onChange={(value: number) => {
+                              onChangeStatus?.(ooaza.id, Number(value));
+                            }}
+                          />
                         </div>
                       ))}
                   </div>

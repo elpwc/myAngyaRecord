@@ -1,4 +1,5 @@
 import { c_uid } from './cookies';
+import { getGlobalState } from './globalStore';
 import { mapStyles } from './mapStyles';
 import request from './request';
 import { RankingResponse, Record } from './types';
@@ -145,7 +146,8 @@ export const getRanking = async (mapid: string, page: number, amountPerPage: num
     });
 };
 
-export const getFillcolor = (mapStyle: number, records: Record[], admin_id: string) => {
+// 给出自治体id，当前地图颜色主题和Record列表，返回这个自治体在这个Record列表中的颜色
+export const getFillcolorByRecords = (mapStyle: number, records: Record[], admin_id: string) => {
   const res = records.findIndex(record => {
     return record.admin_id === admin_id;
   });
@@ -155,7 +157,8 @@ export const getFillcolor = (mapStyle: number, records: Record[], admin_id: stri
   return mapStyles[mapStyle].bgcolor[records[res].level];
 };
 
-export const getForecolor = (mapStyle: number, records: Record[], admin_id: string) => {
+// 给出自治体id，当前地图颜色主题和Record列表，返回这个自治体在这个Record列表中的颜色
+export const getForecolorByRecords = (mapStyle: number, records: Record[], admin_id: string) => {
   const res = records.findIndex(record => {
     return record.admin_id === admin_id;
   });
@@ -163,4 +166,36 @@ export const getForecolor = (mapStyle: number, records: Record[], admin_id: stri
     return mapStyles[mapStyle].color[0];
   }
   return mapStyles[mapStyle].color[records[res].level];
+};
+
+// 给出自治体id，和Record列表，返回这个自治体在这个Record列表中的当前主题的颜色
+export const getCurrentFillColorByRecords = (records: Record[], admin_id: string) => {
+  const res = records.findIndex(record => {
+    return record.admin_id === admin_id;
+  });
+  if (res === -1) {
+    return mapStyles[getGlobalState().mapStyle].bgcolor[0];
+  }
+  return mapStyles[getGlobalState().mapStyle].bgcolor[records[res].level];
+};
+
+// 给出自治体id，和Record列表，返回这个自治体在这个Record列表中的当前主题的颜色
+export const getCurrentForeColorByRecords = (records: Record[], admin_id: string) => {
+  const res = records.findIndex(record => {
+    return record.admin_id === admin_id;
+  });
+  if (res === -1) {
+    return mapStyles[getGlobalState().mapStyle].color[0];
+  }
+  return mapStyles[getGlobalState().mapStyle].color[records[res].level];
+};
+
+// 给出行脚level，返回当前主题的颜色
+export const getCurrentFillColorByLevel = (level: number) => {
+  return mapStyles[getGlobalState().mapStyle].bgcolor[level];
+};
+
+// 给出行脚level，返回当前主题的颜色
+export const getCurrentForeColorByLevel = (level: number) => {
+  return mapStyles[getGlobalState().mapStyle].color[level];
 };

@@ -1,9 +1,9 @@
-import { mapStyles } from '../../utils/mapStyles';
+import { getCurrentFillColorByLevel, getCurrentForeColorByLevel } from '../../utils/serverUtils';
 import { Record } from '../../utils/types';
 import { Ooaza } from './addr';
 import { getOoazaInstanceById } from './geojsonUtils';
 
-export const getAreaFillColor = (mapStyle: number, ooazaList: Ooaza[], records: Record[], area: string) => {
+export const getAreaFillColor = (ooazaList: Ooaza[], records: Record[], area: string) => {
   let maxRecordType = 0;
 
   for (let i = 0; i < records.length; i++) {
@@ -18,10 +18,10 @@ export const getAreaFillColor = (mapStyle: number, ooazaList: Ooaza[], records: 
     }
   }
 
-  return mapStyles[mapStyle].bgcolor[maxRecordType];
+  return getCurrentFillColorByLevel(maxRecordType);
 };
 
-export const getAreaForeColor = (mapStyle: number, ooazaList: Ooaza[], records: Record[], area: string) => {
+export const getAreaForeColor = (ooazaList: Ooaza[], records: Record[], area: string) => {
   let maxRecordType = 0;
 
   for (let i = 0; i < records.length; i++) {
@@ -36,5 +36,5 @@ export const getAreaForeColor = (mapStyle: number, ooazaList: Ooaza[], records: 
     }
   }
 
-  return mapStyles[mapStyle].color[maxRecordType];
+  return getCurrentForeColorByLevel(maxRecordType);
 };
