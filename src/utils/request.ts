@@ -1,7 +1,5 @@
 import axios, { AxiosRequestHeaders, Method } from 'axios';
-import cookie from 'react-cookies';
 import appconfig from '../appconfig';
-import { userInfoStorage } from '../globalStorages';
 import { c_token } from './cookies';
 
 // 更新services里的接口的方法：npm run openapi
@@ -13,9 +11,6 @@ const service = axios.create({
   timeout: 10000,
   responseType: 'json',
   withCredentials: true,
-  headers: {
-    'Content-Type': 'application/json;charset=utf-8',
-  },
 });
 
 // interceptor
@@ -109,9 +104,7 @@ const request = <T = any>(url: string, options?: RequestOptions): Promise<T> => 
         //paramsSerializer: options?.paramsSerializer,
         timeout: options?.timeout,
         timeoutErrorMessage: options?.timeoutMessage,
-        headers: options?.headers ?? {
-          'Content-Type': 'application/json',
-        },
+        headers: options?.headers,
       })
       .then((response: any) => {
         if (response?.data) {
