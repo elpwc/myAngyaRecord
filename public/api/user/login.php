@@ -30,7 +30,7 @@ switch ($request_type) {
     $email = escape_string($sqllink, $data->email);
     $pw = md5(trim((string)($data->password)));
 
-    $sql = "SELECT `email`, `id`, `name` FROM `user` 
+    $sql = "SELECT `email`, `id`, `name`, `avatar_url`, `hitokoto`, `create_date` FROM `user` 
             WHERE `email` = ? AND `pw` = ? AND `is_deleted` = 0 
             AND `is_banned` = 0 AND `verified` = 1";
 
@@ -40,7 +40,7 @@ switch ($request_type) {
       $user = mysqli_fetch_assoc($result);
       $token = gen_token($email, 72000);
       $_SESSION["token"] = $token;
-      echo json_encode(["res" => "ok", "email" => $email, "token" => $token, "uid" => $user['id'], "nickname" => $user['name']]);
+      echo json_encode(["res" => "ok", "email" => $email, "token" => $token, "uid" => $user['id'], "nickname" => $user['name'], "avatar" => $user['avatar_url'], "hitokoto" => $user['hitokoto'], "create_date" => $user['create_date'], 'status' => 200]);
     } else {
       echo json_encode(["res" => "fail", 'status' => 401]);
     }

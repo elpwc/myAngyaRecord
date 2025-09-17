@@ -24,6 +24,8 @@ switch ($request_type) {
     $sql = "SELECT 
               rg.*, 
               u.name AS username,
+              u.avatar_url,
+              u.hitokoto,
               RANK() OVER (ORDER BY score DESC) AS ranking
             FROM 
               `recordgroup` AS rg

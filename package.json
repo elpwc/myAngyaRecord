@@ -5,6 +5,7 @@
   "homepage": "/myangya",
   "dependencies": {
     "axios": "^1.7.9",
+    "browser-image-compression": "^2.0.2",
     "cra-template-typescript": "1.2.0",
     "formik": "^2.4.6",
     "leaflet": "^1.9.4",

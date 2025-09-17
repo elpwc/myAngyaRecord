@@ -48,12 +48,26 @@ switch ($request_type) {
 
   case 'GET':
     $email = escape_string($sqllink, $_GET['email']);
+    $id = escape_string($sqllink, $_GET['id']);
 
-    $sql = "SELECT `id`, `name`, `email`, `is_banned`, `auth`, `verified` 
+    if (isset($email)) {
+      // get by email
+      $sql = "SELECT `id`, `name`, `email`, `is_banned`, `auth`, `verified`, `hitokoto`, `avatar_url`, `create_date`
             FROM `user` 
             WHERE `email` = ? AND `is_deleted` = 0";
 
-    $result = prepare_bind_execute($sqllink, $sql, "s", [$email]);
+      $result = prepare_bind_execute($sqllink, $sql, "s", [$email]);
+    } else if (isset($id)) {
+      // get by id
+      $sql = "SELECT `id`, `name`, `email`, `is_banned`, `auth`, `verified`, `hitokoto`, `avatar_url`, `create_date`
+            FROM `user` 
+            WHERE `id` = ? AND `is_deleted` = 0";
+
+      $result = prepare_bind_execute($sqllink, $sql, "i", [$id]);
+    } else {
+      echo json_encode(["res" => "missing_params"]);
+      return;
+    }
 
     if ($result && mysqli_num_rows($result) > 0) {
       $user = mysqli_fetch_assoc($result);
@@ -73,6 +87,11 @@ switch ($request_type) {
     }
 
     $email = escape_string($sqllink, $data->email);
+    $id = escape_string($sqllink, $data->id);
+    if (!isset($email) && !isset($id)) {
+      echo json_encode(["res" => "missing_params"]);
+      return;
+    }
     $update_fields = [];
     $params = [];
     $types = "";
@@ -103,11 +122,20 @@ switch ($request_type) {
     }
 
     if (!empty($update_fields)) {
-      $params[] = $email;
-      $types .= "s";
 
-      $sql = "UPDATE `user` SET " . implode(', ', $update_fields) . " WHERE `email` = ?";
-      $result = prepare_bind_execute($sqllink, $sql, $types, $params);
+      if (isset($email)) {
+        // get by email
+        $params[] = $email;
+        $types .= "s";
+        $sql = "UPDATE `user` SET " . implode(', ', $update_fields) . " WHERE `email` = ?";
+        $result = prepare_bind_execute($sqllink, $sql, $types, $params);
+      } else if (isset($id)) {
+        // get by id
+        $params[] = $id;
+        $types .= "i";
+        $sql = "UPDATE `user` SET " . implode(', ', $update_fields) . " WHERE `id` = ?";
+        $result = prepare_bind_execute($sqllink, $sql, $types, $params);
+      }
 
       if ($result) {
         echo json_encode(["res" => "ok"]);

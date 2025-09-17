@@ -165,8 +165,8 @@ export const getUserInfoById = async (id: number, onOK: (data: any) => void, onE
     });
 };
 
-export const getUserRecordsById = async (id: number, includePrivate: boolean, onOK: (data: any) => void, onError: (msg: string) => void) => {
-  return request(`/user/user.php?id=${id}&includePrivate=${includePrivate}`, {
+export const getUserRecordsById = async (id: number, isPublic: boolean, onOK: (data: any) => void, onError: (msg: string) => void) => {
+  return request(`/recordGroup.php?uid=${id}&is_public=${isPublic}`, {
     method: 'GET',
   })
     .then(e => {
@@ -204,23 +204,18 @@ export const updateUserInfo = async (id: number, data: { name?: string; hitokoto
     });
 };
 
-export const updateUserAvatar = async (
-  id: number,
-  avatarFile: File,
-  onOK: (data: any) => void,
-  onError: (msg: string) => void
-) => {
+export const updateUserAvatar = async (id: number, avatarFile: File, onOK: (data: any) => void, onError: (msg: string) => void) => {
   const formData = new FormData();
-  formData.append("id", String(id));
-  formData.append("avatar", avatarFile);
+  formData.append('id', String(id));
+  formData.append('avatar', avatarFile);
 
   return request(`/user/avatar.php`, {
-    method: "POST",
+    method: 'POST',
     data: formData,
   })
-    .then((e) => {
+    .then(e => {
       switch (e.res) {
-        case "ok":
+        case 'ok':
           onOK(e.user);
           break;
         default:
@@ -228,9 +223,9 @@ export const updateUserAvatar = async (
           break;
       }
     })
-    .catch((e) => {
-      console.error("Avatar upload failed:", e);
-      onError("network_error");
+    .catch(e => {
+      console.error('Avatar upload failed:', e);
+      onError('network_error');
     });
 };
 

@@ -35,6 +35,9 @@ switch ($request_type) {
 
     // filename gen
     $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
+    if (!$ext) {
+      $ext = 'jpg';
+    }
     $filename = uniqid("avatar_") . "." . $ext;
 
     $uploadDir = __DIR__ . "/uploads/avatars/";

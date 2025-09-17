@@ -10,9 +10,14 @@ import { recordStatus } from '../../utils/map';
 import { useGlobalStore } from '../../utils/globalStore';
 import { useHint } from '../../components/HintProvider';
 import { c_uid } from '../../utils/cookies';
-import { updateUserAvatar } from '../../utils/serverUtils';
+import { getUserInfoById, updateUserAvatar, updateUserInfo } from '../../utils/serverUtils';
+import imageCompression from 'browser-image-compression';
+import appconfig from '../../appconfig';
 
 interface P {}
+
+/** 暂时选中的头像文件 */
+let avatarFile: File | null = null;
 
 export default (props: P) => {
   const params = useParams();
@@ -24,7 +29,12 @@ export default (props: P) => {
 
   // let currentId: string = params.id as string;
 
-  const [avatar, setAvatar] = useState(defaultAvatar);
+  const [userInfo, setUserInfo] = useState({
+    avatar: defaultAvatar,
+    name: '',
+    hitokoto: '',
+    createTime: '',
+  });
   const [profileEditModalAvatar, setProfileEditModalAvatar] = useState(defaultAvatar);
   const [profileEditModalUsername, setProfileEditModalUsername] = useState('');
   const [profileEditModalHitokoto, setProfileEditModalHitokoto] = useState('');
@@ -40,16 +50,75 @@ export default (props: P) => {
     document.title = 'ユーザー設定 - My行脚記録';
   }, []);
 
+  useEffect(() => {
+    getUserInfoById(
+      Number(userId),
+      data => {
+        setUserInfo({
+          avatar: appconfig.apiBaseURL + '/user' + data.avatar_url || defaultAvatar,
+          name: data.name || '',
+          hitokoto: data.hitokoto || '',
+          createTime: data.create_date || '',
+        });
+        setProfileEditModalAvatar(appconfig.apiBaseURL + '/user' + data.avatar_url || defaultAvatar);
+        setProfileEditModalUsername(data.name || '');
+        setProfileEditModalHitokoto(data.hitokoto || '');
+      },
+      msg => {
+        console.log(msg);
+        hint('top', 'ユーザー情報の取得に失敗しました', 'error');
+        navigate('/404');
+      }
+    );
+  }, [userId]);
+
+  const handleAvatarUpload = async () => {
+    if (!avatarFile) return;
+    // < 2mb
+    const maxSizeMB = 2;
+    if (avatarFile.size > maxSizeMB * 1024 * 1024) {
+      hint('bottom', `ファイルサイズが ${maxSizeMB}MBを超えています。より小さいファイルを選択してください。`);
+      return;
+    }
+
+    try {
+      const options = {
+        maxSizeMB: 0.3, //0.3mb
+        maxWidthOrHeight: 512,
+        useWebWorker: true,
+        fileType: 'image/jpeg',
+      };
+
+      const compressedFile = await imageCompression(avatarFile, options);
+
+      //console.log(` ${(avatarFile.size / 1024).toFixed(1)}KB →  ${(compressedFile.size / 1024).toFixed(1)}KB`);
+
+      updateUserAvatar(
+        Number(userId),
+        compressedFile,
+        e => {
+          console.log(e);
+        },
+        e => {
+          console.log(e);
+        }
+      );
+    } catch (err) {
+      hint('bottom', '画像の圧縮に失敗しました');
+    }
+  };
+
   return (
     <div className="container">
       <section className="user-header">
-        <img src={avatar} alt="avatar" className="avatar" />
+        <img src={userInfo.avatar} alt="avatar" className="avatar" />
         <div className="user-meta">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <h1 className="username">{'aaaa'}</h1>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '12px' }}>
+            <h1 className="username">{userInfo.name}</h1>
+            <span>{userInfo.hitokoto}</span>
             <div style={{ display: 'flex', flexDirection: 'column', fontSize: '12px', color: '#c0c0c0' }}>
               <span>id: {userId}</span>
-              <span>{}から利用している</span>
+              <span>{userInfo.createTime}から利用している</span>
             </div>
           </div>
           {isSelfUser && (
@@ -132,6 +201,23 @@ export default (props: P) => {
         showCancelButton
         onOk={() => {
           setShowEditModal(false);
+          // update user info
+          updateUserInfo(
+            Number(userId),
+            {
+              name: profileEditModalUsername,
+              hitokoto: profileEditModalHitokoto,
+            },
+            e => {
+              console.log(e);
+            },
+            e => {
+              console.log(e);
+            }
+          );
+
+          // upload avatar
+          handleAvatarUpload();
         }}
       >
         <div className="modal">
@@ -148,17 +234,8 @@ export default (props: P) => {
               onChange={e => {
                 const file = e.target.files?.[0];
                 if (file) {
+                  avatarFile = file;
                   setProfileEditModalAvatar(URL.createObjectURL(file));
-                  updateUserAvatar(
-                    Number(userId),
-                    file,
-                    e => {
-                      console.log(e);
-                    },
-                    e => {
-                      console.log(e);
-                    }
-                  );
                 }
               }}
             />
