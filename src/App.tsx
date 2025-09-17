@@ -12,6 +12,7 @@ import ResetPassword from './components/userSysCompo/ResetPassword';
 import Ranking from './pages/Ranking';
 import { MapsId } from './utils/map';
 import Vietnam from './pages/Vietnam';
+import UserPage from './pages/UserPage';
 
 function App() {
   const [openMobileAsideMenu, setopenMobileAsideMenu] = useState(true);
@@ -44,6 +45,9 @@ function App() {
           <Route path="emailverify" element={<EmailVerify />}></Route>
           <Route path="register" element={<Register />}></Route>
           <Route path="resetpassword" element={<ResetPassword />}></Route>
+
+          <Route path="user" element={<UserPage />}></Route>
+          <Route path="user/:id" element={<UserPage />}></Route>
 
           <Route path="404" element={<ErrorPage />}></Route>
           <Route path="*" element={<ErrorPage />}></Route>

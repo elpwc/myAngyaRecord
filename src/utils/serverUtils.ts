@@ -146,6 +146,114 @@ export const getRanking = async (mapid: string, page: number, amountPerPage: num
     });
 };
 
+export const getUserInfoById = async (id: number, onOK: (data: any) => void, onError: (msg: string) => void) => {
+  return request(`/user/user.php?id=${id}`, {
+    method: 'GET',
+  })
+    .then(e => {
+      switch (e.res) {
+        case 'ok':
+          onOK(e.user);
+          break;
+        default:
+          onError(e.res);
+          break;
+      }
+    })
+    .catch(e => {
+      console.log(e);
+    });
+};
+
+export const getUserRecordsById = async (id: number, includePrivate: boolean, onOK: (data: any) => void, onError: (msg: string) => void) => {
+  return request(`/user/user.php?id=${id}&includePrivate=${includePrivate}`, {
+    method: 'GET',
+  })
+    .then(e => {
+      switch (e.res) {
+        case 'ok':
+          onOK(e.user);
+          break;
+        default:
+          onError(e.res);
+          break;
+      }
+    })
+    .catch(e => {
+      console.log(e);
+    });
+};
+
+export const updateUserInfo = async (id: number, data: { name?: string; hitokoto?: string }, onOK: (data: any) => void, onError: (msg: string) => void) => {
+  return request(`/user/user.php`, {
+    method: 'PATCH',
+    data: { ...data, id },
+  })
+    .then(e => {
+      switch (e.res) {
+        case 'ok':
+          onOK(e.user);
+          break;
+        default:
+          onError(e.res);
+          break;
+      }
+    })
+    .catch(e => {
+      console.log(e);
+    });
+};
+
+export const updateUserAvatar = async (
+  id: number,
+  avatarFile: File,
+  onOK: (data: any) => void,
+  onError: (msg: string) => void
+) => {
+  const formData = new FormData();
+  formData.append("id", String(id));
+  formData.append("avatar", avatarFile);
+
+  return request(`/user/avatar.php`, {
+    method: "POST",
+    data: formData,
+  })
+    .then((e) => {
+      switch (e.res) {
+        case "ok":
+          onOK(e.user);
+          break;
+        default:
+          onError(e.res);
+          break;
+      }
+    })
+    .catch((e) => {
+      console.error("Avatar upload failed:", e);
+      onError("network_error");
+    });
+};
+
+export const updateUserPassword = async (id: number, oldPassword: string, newPassword: string, onOK: (data: any) => void, onError: (msg: string) => void) => {
+  return request(`/user/user.php`, {
+    method: 'PATCH',
+    data: { id, old_password: oldPassword, new_password: newPassword },
+  })
+    .then(e => {
+      switch (e.res) {
+        case 'ok':
+          onOK(e.user);
+          break;
+        default:
+          onError(e.res);
+          break;
+      }
+    })
+    .catch(e => {
+      console.log(e);
+    });
+};
+
 // 给出自治体id，当前地图颜色主题和Record列表，返回这个自治体在这个Record列表中的颜色
 export const getFillcolorByRecords = (mapStyle: number, records: Record[], admin_id: string) => {
   const res = records.findIndex(record => {

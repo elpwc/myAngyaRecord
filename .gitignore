@@ -36,3 +36,5 @@ global.ts
 
 /vendor/
 /public/vendor/
+
+/public/api/user/uploads/

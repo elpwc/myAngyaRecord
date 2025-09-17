@@ -83,7 +83,8 @@ switch ($request_type) {
       'is_deleted' => 'i',
       'is_banned' => 'i',
       'auth' => 'i',
-      'verified' => 'i'
+      'verified' => 'i',
+      'hitokoto' => 's',
     ];
 
     foreach ($fields as $field => $type) {
