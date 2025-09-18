@@ -55,12 +55,12 @@ export default (props: P) => {
       Number(userId),
       data => {
         setUserInfo({
-          avatar: appconfig.apiBaseURL + '/user' + data.avatar_url || defaultAvatar,
+          avatar: data.avatar_url ? appconfig.apiBaseURL + '/user' + data.avatar_url : defaultAvatar,
           name: data.name || '',
           hitokoto: data.hitokoto || '',
           createTime: data.create_date || '',
         });
-        setProfileEditModalAvatar(appconfig.apiBaseURL + '/user' + data.avatar_url || defaultAvatar);
+        setProfileEditModalAvatar(data.avatar_url ? appconfig.apiBaseURL + '/user' + data.avatar_url : defaultAvatar);
         setProfileEditModalUsername(data.name || '');
         setProfileEditModalHitokoto(data.hitokoto || '');
       },
@@ -74,8 +74,8 @@ export default (props: P) => {
 
   const handleAvatarUpload = async () => {
     if (!avatarFile) return;
-    // < 2mb
-    const maxSizeMB = 2;
+    // <5mb
+    const maxSizeMB = 5;
     if (avatarFile.size > maxSizeMB * 1024 * 1024) {
       hint('bottom', `ファイルサイズが ${maxSizeMB}MBを超えています。より小さいファイルを選択してください。`);
       return;
