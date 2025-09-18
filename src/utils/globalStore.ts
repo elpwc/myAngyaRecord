@@ -1,8 +1,19 @@
 import { useSyncExternalStore } from 'react';
+import { LoginUserInfo } from './userUtils';
 
 // global vars store
 let state: any = {
   mapStyle: 2,
+  loginUserInfo: {
+    id: -1,
+    name: '',
+    email: '',
+    avatar: '',
+    createTime: '',
+    hitokoto: '',
+    token: '',
+    password: '',
+  } as LoginUserInfo,
 };
 
 const listeners = new Set<() => void>();

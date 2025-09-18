@@ -1,9 +1,9 @@
-import { userInfoStorage } from '../globalStorages';
 import { c_autoLogin, c_pw, c_token, c_uid, c_userName } from './cookies';
+import { getGlobalState, setGlobalState } from './globalStore';
 import request from './request';
 
 export const isLogin = () => {
-  return c_token() !== '' && c_userName() !== '' && c_uid() !== '';
+  return getGlobalState().loginUserInfo.token !== '';
   //return userInfoStorage.value.token !== undefined;
 };
 
@@ -29,6 +29,8 @@ export const logout = () => {
   c_pw('');
   c_uid();
   c_autoLogin(false);
+
+  setGlobalState({ loginUserInfo: { id: -1, name: '', email: '', avatar: '', createTime: '', hitokoto: '', token: '', password: '' } });
 };
 
 export const loginUser = async ({ email, password }: { email: string; password: string }) => {
@@ -47,7 +49,7 @@ export const loginCurrentUser = async () => {
     headers: {
       'Content-Type': 'application/json',
     },
-    data: { email: c_userName(), password: c_pw() },
+    data: { email: getGlobalState().loginUserInfo.email, password: getGlobalState().loginUserInfo.password },
   })
     .then(e => {
       const token = e.token;
@@ -57,6 +59,19 @@ export const loginCurrentUser = async () => {
       c_token(token);
       c_userName(email);
       c_uid(uid);
+
+      setGlobalState({
+        loginUserInfo: {
+          id: uid,
+          name: e.nickname,
+          email: email,
+          avatar: e.avatar,
+          createTime: e.create_date,
+          hitokoto: e.hitokoto,
+          token: e.token,
+          password: getGlobalState().loginUserInfo.password,
+        },
+      });
     })
     .catch(e => {
       console.log(e);
@@ -94,3 +109,14 @@ export const registerAlert = (text?: string) => {
   }
   return isLogin();
 };
+
+export interface LoginUserInfo {
+  id: number;
+  name: string;
+  email: string;
+  avatar: string;
+  createTime: string;
+  hitokoto: string;
+  token: string;
+  password?: string;
+}

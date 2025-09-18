@@ -1,10 +1,10 @@
 import { Formik, Form, Field } from 'formik';
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router';
-import { userInfoStorage } from '../../../globalStorages';
 import { c_autoLogin, c_pw, c_token, c_uid, c_userName, c_userNickName } from '../../../utils/cookies';
 import './index.css';
 import { loginUser } from '../../../utils/userUtils';
+import { setGlobalState } from '../../../utils/globalStore';
 
 interface P {}
 
@@ -61,6 +61,9 @@ export default (props: P) => {
                         c_autoLogin(false);
                         c_pw('');
                       }
+                      setGlobalState({
+                        loginUserInfo: { id: uid, name: nickname, email: email, avatar: e.avatar, createTime: e.create_date, hitokoto: e.hitokoto, token: e.token, password: values.password },
+                      });
 
                       resetForm();
                       settip('成功');
