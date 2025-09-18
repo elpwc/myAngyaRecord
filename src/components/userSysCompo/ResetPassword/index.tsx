@@ -4,6 +4,7 @@ import './index.css';
 import { Field, Form, Formik } from 'formik';
 import { resetPassword } from '../../../utils/userUtils';
 import { c_token, c_userName } from '../../../utils/cookies';
+import { getGlobalState } from '../../../utils/globalStore';
 
 interface P {}
 
@@ -25,7 +26,7 @@ export default (props: P) => {
   const [hasRequestSend, sethasRequestSend]: [boolean, any] = useState(false);
 
   const [email, setemail] = useState('');
-  const [token, settoken] = useState('');
+  //const [token, settoken] = useState('');
 
   useEffect(() => {
     const queryParams = new URLSearchParams(mylocation.search);
@@ -33,23 +34,23 @@ export default (props: P) => {
     const token_q = queryParams.get('v');
     if (email_q) {
       if (email_q !== '') {
-        c_userName(email_q);
+        c_userName(getGlobalState().loginUserInfo.id, email_q);
         setemail(email_q);
       } else {
-        setemail(c_userName());
+        setemail(c_userName(getGlobalState().loginUserInfo.id));
       }
     } else {
-      setemail(c_userName());
+      setemail(c_userName(getGlobalState().loginUserInfo.id));
     }
     if (token_q) {
       if (token_q !== '') {
-        c_token(token_q);
-        settoken(token_q);
+        c_token(getGlobalState().loginUserInfo.id, token_q);
+        //settoken(token_q);
       } else {
-        settoken(c_token());
+        //settoken(c_token(getGlobalState().loginUserInfo.id));
       }
     } else {
-      settoken(c_token());
+      //settoken(c_token(getGlobalState().loginUserInfo.id));
     }
   }, [mylocation.search]);
 

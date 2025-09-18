@@ -1,7 +1,7 @@
 import { Formik, Form, Field } from 'formik';
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router';
-import { c_autoLogin, c_pw, c_token, c_uid, c_userName, c_userNickName } from '../../../utils/cookies';
+import { c_autoLogin, c_pw, c_token, c_userName, c_userNickName } from '../../../utils/cookies';
 import './index.css';
 import { loginUser } from '../../../utils/userUtils';
 import { setGlobalState } from '../../../utils/globalStore';
@@ -49,17 +49,16 @@ export default (props: P) => {
                       const nickname = e.nickname;
                       const uid = e.uid;
 
-                      c_token(token);
-                      c_userName(email);
-                      c_userNickName(nickname);
-                      c_uid(uid);
+                      c_token(uid, token);
+                      c_userName(uid, email);
+                      c_userNickName(uid, nickname);
 
                       if (values.autoLogin) {
                         c_autoLogin(true);
-                        c_pw(values.password);
+                        c_pw(uid, values.password);
                       } else {
                         c_autoLogin(false);
-                        c_pw('');
+                        c_pw(uid, '');
                       }
                       setGlobalState({
                         loginUserInfo: { id: uid, name: nickname, email: email, avatar: e.avatar, createTime: e.create_date, hitokoto: e.hitokoto, token: e.token, password: values.password },

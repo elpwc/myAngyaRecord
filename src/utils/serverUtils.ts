@@ -1,4 +1,3 @@
-import { c_uid } from './cookies';
 import { getGlobalState } from './globalStore';
 import { mapStyles } from './mapStyles';
 import request from './request';
@@ -7,7 +6,7 @@ import { RankingResponse, Record } from './types';
 export const postRecord = async (group_id: number, admin_id: string, level: number, onOK: () => void, onError: (msg: string) => void) => {
   return request('/record.php', {
     method: 'POST',
-    data: { group_id: group_id, admin_id, uid: c_uid(), level },
+    data: { group_id: group_id, admin_id, uid: getGlobalState().loginUserInfo.id, level },
   })
     .then(e => {
       switch (e.res) {
@@ -25,7 +24,7 @@ export const postRecord = async (group_id: number, admin_id: string, level: numb
 };
 
 export const getRecords = async (group_id: number, onOK: (data: any) => void, onError: (msg: string) => void) => {
-  return request(`/record.php?group_id=${group_id}&uid=${c_uid()}`, {
+  return request(`/record.php?group_id=${group_id}&uid=${getGlobalState().loginUserInfo.id}`, {
     method: 'GET',
   })
     .then(e => {
@@ -44,7 +43,7 @@ export const getRecords = async (group_id: number, onOK: (data: any) => void, on
 };
 
 export const getRecordGroups = async (mapid: string, onOK: (data: any) => void, onError: (msg: string) => void) => {
-  return request(`/recordgroup.php?mapid=${mapid}&uid=${c_uid()}`, {
+  return request(`/recordgroup.php?mapid=${mapid}&uid=${getGlobalState().loginUserInfo.id}`, {
     method: 'GET',
   })
     .then(e => {
@@ -65,7 +64,7 @@ export const getRecordGroups = async (mapid: string, onOK: (data: any) => void, 
 export const postRecordGroup = async (mapid: string, name: string, desc: string, isPublic: boolean, showLivedLevel: boolean, onOK: (data: any) => void, onError: (msg: string) => void) => {
   return request(`/recordgroup.php`, {
     method: 'POST',
-    data: { mapid, uid: c_uid(), name, desc, is_public: isPublic, show_lived_level: showLivedLevel },
+    data: { mapid, uid: getGlobalState().loginUserInfo.id, name, desc, is_public: isPublic, show_lived_level: showLivedLevel },
   })
     .then(e => {
       switch (e.res) {
@@ -90,7 +89,7 @@ export const patchRecordGroup = async (
 ) => {
   return request(`/recordgroup.php`, {
     method: 'PATCH',
-    data: { ...data, id, uid: c_uid() },
+    data: { ...data, id, uid: getGlobalState().loginUserInfo.id },
   })
     .then(e => {
       switch (e.res) {
@@ -110,7 +109,7 @@ export const patchRecordGroup = async (
 export const deleteRecordGroup = async (id: number, onOK: (data: any) => void, onError: (msg: string) => void) => {
   return request(`/recordgroup.php`, {
     method: 'POST',
-    data: { id, uid: c_uid() },
+    data: { id, uid: getGlobalState().loginUserInfo.id },
   })
     .then(e => {
       switch (e.res) {

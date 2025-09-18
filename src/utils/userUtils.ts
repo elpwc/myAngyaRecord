@@ -1,9 +1,9 @@
-import { c_autoLogin, c_pw, c_token, c_uid, c_userName } from './cookies';
+import { c_autoLogin, c_pw, c_token, c_userName } from './cookies';
 import { getGlobalState, setGlobalState } from './globalStore';
 import request from './request';
 
 export const isLogin = () => {
-  return getGlobalState().loginUserInfo.token !== '';
+  return c_token(getGlobalState().loginUserInfo.id) !== '';
   //return userInfoStorage.value.token !== undefined;
 };
 
@@ -24,10 +24,9 @@ export const valiLogin = () => {
 };
 
 export const logout = () => {
-  c_userName('');
+  c_userName(getGlobalState().loginUserInfo.id, '');
   //c_token('');
-  c_pw('');
-  c_uid();
+  c_pw(getGlobalState().loginUserInfo.id, '');
   c_autoLogin(false);
 
   setGlobalState({ loginUserInfo: { id: -1, name: '', email: '', avatar: '', createTime: '', hitokoto: '', token: '', password: '' } });
@@ -56,9 +55,8 @@ export const loginCurrentUser = async () => {
       const email = e.email;
       const uid = e.uid;
 
-      c_token(token);
-      c_userName(email);
-      c_uid(uid);
+      c_token(uid, token);
+      c_userName(uid, email);
 
       setGlobalState({
         loginUserInfo: {

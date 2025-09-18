@@ -7,9 +7,8 @@ import defaultAvatar from '../../assets/defaultAvatar.png';
 import { RecordGroup } from '../../utils/types';
 import { mapStyles } from '../../utils/mapStyles';
 import { recordStatus } from '../../utils/map';
-import { useGlobalStore } from '../../utils/globalStore';
+import { getGlobalState, useGlobalStore } from '../../utils/globalStore';
 import { useHint } from '../../components/HintProvider';
-import { c_uid } from '../../utils/cookies';
 import { getUserInfoById, updateUserAvatar, updateUserInfo } from '../../utils/serverUtils';
 import imageCompression from 'browser-image-compression';
 import appconfig from '../../appconfig';
@@ -44,7 +43,7 @@ export default (props: P) => {
 
   const [currentMapStyle, setCurrentMapStyle] = useGlobalStore(s => s.mapStyle);
 
-  const [isSelfUser, setIsSelfUser] = useState(userId === c_uid() && userId !== '-1');
+  const [isSelfUser, setIsSelfUser] = useState(userId === getGlobalState().loginUserInfo.id.toString() && userId !== '-1');
 
   useEffect(() => {
     document.title = 'ユーザー設定 - My行脚記録';

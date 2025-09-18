@@ -16,7 +16,6 @@ import { AsideBar, LayerCheckboxInfo } from '../../components/AsideBar';
 import { MapInstance } from '../../components/MapInstance';
 import { InstitutionTypeCd, JapanRailway, Municipality, Prefecture, RailwayClassCd } from './addr';
 import { getShinkoukyokuFillColor, getShinkoukyokuForeColor, getTodofukenFillColor, getTodofukenForeColor } from './utils';
-import { c_uid } from '../../utils/cookies';
 import { getGlobalState, setGlobalState } from '../../utils/globalStore';
 
 interface P {
