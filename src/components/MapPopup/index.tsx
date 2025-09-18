@@ -4,7 +4,7 @@ import './index.css';
 import { useMap } from 'react-leaflet';
 import { isLogin } from '../../utils/userUtils';
 import { recordStatus } from '../../utils/map';
-import { mapStyles } from '../../utils/mapStyles';
+import { getCurrentFillColorByLevel, getCurrentForeColorByLevel } from '../../utils/serverUtils';
 
 interface P {
   addr: string;
@@ -13,8 +13,6 @@ interface P {
   hasOpenningRecordGroup: boolean;
   onClick: (value: number) => void;
 }
-
-let currentMapStyle = 2;
 
 export default ({ addr, name, hasOpenningRecordGroup, onClick }: P) => {
   const thisMap = useMap();
@@ -53,7 +51,7 @@ export default ({ addr, name, hasOpenningRecordGroup, onClick }: P) => {
                 }
                 thisMap.closePopup();
               }}
-              style={{ backgroundColor: mapStyles[currentMapStyle].bgcolor[value.value], color: mapStyles[currentMapStyle].color[value.value] }}
+              style={{ backgroundColor: getCurrentFillColorByLevel(value.value), color: getCurrentForeColorByLevel(value.value) }}
             >
               {value.name}
             </button>
