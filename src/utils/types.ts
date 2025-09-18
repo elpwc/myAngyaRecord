@@ -45,6 +45,8 @@ export interface Record {
 export interface Ranking extends RecordGroup {
   username: string;
   ranking: number;
+  avatar_url: string;
+  hitokoto: string;
 }
 
 export interface RankingResponse {
