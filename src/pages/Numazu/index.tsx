@@ -17,7 +17,7 @@ import { Ooaza, OoazaArea } from './addr';
 import { getNumazuAreaData, getNumazuOoazaData } from './geojsonUtils';
 import { getAreaFillColor, getAreaForeColor } from './utils';
 import MuniList from './MuniList';
-import { getGlobalState, setGlobalState } from '../../utils/globalStore';
+import { getGlobalState, setGlobalState, useGlobalStore } from '../../utils/globalStore';
 
 interface P {
   openMobileAsideMenu: boolean;
@@ -47,6 +47,8 @@ export default (props: P) => {
   const [records, setrecords] = useState<Record[]>([]);
 
   const [currentLatLng, setcurrentLatLng] = useState(DEFAULT_LAT_LNG);
+
+  const [currentBackgroundTileMap, setCurrentBackgroundTileMap] = useGlobalStore(s => s.currentBackgroundTileMap);
 
   const showAreaLevelColor = useMemo(() => layers.area && !layers.ooaza, [layers.area, layers.ooaza]);
 
@@ -98,7 +100,7 @@ export default (props: P) => {
   }, [recordGroup?.id]);
 
   const handleMapBackgroundTileChange = (id: string) => {
-    setGlobalState({ currentBackgroundTileMap: id });
+    setCurrentBackgroundTileMap((s: any) => ({ ...s, currentBackgroundTileMap: id }));
   };
 
   const handleLayerChange = (name: string, checked: boolean) => {

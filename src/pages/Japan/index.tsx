@@ -16,7 +16,7 @@ import { AsideBar, LayerCheckboxInfo } from '../../components/AsideBar';
 import { MapInstance } from '../../components/MapInstance';
 import { InstitutionTypeCd, JapanRailway, Municipality, Prefecture, RailwayClassCd } from './addr';
 import { getShinkoukyokuFillColor, getShinkoukyokuForeColor, getTodofukenFillColor, getTodofukenForeColor } from './utils';
-import { getGlobalState, setGlobalState } from '../../utils/globalStore';
+import { getGlobalState, useGlobalStore } from '../../utils/globalStore';
 
 interface P {
   openMobileAsideMenu: boolean;
@@ -53,6 +53,8 @@ export default (props: P) => {
   const [records, setrecords] = useState<Record[]>([]);
 
   const [currentLatLng, setcurrentLatLng] = useState(DEFAULT_LAT_LNG);
+
+  const [currentBackgroundTileMap, setCurrentBackgroundTileMap] = useGlobalStore(s => s.currentBackgroundTileMap);
 
   const showTodofukenLevelColor = useMemo(() => layers.pref && !layers.muni, [layers.pref, layers.muni]);
 
@@ -108,7 +110,7 @@ export default (props: P) => {
   }, [recordGroup?.id]);
 
   const handleMapBackgroundTileChange = (id: string) => {
-    setGlobalState({ currentBackgroundTileMap: id });
+    setCurrentBackgroundTileMap((s: any) => ({ ...s, currentBackgroundTileMap: id }));
   };
 
   const handleLayerChange = (name: string, checked: boolean) => {

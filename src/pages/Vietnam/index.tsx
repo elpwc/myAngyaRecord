@@ -17,7 +17,7 @@ import { TinhVietnam } from './addr';
 import { getRailwaysData, getTinhVietnamData } from './geojsonUtils';
 import MuniList from './MuniList';
 import { Railway, RailwayType } from '../../utils/addr';
-import { getGlobalState, setGlobalState } from '../../utils/globalStore';
+import { getGlobalState, setGlobalState, useGlobalStore } from '../../utils/globalStore';
 
 interface P {
   openMobileAsideMenu: boolean;
@@ -48,7 +48,8 @@ export default (props: P) => {
   const [records, setrecords] = useState<Record[]>([]);
 
   const [currentLatLng, setcurrentLatLng] = useState(DEFAULT_LAT_LNG);
-  const [currentMapStyle, setcurrentMapStyle] = useState(2);
+
+  const [currentBackgroundTileMap, setCurrentBackgroundTileMap] = useGlobalStore(s => s.currentBackgroundTileMap);
 
   const refreshRecordGroups = () => {
     if (isLogin()) {
@@ -96,7 +97,7 @@ export default (props: P) => {
   }, [recordGroup?.id]);
 
   const handleMapBackgroundTileChange = (id: string) => {
-    setGlobalState({ currentBackgroundTileMap: id });
+    setCurrentBackgroundTileMap((s: any) => ({ ...s, currentBackgroundTileMap: id }));
   };
 
   const handleLayerChange = (name: string, checked: boolean) => {
