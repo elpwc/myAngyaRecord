@@ -4,18 +4,29 @@ import './index.css';
 import { useMap } from 'react-leaflet';
 import { isLogin } from '../../utils/userUtils';
 import { recordStatus } from '../../utils/map';
-import { getCurrentFillColorByLevel, getCurrentForeColorByLevel } from '../../utils/serverUtils';
+import { getCurrentFillColorByLevel, getCurrentForeColorByLevel, patchRecord, postRecord } from '../../utils/serverUtils';
+import { useHint } from '../HintProvider';
 
 interface P {
   addr: string;
   name: string;
+  comment: string;
+  /* 用来上传comment，不一定有 */
+  recordId?: number;
   /* 記録がないと記録できない */
   hasOpenningRecordGroup: boolean;
+  groupId: number;
+  adminId: string;
+  selected: number;
   onClick: (value: number) => void;
 }
 
-export default ({ addr, name, hasOpenningRecordGroup, onClick }: P) => {
+export default ({ addr, name, comment, recordId, hasOpenningRecordGroup, groupId, adminId, selected, onClick }: P) => {
   const thisMap = useMap();
+  const hint = useHint();
+
+  const [editCommentMode, setEditCommentMode] = React.useState(false);
+  const [editingComment, setEditingComment] = React.useState(comment);
 
   return (
     <div className="popup">
@@ -31,13 +42,86 @@ export default ({ addr, name, hasOpenningRecordGroup, onClick }: P) => {
             </svg>
           </a>
         </p>
+
+        <div className="flex">
+          <button
+            className="mappopup-comment-button flex"
+            onClick={() => {
+              if (isLogin()) {
+                setEditCommentMode(!editCommentMode);
+              }
+            }}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+              <path
+                fillRule="evenodd"
+                d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+              />
+            </svg>
+            <span>{editCommentMode ? 'キャンセル' : 'コメント追加'}</span>
+          </button>
+          {editCommentMode && (
+            <button
+              className="mappopup-comment-button flex"
+              onClick={() => {
+                if (isLogin()) {
+                  if (recordId) {
+                    patchRecord(
+                      recordId,
+                      { comment: editingComment ?? '' },
+                      () => {
+                        hint('bottom', 'コメントを更新しました');
+                        setEditingComment(editingComment);
+                        setEditCommentMode(false);
+                      },
+                      () => {
+                        hint('bottom', 'コメントの更新に失敗しました');
+                      }
+                    );
+                  } else {
+                    // 沒有recordId的情况，需要建立一个空白的记录
+                    postRecord(
+                      groupId,
+                      adminId,
+                      0,
+                      editingComment ?? '',
+                      () => {
+                        hint('bottom', 'コメントを更新しました');
+                        setEditingComment(editingComment);
+                        setEditCommentMode(false);
+                      },
+                      () => {
+                        hint('bottom', 'コメントの追加に失敗しました');
+                      }
+                    );
+                  }
+                }
+              }}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M11 2H9v3h2z" />
+                <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z" />
+              </svg>
+              <span>保存する</span>
+            </button>
+          )}
+        </div>
+
+        {editCommentMode ? (
+          <textarea className="mappopup-comment-textarea" placeholder="コメントを記入..." onChange={e => setEditingComment(e.target.value)}>
+            {editingComment}
+          </textarea>
+        ) : (
+          <p className="popupcomment">{editingComment || ''}</p>
+        )}
       </div>
       <div className="popupbuttoncontainer">
         {recordStatus.map(value => {
           return (
             <button
               key={value.name}
-              className="popupbutton"
+              className={'popupbutton' + (selected === value.value ? ' popupbutton-selected' : '')}
               onClick={() => {
                 if (isLogin()) {
                   if (hasOpenningRecordGroup) {

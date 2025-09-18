@@ -59,13 +59,14 @@ switch ($request_type) {
       echo json_encode(["res" => $update_result !== false ? "ok" : "error"]);
     } else {
       // 如果记录不存在，插入新记录
-      $insert_sql = "INSERT INTO `record` ( `admin_id`, `group_id`, `level`) VALUES (?, ?, ?)";
+      $insert_sql = "INSERT INTO `record` ( `admin_id`, `group_id`, `level`, `comment`) VALUES (?, ?, ?, ?)";
       $insert_params = [
         escape_string($sqllink, $data->admin_id),
         (int)($data->group_id),
-        (int)($data->level)
+        (int)($data->level),
+        escape_string($sqllink, $data->comment)
       ];
-      $insert_result = prepare_bind_execute($sqllink, $insert_sql, "sii", $insert_params);
+      $insert_result = prepare_bind_execute($sqllink, $insert_sql, "siis", $insert_params);
       echo json_encode(["res" => $insert_result !== false ? "ok" : "error"]);
     }
 
@@ -139,9 +140,9 @@ switch ($request_type) {
     $fields = [
       'mapid' => 's',
       'admin_id' => 's',
-      'uid' => 'i',
       'level' => 'i',
-      'is_deleted' => 'i'
+      'is_deleted' => 'i',
+      'comment' => 's',
     ];
 
     foreach ($fields as $field => $type) {

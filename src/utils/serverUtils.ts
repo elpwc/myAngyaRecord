@@ -3,10 +3,10 @@ import { mapStyles } from './mapStyles';
 import request from './request';
 import { RankingResponse, Record } from './types';
 
-export const postRecord = async (group_id: number, admin_id: string, level: number, onOK: () => void, onError: (msg: string) => void) => {
+export const postRecord = async (group_id: number, admin_id: string, level: number, comment: string, onOK: () => void, onError: (msg: string) => void) => {
   return request('/record.php', {
     method: 'POST',
-    data: { group_id: group_id, admin_id, uid: getGlobalState().loginUserInfo.id, level },
+    data: { group_id: group_id, admin_id, uid: getGlobalState().loginUserInfo.id, level, comment },
   })
     .then(e => {
       switch (e.res) {
@@ -26,6 +26,26 @@ export const postRecord = async (group_id: number, admin_id: string, level: numb
 export const getRecords = async (group_id: number, onOK: (data: any) => void, onError: (msg: string) => void) => {
   return request(`/record.php?group_id=${group_id}&uid=${getGlobalState().loginUserInfo.id}`, {
     method: 'GET',
+  })
+    .then(e => {
+      switch (e.res) {
+        case 'ok':
+          onOK(e.records);
+          break;
+        default:
+          onError(e.res);
+          break;
+      }
+    })
+    .catch(e => {
+      console.log(e);
+    });
+};
+
+export const patchRecord = async (id: number, data: { level?: number; comment?: string }, onOK: (data: any) => void, onError: (msg: string) => void) => {
+  return request(`/record.php`, {
+    method: 'PATCH',
+    data: { ...data, id, uid: getGlobalState().loginUserInfo.id },
   })
     .then(e => {
       switch (e.res) {

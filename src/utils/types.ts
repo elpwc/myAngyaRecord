@@ -40,6 +40,7 @@ export interface Record {
   is_deleted: boolean;
   create_date: string;
   update_date: string;
+  comment: string;
 }
 
 export interface Ranking extends RecordGroup {

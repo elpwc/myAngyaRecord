@@ -185,6 +185,7 @@ export default (props: P) => {
         recordGroup?.id,
         muniId,
         status,
+        '',
         () => {
           refreshRecords();
         },
@@ -262,7 +263,12 @@ export default (props: P) => {
                             <MapPopup
                               addr={(muniBorder.pref ?? '') + (muniBorder.shinkoukyoku ?? '') + (muniBorder.gun_seireishi ?? '')}
                               name={muniBorder.name}
+                              comment={records.find(r => r.admin_id === muniBorder.id)?.comment ?? ''}
+                              recordId={records.find(r => r.admin_id === muniBorder.id)?.id}
+                              groupId={recordGroup?.id ?? 0}
+                              adminId={muniBorder.id}
                               hasOpenningRecordGroup={!!recordGroup?.id}
+                              selected={records.find(r => r.admin_id === muniBorder.id)?.level ?? -1}
                               onClick={value => {
                                 changeRecordStatus(muniBorder.id, value);
                               }}

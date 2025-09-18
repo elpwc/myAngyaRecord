@@ -1,44 +1,86 @@
 .popup {
-	
-    width: fit-content;
+  width: fit-content;
 }
 
 .popuproute {
-	color: gray;
+  color: gray;
 }
 
-.popuptitleContainer{
-	padding: 5px 10px;
-	padding-right: 20px;
-	width: max-content;
+.popuptitleContainer {
+  padding: 5px 10px;
+  padding-right: 20px;
+  width: max-content;
 }
 
 .popuptitle {
-	font-size: 20px;
-	font-weight: bold;
-	display: flex;
-	flex-direction: row;
-	gap: 16px;
-	justify-content: space-between;
+  font-size: 20px;
+  font-weight: bold;
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  justify-content: space-between;
 }
 
 .popupbuttoncontainer {
-	display: flex;
-	flex-direction: column;
-	gap: 0px;
-	width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  width: 100%;
 }
 
 .popupbutton {
   border-width: 0px;
   border-color: rgb(255, 255, 255);
-	cursor: pointer;
+  cursor: pointer;
   font-size: 15px;
   padding: 4px 2px;
-	width: 100%;
-	transition: all 0.1s;
+  width: 100%;
+  transition: all 0.1s;
 }
 
 .popupbutton:hover {
-	opacity: 0.8;
+  opacity: 0.8;
+}
+
+.popupbutton-selected{
+	box-shadow: inset 0 0 0px 2px #00000064;
+	font-weight: bold;
+}
+
+.mappopup-comment-button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 10px;
+  color: #686868;
+}
+
+.mappopup-comment-button:hover {
+  color: #005ae3;
+}
+
+.popupcomment {
+	font-size: 12px;
+	color: #686868;
+	padding: 0 !important;
+	margin: 8px 0 !important;
+	white-space: pre-wrap;
+	word-break: break-word;
+	max-width: 260px;
+	max-height: 50vh;
+	overflow-y: auto;
+}
+
+.mappopup-comment-textarea{
+	width: 100%;
+	height: 60px;
+	resize: none;
+	border: 1px solid #d0d0d0;
+	border-radius: 4px;
+	padding: 2px;
+	margin: 8px 0 !important;
+	font-size: 12px;
+	max-width: 260px;
+	max-height: 50vh;
+	overflow-y: auto;
 }

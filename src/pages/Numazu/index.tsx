@@ -170,6 +170,7 @@ export default (props: P) => {
         recordGroup?.id,
         muniId,
         status,
+        '',
         () => {
           refreshRecords();
         },
@@ -233,7 +234,12 @@ export default (props: P) => {
                         <MapPopup
                           addr={border.area ? border.area + '地区' : ''}
                           name={border.name}
+                          comment={records.find(r => r.admin_id === border.id)?.comment ?? ''}
+                          recordId={records.find(r => r.admin_id === border.id)?.id}
+                          groupId={recordGroup?.id ?? 0}
+                          adminId={border.id}
                           hasOpenningRecordGroup={!!recordGroup?.id}
+                          selected={records.find(r => r.admin_id === border.id)?.level ?? -1}
                           onClick={value => {
                             changeRecordStatus(border.id, value);
                           }}
