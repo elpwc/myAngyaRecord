@@ -3,10 +3,10 @@ import cookie from 'react-cookies';
 
 export const c_token = (userid: number, token?: string): string => {
   if (token !== null && token !== undefined) {
-    cookie.save('token_' + userid, token ?? '', { path: '/' });
+    cookie.save('token', token ?? '', { path: '/' });
     return token ?? '';
   } else {
-    return cookie.load('token_' + userid) ?? '';
+    return cookie.load('token') ?? '';
   }
 };
 
@@ -25,28 +25,28 @@ export const c_autoLogin = (state?: boolean): boolean => {
 
 export const c_userNickName = (userid: number, userName?: string): string => {
   if (userName !== null && userName !== undefined) {
-    cookie.save('userNickName_' + userid, userName ?? '', { path: '/' });
+    cookie.save('userNickName', userName ?? '', { path: '/' });
     return userName ?? '';
   } else {
-    return cookie.load('userNickName_' + userid) ?? '';
+    return cookie.load('userNickName') ?? '';
   }
 };
 
 export const c_userName = (userid: number, userName?: string): string => {
   if (userName !== null && userName !== undefined) {
-    cookie.save('userName_' + userid, userName ?? '', { path: '/' });
+    cookie.save('userName', userName ?? '', { path: '/' });
     return userName ?? '';
   } else {
-    return cookie.load('userName_' + userid) ?? '';
+    return cookie.load('userName') ?? '';
   }
 };
 
 export const c_pw = (userid: number, pw?: string): string => {
   if (pw !== null && pw !== undefined) {
-    cookie.save('p_' + userid, pw ?? '', { path: '/' });
+    cookie.save('p', pw ?? '', { path: '/' });
     return pw ?? '';
   } else {
-    return cookie.load('p_' + userid) ?? '';
+    return cookie.load('p') ?? '';
   }
 };
 

@@ -3,6 +3,7 @@ import { getGlobalState, setGlobalState } from './globalStore';
 import request from './request';
 
 export const isLogin = () => {
+  console.log(getGlobalState(), c_token(getGlobalState().loginUserInfo.id));
   return c_token(getGlobalState().loginUserInfo.id) !== '';
   //return userInfoStorage.value.token !== undefined;
 };
@@ -25,7 +26,7 @@ export const valiLogin = () => {
 
 export const logout = () => {
   c_userName(getGlobalState().loginUserInfo.id, '');
-  //c_token('');
+  c_token(getGlobalState().loginUserInfo.id, '');
   c_pw(getGlobalState().loginUserInfo.id, '');
   c_autoLogin(false);
 
@@ -48,7 +49,7 @@ export const loginCurrentUser = async () => {
     headers: {
       'Content-Type': 'application/json',
     },
-    data: { email: getGlobalState().loginUserInfo.email, password: getGlobalState().loginUserInfo.password },
+    data: { email: c_userName(getGlobalState().loginUserInfo.id), password: c_pw(getGlobalState().loginUserInfo.id) },
   })
     .then(e => {
       const token = e.token;
@@ -67,7 +68,7 @@ export const loginCurrentUser = async () => {
           createTime: e.create_date,
           hitokoto: e.hitokoto,
           token: e.token,
-          password: getGlobalState().loginUserInfo.password,
+          password: c_pw(getGlobalState().loginUserInfo.id),
         },
       });
     })
