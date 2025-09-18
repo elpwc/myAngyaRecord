@@ -17,6 +17,7 @@ import { Ooaza, OoazaArea } from './addr';
 import { getNumazuAreaData, getNumazuOoazaData } from './geojsonUtils';
 import { getAreaFillColor, getAreaForeColor } from './utils';
 import MuniList from './MuniList';
+import { getGlobalState, setGlobalState } from '../../utils/globalStore';
 
 interface P {
   openMobileAsideMenu: boolean;
@@ -32,7 +33,6 @@ export default (props: P) => {
   const DEFAULT_ZOOM = 12;
 
   // let currentId: string = params.id as string;
-  const [currentBackgroundTileMap, setcurrentBackgroundTileMap] = useState('blank');
   const [layers, setLayers] = useState({
     area: true,
     ooaza: true,
@@ -98,7 +98,7 @@ export default (props: P) => {
   }, [recordGroup?.id]);
 
   const handleMapBackgroundTileChange = (id: string) => {
-    setcurrentBackgroundTileMap(id);
+    setGlobalState({ currentBackgroundTileMap: id });
   };
 
   const handleLayerChange = (name: string, checked: boolean) => {
@@ -185,7 +185,7 @@ export default (props: P) => {
         currentRecordGroup={recordGroup}
         thisMapId={thisMapId}
         openMobileAsideMenu={props.openMobileAsideMenu}
-        currentTileMap={currentBackgroundTileMap}
+        currentTileMap={getGlobalState().currentBackgroundTileMap}
         layers={LAYERS}
         list={<MuniList borderData={ooazaBorderData} areaData={areaBorderData} records={records} onChangeStatus={changeRecordStatus} />}
         onCurrentBackgroundTileMapChange={handleMapBackgroundTileChange}
@@ -198,7 +198,7 @@ export default (props: P) => {
       <MapInstance
         defaultLatLng={DEFAULT_LAT_LNG}
         defaultZoom={DEFAULT_ZOOM}
-        backgroundTile={currentBackgroundTileMap}
+        backgroundTile={getGlobalState().currentBackgroundTileMap}
         panes={PANES}
         onZoom={setCurrentZoom}
         onMove={setcurrentLatLng}
@@ -222,7 +222,7 @@ export default (props: P) => {
                         fillColor: getCurrentFillColorByRecords(records, border.id),
                         color: getCurrentForeColorByRecords(records, border.id),
                         opacity: 1,
-                        fillOpacity: currentBackgroundTileMap !== 'blank' ? 0.6 : 1,
+                        fillOpacity: getGlobalState().currentBackgroundTileMap !== 'blank' ? 0.6 : 1,
                         weight: 0.4,
                       }}
                       positions={border.coordinates}
@@ -255,7 +255,7 @@ export default (props: P) => {
                       pathOptions={{
                         fillColor: showAreaLevelColor ? getAreaFillColor(ooazaBorderData, records, border.name) : '#ffffff',
                         opacity: 1,
-                        fillOpacity: showAreaLevelColor ? (currentBackgroundTileMap !== 'blank' ? 0.6 : 1) : 0,
+                        fillOpacity: showAreaLevelColor ? (getGlobalState().currentBackgroundTileMap !== 'blank' ? 0.6 : 1) : 0,
                         weight: 0.7,
                         color: showAreaLevelColor ? getAreaForeColor(ooazaBorderData, records, border.name) : 'black',
                       }}

@@ -17,6 +17,7 @@ import { TinhVietnam } from './addr';
 import { getRailwaysData, getTinhVietnamData } from './geojsonUtils';
 import MuniList from './MuniList';
 import { Railway, RailwayType } from '../../utils/addr';
+import { getGlobalState, setGlobalState } from '../../utils/globalStore';
 
 interface P {
   openMobileAsideMenu: boolean;
@@ -33,7 +34,6 @@ export default (props: P) => {
   const thisMapId = MapsId.Vietnam;
 
   // let currentId: string = params.id as string;
-  const [currentBackgroundTileMap, setcurrentBackgroundTileMap] = useState('blank');
   const [layers, setLayers] = useState({
     tinh: true,
     railways: true,
@@ -96,7 +96,7 @@ export default (props: P) => {
   }, [recordGroup?.id]);
 
   const handleMapBackgroundTileChange = (id: string) => {
-    setcurrentBackgroundTileMap(id);
+    setGlobalState({ currentBackgroundTileMap: id });
   };
 
   const handleLayerChange = (name: string, checked: boolean) => {
@@ -183,7 +183,7 @@ export default (props: P) => {
         currentRecordGroup={recordGroup}
         thisMapId={thisMapId}
         openMobileAsideMenu={props.openMobileAsideMenu}
-        currentTileMap={currentBackgroundTileMap}
+        currentTileMap={getGlobalState().currentBackgroundTileMap}
         layers={LAYERS}
         list={<MuniList borderData={tinhBorderData} records={records} onChangeStatus={changeRecordStatus} />}
         onCurrentBackgroundTileMapChange={handleMapBackgroundTileChange}
@@ -196,7 +196,7 @@ export default (props: P) => {
       <MapInstance
         defaultLatLng={DEFAULT_LAT_LNG}
         defaultZoom={DEFAULT_ZOOM}
-        backgroundTile={currentBackgroundTileMap}
+        backgroundTile={getGlobalState().currentBackgroundTileMap}
         panes={PANES}
         onZoom={setCurrentZoom}
         onMove={setcurrentLatLng}
@@ -220,7 +220,7 @@ export default (props: P) => {
                         fillColor: getCurrentFillColorByRecords(records, border.id),
                         color: getCurrentForeColorByRecords(records, border.id),
                         opacity: 1,
-                        fillOpacity: currentBackgroundTileMap !== 'blank' ? 0.6 : 1,
+                        fillOpacity: getGlobalState().currentBackgroundTileMap !== 'blank' ? 0.6 : 1,
                         weight: 0.4,
                       }}
                       positions={border.coordinates}

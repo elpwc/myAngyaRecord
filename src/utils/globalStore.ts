@@ -4,6 +4,7 @@ import { LoginUserInfo } from './userUtils';
 // global vars store
 let state: any = {
   mapStyle: 2,
+  currentBackgroundTileMap: 'default',
   loginUserInfo: {
     id: -1,
     name: '',

@@ -7,7 +7,7 @@ import { getBounds, MapsId } from '../../utils/map';
 import { getMunicipalitiesData, getPrefecture_ShinkoukyokuData, getRailwaysData } from './geojsonUtils';
 import MapPopup from '../../components/MapPopup';
 import L, { divIcon, LatLngTuple } from 'leaflet';
-import {  getCurrentFillColorByRecords, getCurrentForeColorByRecords, getRecordGroups, getRecords, postRecord } from '../../utils/serverUtils';
+import { getCurrentFillColorByRecords, getCurrentForeColorByRecords, getRecordGroups, getRecords, postRecord } from '../../utils/serverUtils';
 import MuniList from './MuniList';
 import { Record, RecordGroup } from '../../utils/types';
 import { isLogin } from '../../utils/userUtils';
@@ -17,6 +17,7 @@ import { MapInstance } from '../../components/MapInstance';
 import { InstitutionTypeCd, JapanRailway, Municipality, Prefecture, RailwayClassCd } from './addr';
 import { getShinkoukyokuFillColor, getShinkoukyokuForeColor, getTodofukenFillColor, getTodofukenForeColor } from './utils';
 import { c_uid } from '../../utils/cookies';
+import { getGlobalState, setGlobalState } from '../../utils/globalStore';
 
 interface P {
   openMobileAsideMenu: boolean;
@@ -32,7 +33,6 @@ export default (props: P) => {
   const DEFAULT_ZOOM = 5;
 
   // let currentId: string = params.id as string;
-  const [currentBackgroundTileMap, setcurrentBackgroundTileMap] = useState('default');
   const [layers, setLayers] = useState({
     pref: true,
     muni: true,
@@ -109,7 +109,7 @@ export default (props: P) => {
   }, [recordGroup?.id]);
 
   const handleMapBackgroundTileChange = (id: string) => {
-    setcurrentBackgroundTileMap(id);
+    setGlobalState({ currentBackgroundTileMap: id });
   };
 
   const handleLayerChange = (name: string, checked: boolean) => {
@@ -175,8 +175,8 @@ export default (props: P) => {
 
   /**
    * 对DB中的自治体行脚记录进行修改
-   * @param muniId 
-   * @param status 
+   * @param muniId
+   * @param status
    */
   const changeRecordStatus = (muniId: string, status: number) => {
     if (recordGroup?.id) {
@@ -201,7 +201,7 @@ export default (props: P) => {
         currentRecordGroup={recordGroup}
         thisMapId={thisMapId}
         openMobileAsideMenu={props.openMobileAsideMenu}
-        currentTileMap={currentBackgroundTileMap}
+        currentTileMap={getGlobalState().currentBackgroundTileMap}
         layers={LAYERS}
         list={
           <MuniList
@@ -222,7 +222,7 @@ export default (props: P) => {
       <MapInstance
         defaultLatLng={DEFAULT_LAT_LNG}
         defaultZoom={DEFAULT_ZOOM}
-        backgroundTile={currentBackgroundTileMap}
+        backgroundTile={getGlobalState().currentBackgroundTileMap}
         panes={PANES}
         onZoom={setCurrentZoom}
         onMove={setcurrentLatLng}
@@ -252,7 +252,7 @@ export default (props: P) => {
                             fillColor: getCurrentFillColorByRecords(records, muniBorder.id),
                             color: getCurrentForeColorByRecords(records, muniBorder.id),
                             opacity: 1,
-                            fillOpacity: currentBackgroundTileMap !== 'blank' ? 0.6 : 1,
+                            fillOpacity: getGlobalState().currentBackgroundTileMap !== 'blank' ? 0.6 : 1,
                             weight: 0.4,
                           }}
                           positions={muniBorder.coordinates}
@@ -316,11 +316,11 @@ export default (props: P) => {
                       pane="pref"
                       key={'pref' + prefBorder.id}
                       pathOptions={{
-                        fillColor: showTodofukenLevelColor ? getTodofukenFillColor( records, prefBorder.id) : '#ffffff',
+                        fillColor: showTodofukenLevelColor ? getTodofukenFillColor(records, prefBorder.id) : '#ffffff',
                         opacity: 1,
-                        fillOpacity: showTodofukenLevelColor ? (currentBackgroundTileMap !== 'blank' ? 0.6 : 1) : 0,
+                        fillOpacity: showTodofukenLevelColor ? (getGlobalState().currentBackgroundTileMap !== 'blank' ? 0.6 : 1) : 0,
                         weight: 0.7,
-                        color: showTodofukenLevelColor ? getTodofukenForeColor( records, prefBorder.id) : 'black',
+                        color: showTodofukenLevelColor ? getTodofukenForeColor(records, prefBorder.id) : 'black',
                       }}
                       positions={prefBorder.coordinates}
                       interactive={false}
@@ -351,11 +351,11 @@ export default (props: P) => {
                       pane="subpref"
                       key={'subpref' + shinkouBorder.id}
                       pathOptions={{
-                        fillColor: showTodofukenLevelColor && showSubprefectureLevelColor ? getShinkoukyokuFillColor( records, muniBorderData, shinkouBorder.name) : '#ffffff',
+                        fillColor: showTodofukenLevelColor && showSubprefectureLevelColor ? getShinkoukyokuFillColor(records, muniBorderData, shinkouBorder.name) : '#ffffff',
                         opacity: 1,
-                        fillOpacity: showTodofukenLevelColor && showSubprefectureLevelColor ? (currentBackgroundTileMap !== 'blank' ? 0.6 : 1) : 0,
+                        fillOpacity: showTodofukenLevelColor && showSubprefectureLevelColor ? (getGlobalState().currentBackgroundTileMap !== 'blank' ? 0.6 : 1) : 0,
                         weight: 0.7,
-                        color: showTodofukenLevelColor && showSubprefectureLevelColor ? getShinkoukyokuForeColor( records, muniBorderData, shinkouBorder.name) : 'black',
+                        color: showTodofukenLevelColor && showSubprefectureLevelColor ? getShinkoukyokuForeColor(records, muniBorderData, shinkouBorder.name) : 'black',
                       }}
                       positions={shinkouBorder.coordinates}
                       interactive={false}
