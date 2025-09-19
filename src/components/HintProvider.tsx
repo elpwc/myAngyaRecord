@@ -6,10 +6,11 @@ type HintMessage = {
   position: 'top' | 'bottom' | 'top-right' | 'bottom-right';
   text: string;
   color: string;
+  timeout: number;
 };
 
 type HintContextType = {
-  showHint: (pos: HintMessage['position'], text: string, color?: string) => void;
+  showHint: (pos: HintMessage['position'], text: string, color?: string, timeout?: number) => void;
 };
 
 const HintContext = createContext<HintContextType | null>(null);
@@ -18,14 +19,14 @@ export const HintProvider = ({ children }: { children: ReactNode }) => {
   const [hints, setHints] = useState<HintMessage[]>([]);
   let idCounter = 0;
 
-  const showHint = (pos: HintMessage['position'], text: string, color: string = '#333') => {
+  const showHint = (pos: HintMessage['position'], text: string, color: string = '#333', timeout: number = 1000) => {
     const id = ++idCounter;
-    setHints(prev => [...prev, { id, position: pos, text, color }]);
+    setHints(prev => [...prev, { id, position: pos, text, color, timeout }]);
 
     // remove
     setTimeout(() => {
       setHints(prev => prev.filter(h => h.id !== id));
-    }, 1000);
+    }, timeout);
   };
 
   const variants = {
