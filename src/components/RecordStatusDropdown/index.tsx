@@ -15,7 +15,7 @@ export default function ({ value, disabled = false, onChange }: Props) {
   const [selected, setSelected] = useState(recordStatus[5 - value] || recordStatus[0]);
 
   useEffect(() => {
-    setSelected(recordStatus[value]);
+    setSelected(recordStatus[5 - value]);
   }, [value]);
 
   const toggle = () => {
