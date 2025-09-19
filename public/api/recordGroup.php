@@ -52,9 +52,17 @@ switch ($request_type) {
       $result = prepare_bind_execute($sqllink, $sql, "i", [$id]);
     } else {
       // 符合条件的所有地图
-      $sql = "SELECT * FROM `recordgroup` WHERE `mapid` = ? AND `uid` = ? AND `is_deleted` = 0" . ($is_public !== null ? " AND `is_public` = ? " : '') . ($show_lived_level  !== null ? " AND `show_lived_level` = ?" : '');
-      $types = 'si';
-      $params =  [$mapid, $uid];
+      if ($mapid !== null) {
+        // 指定mapid
+        $sql = "SELECT * FROM `recordgroup` WHERE `mapid` = ? AND `uid` = ? AND `is_deleted` = 0" . ($is_public !== null ? " AND `is_public` = ? " : '') . ($show_lived_level  !== null ? " AND `show_lived_level` = ?" : '');
+        $types = 'si';
+        $params =  [$mapid, $uid];
+      } else {
+        // 所有mapid
+        $sql = "SELECT * FROM `recordgroup` WHERE `uid` = ? AND `is_deleted` = 0" . ($is_public !== null ? " AND `is_public` = ? " : '') . ($show_lived_level  !== null ? " AND `show_lived_level` = ?" : '');
+        $types = 'i';
+        $params =  [$uid];
+      }
       if ($is_public !== null) {
         $types .= "i";
         array_push($params, $is_public);

@@ -82,6 +82,25 @@ export const getRecordGroups = async (mapid: string, onOK: (data: any) => void, 
     });
 };
 
+export const getRecordGroupsInAllMapsByUserID = async (uid: string, onOK: (data: any) => void, onError: (msg: string) => void) => {
+  return request(`/recordgroup.php?&uid=${uid}`, {
+    method: 'GET',
+  })
+    .then(e => {
+      switch (e.res) {
+        case 'ok':
+          onOK(e.groups);
+          break;
+        default:
+          onError(e.res);
+          break;
+      }
+    })
+    .catch(e => {
+      console.log(e);
+    });
+};
+
 export const getRecordGroupById = async (id: number, onOK: (data: any) => void, onError: (msg: string) => void) => {
   return request(`/recordgroup.php?id=${id}`, {
     method: 'GET',

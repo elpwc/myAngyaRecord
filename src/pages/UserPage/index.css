@@ -56,6 +56,9 @@
   border-bottom: 1px solid #eee;
   padding: 12px 0;
 }
+.record-item:hover{
+  background-color: #f1f1f1;
+}
 .record-title {
   font-weight: bold;
 }

@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
 import { useEffect } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router';
+import { Link, useLocation, useNavigate, useParams } from 'react-router';
 import './index.css';
 import { Modal } from '../../components/Modal';
 import defaultAvatar from '../../assets/defaultAvatar.png';
 import { RecordGroup } from '../../utils/types';
 import { mapStyles } from '../../utils/mapStyles';
-import { recordStatus } from '../../utils/map';
-import { getGlobalState, useGlobalStore } from '../../utils/globalStore';
+import { getMapTitleByMapsId, getMapUrlByMapsId, recordStatus } from '../../utils/map';
+import { useGlobalStore } from '../../utils/globalStore';
 import { useHint } from '../../components/HintProvider';
-import { getUserInfoById, updateUserAvatar, updateUserInfo } from '../../utils/serverUtils';
+import { getRecordGroupsInAllMapsByUserID, getUserInfoById, updateUserAvatar, updateUserInfo } from '../../utils/serverUtils';
 import imageCompression from 'browser-image-compression';
-import appconfig from '../../appconfig';
 import { c_mapStyle, c_uid } from '../../utils/cookies';
 import { getAvatarFullURL } from '../../utils/userUtils';
 
@@ -47,8 +46,22 @@ export default (props: P) => {
 
   const [isSelfUser, setIsSelfUser] = useState(userId === c_uid() && userId !== '-1');
 
+  const refreshRecordGroups = (onOK?: (data: RecordGroup[]) => void) => {
+    getRecordGroupsInAllMapsByUserID(
+      userId,
+      (data: RecordGroup[]) => {
+        setRecordGroups(data);
+        onOK?.(data);
+      },
+      (e: any) => {
+        console.log(e);
+      }
+    );
+  };
+
   useEffect(() => {
     document.title = 'ユーザー設定 - My行脚記録';
+    refreshRecordGroups();
   }, []);
 
   useEffect(() => {
@@ -131,15 +144,23 @@ export default (props: P) => {
       </section>
 
       <section className="records">
-        <h2>{isSelfUser ? '私の記録' : '公開の記録'}</h2>
+        <h2>{isSelfUser ? '私の記録' : '公開された記録'}</h2>
         <ul>
-          {recordGroups.map(group => (
-            <li key={group.id} className="record-item">
-              <div className="record-title">{group.name}</div>
-              <div className="record-date">{group.create_date}</div>
-              {group.desc && <div className="record-desc">{group.desc}</div>}
-            </li>
-          ))}
+          {recordGroups.map((group: RecordGroup) => {
+            if (userId === c_uid() || group.is_public) {
+              return (
+                <Link to={`/${getMapUrlByMapsId(group.mapid)}/` + group.id} target="_blank" className="link">
+                  <li key={group.id} className="record-item">
+                    <div className="record-title">{getMapTitleByMapsId(group.mapid) + ' ' + group.name + ' ' + (group.is_public ? '' : '(非公開)')}</div>
+                    <div className="record-date">{group.create_date}</div>
+                    {group.desc && <div className="record-desc">{group.desc}</div>}
+                  </li>
+                </Link>
+              );
+            } else {
+              return <></>;
+            }
+          })}
         </ul>
       </section>
 
