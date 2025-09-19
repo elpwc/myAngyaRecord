@@ -6,14 +6,17 @@ import { getCurrentFillColorByLevel, getCurrentForeColorByLevel } from '../../ut
 
 interface Props {
   value: number;
+  disabled?: boolean;
   onChange: (value: number) => void;
 }
 
-export default function ({ value, onChange }: Props) {
+export default function ({ value, disabled = false, onChange }: Props) {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(recordStatus[5 - value] || recordStatus[0]);
 
-  const toggle = () => setOpen(!open);
+  const toggle = () => {
+    if (!disabled) setOpen(!open);
+  };
 
   const handleSelect = (item: (typeof recordStatus)[0]) => {
     setSelected(item);

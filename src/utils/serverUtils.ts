@@ -25,7 +25,7 @@ export const postRecord = async (group_id: number, admin_id: string, level: numb
 };
 
 export const getRecords = async (group_id: number, onOK: (data: any) => void, onError: (msg: string) => void) => {
-  return request(`/record.php?group_id=${group_id}&uid=${c_uid()}`, {
+  return request(`/record.php?group_id=${group_id}`, {
     method: 'GET',
   })
     .then(e => {
@@ -65,6 +65,25 @@ export const patchRecord = async (id: number, data: { level?: number; comment?: 
 
 export const getRecordGroups = async (mapid: string, onOK: (data: any) => void, onError: (msg: string) => void) => {
   return request(`/recordgroup.php?mapid=${mapid}&uid=${c_uid()}`, {
+    method: 'GET',
+  })
+    .then(e => {
+      switch (e.res) {
+        case 'ok':
+          onOK(e.groups);
+          break;
+        default:
+          onError(e.res);
+          break;
+      }
+    })
+    .catch(e => {
+      console.log(e);
+    });
+};
+
+export const getRecordGroupById = async (id: number, onOK: (data: any) => void, onError: (msg: string) => void) => {
+  return request(`/recordgroup.php?id=${id}`, {
     method: 'GET',
   })
     .then(e => {

@@ -13,6 +13,7 @@ import { getUserInfoById, updateUserAvatar, updateUserInfo } from '../../utils/s
 import imageCompression from 'browser-image-compression';
 import appconfig from '../../appconfig';
 import { c_mapStyle, c_uid } from '../../utils/cookies';
+import { getAvatarFullURL } from '../../utils/userUtils';
 
 interface P {}
 
@@ -55,12 +56,12 @@ export default (props: P) => {
       Number(userId),
       data => {
         setUserInfo({
-          avatar: data.avatar_url ? appconfig.apiBaseURL + '/user' + data.avatar_url : defaultAvatar,
+          avatar: getAvatarFullURL(data.avatar_url),
           name: data.name || '',
           hitokoto: data.hitokoto || '',
           createTime: data.create_date || '',
         });
-        setProfileEditModalAvatar(data.avatar_url ? appconfig.apiBaseURL + '/user' + data.avatar_url : defaultAvatar);
+        setProfileEditModalAvatar(getAvatarFullURL(data.avatar_url));
         setProfileEditModalUsername(data.name || '');
         setProfileEditModalHitokoto(data.hitokoto || '');
       },

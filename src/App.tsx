@@ -31,8 +31,11 @@ function App() {
         >
           <Route index element={<Navigate to="/japan" replace />} />
           <Route path="japan" element={<Japan openMobileAsideMenu={openMobileAsideMenu} />}></Route>
+          <Route path="japan/:id" element={<Japan openMobileAsideMenu={openMobileAsideMenu} />}></Route>
           <Route path="numazu" element={<Numazu openMobileAsideMenu={openMobileAsideMenu} />}></Route>
+          <Route path="numazu/:id" element={<Numazu openMobileAsideMenu={openMobileAsideMenu} />}></Route>
           <Route path="vietnam" element={<Vietnam openMobileAsideMenu={openMobileAsideMenu} />}></Route>
+          <Route path="vietnam/:id" element={<Vietnam openMobileAsideMenu={openMobileAsideMenu} />}></Route>
 
           <Route path="ranking">
             <Route index element={<Navigate to="japan" replace />} />

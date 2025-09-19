@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router';
+import { data, useLocation, useNavigate, useParams } from 'react-router';
 import './index.css';
 import '../../../node_modules/leaflet/dist/leaflet.css';
 import { Marker, Polygon, Polyline, Popup, useMap } from 'react-leaflet';
@@ -7,7 +7,7 @@ import { getBounds, MapsId } from '../../utils/map';
 import { getMunicipalitiesData, getPrefecture_ShinkoukyokuData, getRailwaysData } from './geojsonUtils';
 import MapPopup from '../../components/MapPopup';
 import L, { divIcon, LatLngTuple } from 'leaflet';
-import { getCurrentFillColorByRecords, getCurrentForeColorByRecords, getRecordGroups, getRecords, postRecord } from '../../utils/serverUtils';
+import { getCurrentFillColorByRecords, getCurrentForeColorByRecords, getRecordGroupById, getRecordGroups, getRecords, postRecord } from '../../utils/serverUtils';
 import MuniList from './MuniList';
 import { Record, RecordGroup } from '../../utils/types';
 import { isLogin } from '../../utils/userUtils';
@@ -17,6 +17,7 @@ import { MapInstance } from '../../components/MapInstance';
 import { InstitutionTypeCd, JapanRailway, Municipality, Prefecture, RailwayClassCd } from './addr';
 import { getShinkoukyokuFillColor, getShinkoukyokuForeColor, getTodofukenFillColor, getTodofukenForeColor } from './utils';
 import { getGlobalState, useGlobalStore } from '../../utils/globalStore';
+import { c_uid } from '../../utils/cookies';
 
 interface P {
   openMobileAsideMenu: boolean;
@@ -28,10 +29,11 @@ export default (props: P) => {
   const mylocation = useLocation();
   const isMobile = useIsMobile();
 
+  const currentRecordGroupId = params.id || '-1';
+
   const DEFAULT_LAT_LNG: [number, number] = [36.016142, 137.990904];
   const DEFAULT_ZOOM = 5;
 
-  // let currentId: string = params.id as string;
   const [layers, setLayers] = useState({
     pref: true,
     muni: true,
@@ -40,6 +42,7 @@ export default (props: P) => {
     placename: true,
     railways: true,
   });
+  const [isViewMode, setIsViewMode] = useState(false);
   const [prefBorderData, setprefBorderData]: [Prefecture[], any] = useState([]);
   const [shinkouBorderData, setshinkouBorderData]: [Prefecture[], any] = useState([]);
   const [railwaysData, setrailwaysData]: [JapanRailway[], any] = useState([]);
@@ -104,6 +107,36 @@ export default (props: P) => {
     refreshRecordGroups();
     refreshRecords();
   }, []);
+
+  // param.id
+  useEffect(() => {
+    if (currentRecordGroupId !== '-1') {
+      console.log(currentRecordGroupId);
+      getRecordGroupById(
+        Number(currentRecordGroupId),
+        (data: RecordGroup[]) => {
+          if (data && data[0].mapid === thisMapId) {
+            setrecordGroup(data[0]);
+            if (data[0].uid !== Number(c_uid())) {
+              setIsViewMode(true);
+            }
+            getRecords(
+              Number(currentRecordGroupId),
+              (recordsData: Record[]) => {
+                setrecords(recordsData);
+              },
+              errmsg => {
+                alert(errmsg);
+              }
+            );
+          }
+        },
+        (errmsg: any) => {
+          alert(errmsg);
+        }
+      );
+    }
+  }, [currentRecordGroupId]);
 
   useEffect(() => {
     refreshRecords();
@@ -205,11 +238,13 @@ export default (props: P) => {
         openMobileAsideMenu={props.openMobileAsideMenu}
         currentTileMap={getGlobalState().currentBackgroundTileMap}
         layers={LAYERS}
+        isViewMode={isViewMode}
         list={
           <MuniList
             muniBorderData={muniBorderData}
             records={records}
             showCheckbox={LAYERS.some(layer => layer.checked && layer.name === 'muni')}
+            isViewMode={isViewMode}
             onSelectedPrefChanged={setMuniListSelectedPrefectures}
             onChangeStatus={changeRecordStatus}
           />
@@ -269,6 +304,7 @@ export default (props: P) => {
                               adminId={muniBorder.id}
                               hasOpenningRecordGroup={!!recordGroup?.id}
                               selected={records.find(r => r.admin_id === muniBorder.id)?.level ?? -1}
+                              isViewMode={isViewMode}
                               onClick={value => {
                                 changeRecordStatus(muniBorder.id, value);
                               }}

@@ -11,10 +11,11 @@ interface Props {
   areaData: OoazaArea[];
   borderData: Ooaza[];
   records: Record[];
+  isViewMode: boolean;
   onChangeStatus?: (muniId: string, level: number) => void;
 }
 
-const MuniList = ({ areaData, borderData, records, onChangeStatus }: Props) => {
+const MuniList = ({ areaData, borderData, records, onChangeStatus, isViewMode }: Props) => {
   const [expandedPrefectures, setExpandedPrefectures] = useState<string[]>([]);
   const togglePrefecture = (prefecture: string) => {
     setExpandedPrefectures(prev => (prev.includes(prefecture) ? prev.filter(p => p !== prefecture) : [...prev, prefecture]));
@@ -111,6 +112,7 @@ const MuniList = ({ areaData, borderData, records, onChangeStatus }: Props) => {
                           <div className="municipalityName">{ooaza.name}</div>
                           <RecordStatusDropdown
                             value={getStatusLevelByMuniId(ooaza.id, records)}
+                            disabled={isViewMode}
                             onChange={(value: number) => {
                               onChangeStatus?.(ooaza.id, Number(value));
                             }}

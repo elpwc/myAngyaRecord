@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router';
 import './index.css';
-import { getMapTitleByMapsId, MapsId } from '../../utils/map';
+import { getMapTitleByMapsId, getMapUrlByMapsId, MapsId } from '../../utils/map';
 import { getRanking } from '../../utils/serverUtils';
 import { Ranking } from '../../utils/types';
 import Pagination from '../../components/Pagination';
@@ -63,7 +63,7 @@ export default (props: P) => {
               <span className="rankPosition">第{rank.ranking}位</span>
               <div className="rankInfo">
                 <div className="rankInfoTop">
-                  <Link to={'/user/' + rank.uid} className="rankUserName">
+                  <Link to={'/user/' + rank.uid} className="rankUserName" target="_blank">
                     <Avatar avatarUrl={rank.avatar_url} width={24} />
                     <span className="">{rank.username}</span>
                   </Link>
@@ -72,7 +72,9 @@ export default (props: P) => {
                 <span className="rankDesc">{rank.desc}</span>
               </div>
               <span className="rankScore">行脚値：{rank.score}</span>
-              <button className="rankButton">閲覧</button>
+              <Link to={`/${getMapUrlByMapsId(props.mapId)}/` + rank.id} target="_blank">
+                <button className="rankButton">閲覧</button>
+              </Link>
             </li>
           );
         })}

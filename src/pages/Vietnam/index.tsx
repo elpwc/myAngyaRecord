@@ -6,10 +6,10 @@ import { Marker, Polygon, Polyline, Popup, useMap } from 'react-leaflet';
 import { getBounds, MapsId } from '../../utils/map';
 import MapPopup from '../../components/MapPopup';
 import L, { divIcon, LatLngTuple } from 'leaflet';
-import { getCurrentFillColorByRecords, getCurrentForeColorByRecords, getRecordGroups, getRecords, postRecord } from '../../utils/serverUtils';
+import { getCurrentFillColorByRecords, getCurrentForeColorByRecords, getRecordGroupById, getRecordGroups, getRecords, postRecord } from '../../utils/serverUtils';
 import { Record, RecordGroup } from '../../utils/types';
 import { isLogin } from '../../utils/userUtils';
-import { c_zoom } from '../../utils/cookies';
+import { c_uid, c_zoom } from '../../utils/cookies';
 import { useIsMobile } from '../../utils/hooks';
 import { AsideBar, LayerCheckboxInfo } from '../../components/AsideBar';
 import { MapInstance } from '../../components/MapInstance';
@@ -29,11 +29,13 @@ export default (props: P) => {
   const mylocation = useLocation();
   const isMobile = useIsMobile();
 
+  const currentRecordGroupId = params.id || '-1';
+
   const DEFAULT_LAT_LNG: [number, number] = [16.059890812484632, 107.2631833702326];
   const DEFAULT_ZOOM = 6;
   const thisMapId = MapsId.Vietnam;
 
-  // let currentId: string = params.id as string;
+  const [isViewMode, setIsViewMode] = useState(false);
   const [layers, setLayers] = useState({
     tinh: true,
     railways: true,
@@ -91,6 +93,36 @@ export default (props: P) => {
     refreshRecordGroups();
     refreshRecords();
   }, []);
+
+    // param.id
+    useEffect(() => {
+      if (currentRecordGroupId !== '-1') {
+        console.log(currentRecordGroupId);
+        getRecordGroupById(
+          Number(currentRecordGroupId),
+          (data: RecordGroup[]) => {
+            if (data && data[0].mapid === thisMapId) {
+              setrecordGroup(data[0]);
+              if (data[0].uid !== Number(c_uid())) {
+                setIsViewMode(true);
+              }
+              getRecords(
+                Number(currentRecordGroupId),
+                (recordsData: Record[]) => {
+                  setrecords(recordsData);
+                },
+                errmsg => {
+                  alert(errmsg);
+                }
+              );
+            }
+          },
+          (errmsg: any) => {
+            alert(errmsg);
+          }
+        );
+      }
+    }, [currentRecordGroupId]);
 
   useEffect(() => {
     refreshRecords();
@@ -187,7 +219,8 @@ export default (props: P) => {
         openMobileAsideMenu={props.openMobileAsideMenu}
         currentTileMap={getGlobalState().currentBackgroundTileMap}
         layers={LAYERS}
-        list={<MuniList borderData={tinhBorderData} records={records} onChangeStatus={changeRecordStatus} />}
+        isViewMode={isViewMode}
+        list={<MuniList borderData={tinhBorderData} records={records} isViewMode={isViewMode} onChangeStatus={changeRecordStatus} />}
         onCurrentBackgroundTileMapChange={handleMapBackgroundTileChange}
         onLayerChange={handleLayerChange}
         onSelectRecordGroup={(recordGroup: RecordGroup) => {
@@ -237,6 +270,7 @@ export default (props: P) => {
                           adminId={border.id}
                           hasOpenningRecordGroup={!!recordGroup?.id}
                           selected={records.find(r => r.admin_id === border.id)?.level ?? -1}
+                          isViewMode={isViewMode}
                           onClick={value => {
                             changeRecordStatus(border.id, value);
                           }}

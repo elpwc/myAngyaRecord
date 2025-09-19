@@ -28,6 +28,8 @@ export interface RecordGroup {
   update_date: string;
   is_public: boolean;
   show_lived_level: boolean;
+  nickname: string;
+  avatar_url: string;
 }
 
 export interface Record {

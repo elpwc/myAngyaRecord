@@ -49,7 +49,11 @@ switch ($request_type) {
 
     if ($id) {
       // 指定id的单个地图
-      $sql = "SELECT * FROM `recordgroup` WHERE `id` = ? AND `is_deleted` = 0";
+      $sql = "SELECT rg.*, u.avatar_url AS avatar_url , u.name AS nickname
+              FROM `recordgroup` rg 
+              JOIN `user` u 
+              ON rg.uid = u.id
+              WHERE rg.id = ? AND rg.is_deleted = 0";
       $result = prepare_bind_execute($sqllink, $sql, "i", [$id]);
     } else {
       // 符合条件的所有地图

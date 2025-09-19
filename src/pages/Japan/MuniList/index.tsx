@@ -13,11 +13,12 @@ interface Props {
   muniBorderData: { municipalities: Municipality[]; prefecture: string }[];
   records: Record[];
   showCheckbox?: boolean;
+  isViewMode: boolean;
   onSelectedPrefChanged?: (pref: string[]) => void;
   onChangeStatus?: (muniId: string, level: number) => void;
 }
 
-const MuniList = ({ muniBorderData, records, showCheckbox, onSelectedPrefChanged, onChangeStatus }: Props) => {
+const MuniList = ({ muniBorderData, records, showCheckbox, onSelectedPrefChanged, onChangeStatus, isViewMode }: Props) => {
   const [expandedPrefectures, setExpandedPrefectures] = useState<string[]>([]);
   const [selectedChihous, setSelectedChihous] = useState<string[]>([]);
   const [selectedPrefectures, setSelectedPrefectures] = useState<string[]>([]);
@@ -188,6 +189,7 @@ const MuniList = ({ muniBorderData, records, showCheckbox, onSelectedPrefChanged
                                 <div className="municipalityRegion">{(muniBorder.shinkoukyoku ?? '') + (muniBorder.gun_seireishi ?? '')}</div>
                                 <RecordStatusDropdown
                                   value={getStatusLevelByMuniId(muniBorder.id, records)}
+                                  disabled={isViewMode}
                                   onChange={(value: number) => {
                                     onChangeStatus?.(muniBorder.id, Number(value));
                                   }}

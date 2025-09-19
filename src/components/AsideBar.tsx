@@ -38,6 +38,7 @@ export const AsideBar = ({
   currentTileMap,
   layers,
   list,
+  isViewMode,
   onCurrentBackgroundTileMapChange,
   onLayerChange,
   onSelectRecordGroup,
@@ -48,6 +49,7 @@ export const AsideBar = ({
   currentTileMap: string;
   layers: LayerCheckboxInfo[];
   list: JSX.Element;
+  isViewMode: boolean;
   /** 当底图改变时 */
   onCurrentBackgroundTileMapChange: (id: string) => void;
   /** 当图层改变时 */
@@ -78,8 +80,8 @@ export const AsideBar = ({
           })}
         </div>
       </div>
-      {isLogin() ? (
-        <RecordGroupToolbar recordGroup={currentRecordGroup} thisMapId={thisMapId} onSelectRecordGroup={onSelectRecordGroup} />
+      {isLogin() || isViewMode ? (
+        <RecordGroupToolbar recordGroup={currentRecordGroup} thisMapId={thisMapId} isViewMode={isViewMode} onSelectRecordGroup={onSelectRecordGroup} />
       ) : (
         <div style={{ height: '100%', backgroundColor: '#ffffffa1' }}>
           <div style={{ padding: '10px', borderRadius: '5px', backgroundColor: 'white', margin: '20px', border: 'solid 1px #c1c1c1', paddingBottom: '30px' }}>

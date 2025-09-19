@@ -9,11 +9,11 @@ import RecordStatusDropdown from '../../../components/RecordStatusDropdown';
 interface Props {
   borderData: TinhVietnam[];
   records: Record[];
-
+  isViewMode: boolean;
   onChangeStatus?: (muniId: string, level: number) => void;
 }
 
-const MuniList = ({ borderData, records, onChangeStatus }: Props) => {
+const MuniList = ({ borderData, records, isViewMode, onChangeStatus }: Props) => {
   return (
     <div className="municipalitiesList">
       <div>
@@ -22,6 +22,7 @@ const MuniList = ({ borderData, records, onChangeStatus }: Props) => {
             <div className="municipalityName">{tinh.hantu}</div>
             <RecordStatusDropdown
               value={getStatusLevelByMuniId(tinh.id, records)}
+              disabled={isViewMode}
               onChange={(value: number) => {
                 onChangeStatus?.(tinh.id, Number(value));
               }}

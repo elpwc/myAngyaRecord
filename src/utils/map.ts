@@ -24,6 +24,19 @@ export const getMapTitleByMapsId = (mapsId: MapsId) => {
   }
 };
 
+export const getMapUrlByMapsId = (mapsId: MapsId) => {
+  switch (mapsId) {
+    case MapsId.JapanMuni:
+      return 'japan';
+    case MapsId.Numazu:
+      return 'numazu';
+    case MapsId.Vietnam:
+      return 'vietnam';
+    default:
+      return '';
+  }
+};
+
 export const mapTiles = [
   { id: 'blank', name: '白地図', url: '' },
   { id: 'default', name: '道路地図', url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' },

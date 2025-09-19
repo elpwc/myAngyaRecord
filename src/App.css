@@ -77,3 +77,9 @@ input[type='text']:focus {
   gap: 4px;
   align-items: center;
 }
+
+.link {
+  text-decoration: none;
+  font-size: 14px;
+  color: black;
+}

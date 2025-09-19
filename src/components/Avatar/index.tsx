@@ -1,8 +1,7 @@
 import React from 'react';
 import { useEffect } from 'react';
 import './index.css';
-import defaultAvatar from '../../assets/defaultAvatar.png';
-import appconfig from '../../appconfig';
+import { getAvatarFullURL } from '../../utils/userUtils';
 
 interface P {
   avatarUrl?: string;
@@ -14,7 +13,7 @@ export default ({ avatarUrl, width = 120 }: P) => {
 
   return (
     <>
-      <img src={avatarUrl ? appconfig.apiBaseURL + '/user' + avatarUrl : defaultAvatar} alt="avatar" className="avatar" style={{ width: `${width}px`, height: `${width}px` }} />
+      <img src={getAvatarFullURL (avatarUrl)} alt="avatar" className="avatar" style={{ width: `${width}px`, height: `${width}px` }} />
     </>
   );
 };

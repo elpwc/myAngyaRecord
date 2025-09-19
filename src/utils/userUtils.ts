@@ -1,6 +1,8 @@
+import appconfig from '../appconfig';
 import { c_autoLogin, c_pw, c_token, c_uid, c_userName } from './cookies';
 import { getGlobalState, setGlobalState } from './globalStore';
 import request from './request';
+import defaultAvatar from '../assets/defaultAvatar.png';
 
 export const isLogin = () => {
   //console.log(getGlobalState(), c_token(Number(c_uid())));
@@ -121,3 +123,11 @@ export interface LoginUserInfo {
   token: string;
   password?: string;
 }
+
+export const getAvatarFullURL = (avatar_url: string | undefined) => {
+  if (avatar_url) {
+    return appconfig.apiBaseURL + '/user' + avatar_url;
+  } else {
+    return defaultAvatar;
+  }
+};
