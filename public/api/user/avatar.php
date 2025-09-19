@@ -21,7 +21,7 @@ switch ($request_type) {
       echo json_encode(["res" => "token_error"]);
       return;
     }
-    
+
     $id = $_POST['id'] ?? null;
 
     error_log(json_encode($_POST));
@@ -70,7 +70,8 @@ switch ($request_type) {
 
     echo json_encode([
       "res" => "ok",
-      "user" => $user
+      "user" => $user,
+      "avatar_url" => $avatarUrl
     ]);
     exit;
     break;

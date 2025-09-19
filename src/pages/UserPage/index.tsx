@@ -112,8 +112,8 @@ export default (props: P) => {
       updateUserAvatar(
         Number(userId),
         compressedFile,
-        e => {
-          console.log(e);
+        data => {
+          setUserInfo({ ...userInfo, avatar: data.avatar_url });
         },
         e => {
           console.log(e);
@@ -273,8 +273,8 @@ export default (props: P) => {
               name: profileEditModalUsername,
               hitokoto: profileEditModalHitokoto,
             },
-            e => {
-              console.log(e);
+            data => {
+              setUserInfo({ ...userInfo, name: profileEditModalUsername, hitokoto: profileEditModalHitokoto });
             },
             e => {
               console.log(e);
