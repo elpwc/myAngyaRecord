@@ -94,3 +94,12 @@ export const c_showfilter = (value?: string): string => {
     return cookie.load('showfilter') ?? '';
   }
 };
+
+export const c_mapStyle = (value?: string): string => {
+  if (value !== null && value !== undefined) {
+    cookie.save('mapStyle', value ?? '', { path: '/' });
+    return value ?? '';
+  } else {
+    return cookie.load('mapStyle') ?? '';
+  }
+};

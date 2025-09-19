@@ -1,9 +1,10 @@
 import { useSyncExternalStore } from 'react';
 import { LoginUserInfo } from './userUtils';
+import { c_mapStyle } from './cookies';
 
 // global vars store
 let state: any = {
-  mapStyle: 2,
+  mapStyle: Number(c_mapStyle()) || 0,
   currentBackgroundTileMap: 'default',
   loginUserInfo: {
     id: -1,

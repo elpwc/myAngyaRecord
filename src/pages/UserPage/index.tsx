@@ -12,7 +12,7 @@ import { useHint } from '../../components/HintProvider';
 import { getUserInfoById, updateUserAvatar, updateUserInfo } from '../../utils/serverUtils';
 import imageCompression from 'browser-image-compression';
 import appconfig from '../../appconfig';
-import { c_uid } from '../../utils/cookies';
+import { c_mapStyle, c_uid } from '../../utils/cookies';
 
 interface P {}
 
@@ -158,6 +158,7 @@ export default (props: P) => {
                     onClick={e => {
                       if (e.currentTarget.checked) {
                         setCurrentMapStyle((s: any) => ({ ...s, mapStyle: index }));
+                        c_mapStyle(index.toString());
                         hint('bottom', '地図テーマを変更しました');
                       }
                     }}
