@@ -42,6 +42,19 @@
   background: #3b6fd1;
 }
 
+.logout-btn {
+  margin-top: 8px;
+  padding: 6px 12px;
+  background: #ccc;
+  border: none;
+  border-radius: 6px;
+  color: black;
+  cursor: pointer;
+}
+.logout-btn:hover {
+  background: #acacac;
+}
+
 .records h2,
 .system-settings h2 {
   margin-bottom: 12px;

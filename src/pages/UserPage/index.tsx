@@ -12,7 +12,7 @@ import { useHint } from '../../components/HintProvider';
 import { getRecordGroupsInAllMapsByUserID, getUserInfoById, updateUserAvatar, updateUserInfo } from '../../utils/serverUtils';
 import imageCompression from 'browser-image-compression';
 import { c_mapStyle, c_uid } from '../../utils/cookies';
-import { getAvatarFullURL } from '../../utils/userUtils';
+import { getAvatarFullURL, logout } from '../../utils/userUtils';
 
 interface P {}
 
@@ -136,9 +136,20 @@ export default (props: P) => {
             </div>
           </div>
           {isSelfUser && (
-            <button className="edit-btn" onClick={() => setShowEditModal(true)}>
-              プロフィール編集
-            </button>
+            <div className="flex">
+              <button className="edit-btn" onClick={() => setShowEditModal(true)}>
+                プロフィール編集
+              </button>
+              <button
+                className="logout-btn"
+                onClick={() => {
+                  logout();
+                  navigate('/japan');
+                }}
+              >
+                ログアウト
+              </button>
+            </div>
           )}
         </div>
       </section>
