@@ -50,14 +50,14 @@ export const c_pw = (userid: number, pw?: string): string => {
   }
 };
 
-// export const c_uid = (value?: string): string => {
-//   if (value !== null && value !== undefined) {
-//     cookie.save('uid_' + value, value ?? '', { path: '/' });
-//     return value ?? '';
-//   } else {
-//     return cookie.load('uid_' + value) ?? '';
-//   }
-// };
+export const c_uid = (value?: string): string => {
+  if (value !== null && value !== undefined) {
+    cookie.save('uid', value ?? '', { path: '/' });
+    return value ?? '';
+  } else {
+    return cookie.load('uid') ?? '';
+  }
+};
 
 export const c_lat = (value?: string): string => {
   if (value !== null && value !== undefined) {

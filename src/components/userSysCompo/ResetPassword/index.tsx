@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate, useParams } from 'react-router';
 import './index.css';
 import { Field, Form, Formik } from 'formik';
 import { resetPassword } from '../../../utils/userUtils';
-import { c_token, c_userName } from '../../../utils/cookies';
+import { c_token, c_uid, c_userName } from '../../../utils/cookies';
 import { getGlobalState } from '../../../utils/globalStore';
 
 interface P {}
@@ -34,23 +34,23 @@ export default (props: P) => {
     const token_q = queryParams.get('v');
     if (email_q) {
       if (email_q !== '') {
-        c_userName(getGlobalState().loginUserInfo.id, email_q);
+        c_userName(Number(c_uid()), email_q);
         setemail(email_q);
       } else {
-        setemail(c_userName(getGlobalState().loginUserInfo.id));
+        setemail(c_userName(Number(c_uid())));
       }
     } else {
-      setemail(c_userName(getGlobalState().loginUserInfo.id));
+      setemail(c_userName(Number(c_uid())));
     }
     if (token_q) {
       if (token_q !== '') {
-        c_token(getGlobalState().loginUserInfo.id, token_q);
+        c_token(Number(c_uid()), token_q);
         //settoken(token_q);
       } else {
-        //settoken(c_token(getGlobalState().loginUserInfo.id));
+        //settoken(c_token(Number(c_uid())));
       }
     } else {
-      //settoken(c_token(getGlobalState().loginUserInfo.id));
+      //settoken(c_token(Number(c_uid())));
     }
   }, [mylocation.search]);
 

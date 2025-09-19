@@ -1,10 +1,10 @@
-import { c_autoLogin, c_pw, c_token, c_userName } from './cookies';
+import { c_autoLogin, c_pw, c_token, c_uid, c_userName } from './cookies';
 import { getGlobalState, setGlobalState } from './globalStore';
 import request from './request';
 
 export const isLogin = () => {
-  console.log(getGlobalState(), c_token(getGlobalState().loginUserInfo.id));
-  return c_token(getGlobalState().loginUserInfo.id) !== '';
+  console.log(getGlobalState(), c_token(Number(c_uid())));
+  return c_token(Number(c_uid())) !== '';
   //return userInfoStorage.value.token !== undefined;
 };
 
@@ -25,9 +25,9 @@ export const valiLogin = () => {
 };
 
 export const logout = () => {
-  c_userName(getGlobalState().loginUserInfo.id, '');
-  c_token(getGlobalState().loginUserInfo.id, '');
-  c_pw(getGlobalState().loginUserInfo.id, '');
+  c_userName(Number(c_uid()), '');
+  c_token(Number(c_uid()), '');
+  c_pw(Number(c_uid()), '');
   c_autoLogin(false);
 
   setGlobalState({ loginUserInfo: { id: -1, name: '', email: '', avatar: '', createTime: '', hitokoto: '', token: '', password: '' } });
@@ -49,15 +49,17 @@ export const loginCurrentUser = async () => {
     headers: {
       'Content-Type': 'application/json',
     },
-    data: { email: c_userName(getGlobalState().loginUserInfo.id), password: c_pw(getGlobalState().loginUserInfo.id) },
+    data: { email: c_userName(Number(c_uid())), password: c_pw(Number(c_uid())) },
   })
     .then(e => {
+      console.log(e);
       const token = e.token;
       const email = e.email;
       const uid = e.uid;
 
       c_token(uid, token);
       c_userName(uid, email);
+      c_uid(String(uid));
 
       setGlobalState({
         loginUserInfo: {
@@ -68,7 +70,7 @@ export const loginCurrentUser = async () => {
           createTime: e.create_date,
           hitokoto: e.hitokoto,
           token: e.token,
-          password: c_pw(getGlobalState().loginUserInfo.id),
+          password: c_pw(Number(c_uid())),
         },
       });
     })

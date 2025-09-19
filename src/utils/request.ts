@@ -1,7 +1,7 @@
 import axios, { AxiosRequestHeaders, Method } from 'axios';
 import appconfig from '../appconfig';
 import { getGlobalState } from './globalStore';
-import { c_token } from './cookies';
+import { c_token, c_uid } from './cookies';
 
 // 更新services里的接口的方法：npm run openapi
 
@@ -19,7 +19,7 @@ service.interceptors.request.use(
   config => {
     //token
     if (config && config.headers) {
-      config.headers.authorization = 'Bearer ' + (c_token(getGlobalState().loginUserInfo.id) || '');
+      config.headers.authorization = 'Bearer ' + (c_token(Number(c_uid())) || '');
     }
     return config;
   },

@@ -12,6 +12,7 @@ import { useHint } from '../../components/HintProvider';
 import { getUserInfoById, updateUserAvatar, updateUserInfo } from '../../utils/serverUtils';
 import imageCompression from 'browser-image-compression';
 import appconfig from '../../appconfig';
+import { c_uid } from '../../utils/cookies';
 
 interface P {}
 
@@ -43,7 +44,7 @@ export default (props: P) => {
 
   const [currentMapStyle, setCurrentMapStyle] = useGlobalStore(s => s.mapStyle);
 
-  const [isSelfUser, setIsSelfUser] = useState(userId === getGlobalState().loginUserInfo.id.toString() && userId !== '-1');
+  const [isSelfUser, setIsSelfUser] = useState(userId === c_uid() && userId !== '-1');
 
   useEffect(() => {
     document.title = 'ユーザー設定 - My行脚記録';
