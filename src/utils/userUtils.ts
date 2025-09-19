@@ -54,7 +54,6 @@ export const loginCurrentUser = async () => {
     data: { email: c_userName(Number(c_uid())), password: c_pw(Number(c_uid())) },
   })
     .then(e => {
-      console.log(e);
       const token = e.token;
       const email = e.email;
       const uid = e.uid;

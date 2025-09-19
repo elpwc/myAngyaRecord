@@ -13,6 +13,8 @@ import { getRecordGroupsInAllMapsByUserID, getUserInfoById, updateUserAvatar, up
 import imageCompression from 'browser-image-compression';
 import { c_mapStyle, c_uid } from '../../utils/cookies';
 import { getAvatarFullURL, logout } from '../../utils/userUtils';
+import Coffee from '../../components/Coffee';
+import OuterLink from '../../components/OuterLink';
 
 interface P {}
 
@@ -221,8 +223,37 @@ export default (props: P) => {
         </section>
       )}
 
+      <section className="system-settings">
+        <h2>About</h2>
+        <p>
+          My行脚記録を使用していただき、誠にありがとうございます
+          <br />
+          <br />
+          開発者の<OuterLink link="https://x.com/elpwc">うに</OuterLink>です
+          <br />
+          <br />
+          My行脚記録は訪れた場所を「<span style={{ color: 'red' }}>色</span>」で記録できる地図サービスです
+          <br />
+          地図上の行政区をクリックするだけで、訪問状況をシンプルに残せます
+          <br />
+          色分けすることで、自分だけの「旅の履歴書」を直感的に作成できます
+          <br />
+          地図を眺めれば、これまでの旅の足跡がひと目でわかり、まだ行っていない場所への興味も広がります
+          <br />
+          <br />
+          このサイトが、みんなの思い出の記録と次の冒険のきっかけになりますように
+          <br />
+          <br />
+        </p>
+        <p>もし気に入ったら、コーヒー１杯でご褒美してくれると大変喜びます</p>
+        <br />
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <Coffee />
+        </div>
+      </section>
+
       <footer className="page-footer">
-        <p>My行脚記録 © 2025 — このサイトについて</p>
+        <p>My行脚記録 © 2025</p>
       </footer>
 
       <Modal
