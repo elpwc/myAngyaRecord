@@ -96,8 +96,8 @@ switch ($request_type) {
     break;
 
   case 'GET':
-    $id = isset($_GET['id']) ? escape_string($sqllink, $_GET['id']) : null;
-    $group_id = isset($_GET['group_id']) ? escape_string($sqllink, $_GET['group_id']) : null;
+    @$id = isset($_GET['id']) ? escape_string($sqllink, $_GET['id']) : null;
+    @$group_id = isset($_GET['group_id']) ? escape_string($sqllink, $_GET['group_id']) : null;
 
     if ($id) {
       $sql = "SELECT * FROM `record` WHERE `id` = ? AND `is_deleted` = 0";
@@ -128,7 +128,7 @@ switch ($request_type) {
       echo json_encode(["res" => "token_error"]);
       return;
     }
-    $id = escape_string($sqllink, $data->id);
+    @$id = escape_string($sqllink, $data->id);
     $update_fields = [];
     $params = [];
     $types = "";

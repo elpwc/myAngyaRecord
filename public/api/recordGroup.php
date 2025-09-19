@@ -36,11 +36,11 @@ switch ($request_type) {
     break;
 
   case 'GET':
-    $id = isset($_GET['id']) ? escape_string($sqllink, $_GET['id']) : null;
-    $uid = isset($_GET['uid']) ? escape_string($sqllink, $_GET['uid']) : null;
-    $mapid = isset($_GET['mapid']) ? escape_string($sqllink, $_GET['mapid']) : null;
-    $is_public = isset($_GET['is_public']) ? (escape_string($sqllink, $_GET['is_public']) === 'true' ? 1 : 0) : null;
-    $show_lived_level = isset($_GET['show_lived_level']) ? (escape_string($sqllink, $_GET['show_lived_level']) === 'true' ? 1 : 0) : null;
+    @$id = isset($_GET['id']) ? escape_string($sqllink, $_GET['id']) : null;
+    @$uid = isset($_GET['uid']) ? escape_string($sqllink, $_GET['uid']) : null;
+    @$mapid = isset($_GET['mapid']) ? escape_string($sqllink, $_GET['mapid']) : null;
+    @$is_public = isset($_GET['is_public']) ? (escape_string($sqllink, $_GET['is_public']) === 'true' ? 1 : 0) : null;
+    @$show_lived_level = isset($_GET['show_lived_level']) ? (escape_string($sqllink, $_GET['show_lived_level']) === 'true' ? 1 : 0) : null;
 
     if ($id) {
       // 指定id的单个地图
@@ -88,7 +88,7 @@ switch ($request_type) {
       echo json_encode(["res" => "token_error"]);
       return;
     }
-    $id = (int)$data->id;
+    @$id = (int)$data->id;
     $update_fields = [];
     $params = [];
     $types = "";

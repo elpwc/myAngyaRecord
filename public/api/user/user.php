@@ -47,8 +47,8 @@ switch ($request_type) {
     break;
 
   case 'GET':
-    $email = escape_string($sqllink, $_GET['email']);
-    $id = escape_string($sqllink, $_GET['id']);
+    @$email = escape_string($sqllink, $_GET['email']);
+    @$id = escape_string($sqllink, $_GET['id']);
 
     if (isset($email)) {
       // get by email
@@ -86,8 +86,8 @@ switch ($request_type) {
       return;
     }
 
-    $email = escape_string($sqllink, $data->email);
-    $id = escape_string($sqllink, $data->id);
+    @$email = escape_string($sqllink, $data->email);
+    @$id = escape_string($sqllink, $data->id);
     if (!isset($email) && !isset($id)) {
       echo json_encode(["res" => "missing_params"]);
       return;
