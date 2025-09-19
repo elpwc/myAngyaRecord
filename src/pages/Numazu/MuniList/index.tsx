@@ -3,9 +3,10 @@ import './index.css';
 import { Record } from '../../../utils/types';
 import { Ooaza, OoazaArea } from '../addr';
 import { getOoazaInstanceById } from '../geojsonUtils';
-import { getCurrentFillColorByLevel, getCurrentFillColorByRecords, getCurrentForeColorByRecords } from '../../../utils/serverUtils';
-import { getStatusByMuniId, getStatusLevelByMuniId } from '../../../utils/map';
+import { getCurrentFillColorByLevel } from '../../../utils/serverUtils';
+import { getStatusLevelByMuniId } from '../../../utils/map';
 import RecordStatusDropdown from '../../../components/RecordStatusDropdown';
+import { isLogin } from '../../../utils/userUtils';
 
 interface Props {
   areaData: OoazaArea[];
@@ -112,7 +113,7 @@ const MuniList = ({ areaData, borderData, records, onChangeStatus, isViewMode }:
                           <div className="municipalityName">{ooaza.name}</div>
                           <RecordStatusDropdown
                             value={getStatusLevelByMuniId(ooaza.id, records)}
-                            disabled={isViewMode}
+                            disabled={isViewMode || !isLogin()}
                             onChange={(value: number) => {
                               onChangeStatus?.(ooaza.id, Number(value));
                             }}

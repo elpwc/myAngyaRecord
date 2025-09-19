@@ -6,7 +6,7 @@ import { RecordGroup } from '../utils/types';
 import { useState } from 'react';
 import { postRecordGroup } from '../utils/serverUtils';
 import Avatar from './Avatar';
-import { getAvatarFullURL } from '../utils/userUtils';
+import { getAvatarFullURL, isLogin } from '../utils/userUtils';
 import { Link } from 'react-router';
 
 export const RecordGroupToolbar = ({
@@ -47,7 +47,7 @@ export const RecordGroupToolbar = ({
           )}
         </div>
         {isViewMode ? (
-          <Link to={'/user/' + recordGroup?.uid} className='link' style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+          <Link to={'/user/' + recordGroup?.uid} className="link" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
             <div className="flex" style={{ paddingRight: '4px' }}>
               <Avatar avatarUrl={recordGroup?.avatar_url} width={30} />
               <span>{recordGroup?.nickname}</span>
@@ -57,7 +57,11 @@ export const RecordGroupToolbar = ({
           <div className="" style={{ display: 'flex', padding: '0px' }}>
             <button
               className="styled-button primary-button flex"
-              onClick={() => setIsGroupListModalOpen(true)}
+              onClick={() => {
+                if (isLogin()) {
+                  setIsGroupListModalOpen(true);
+                }
+              }}
               style={{ borderRight: 'none', borderTopRightRadius: '0px', borderBottomRightRadius: '0px' }}
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
@@ -68,7 +72,15 @@ export const RecordGroupToolbar = ({
               </svg>
               {recordGroup ? '記録切り替え' : '記録を開く'}
             </button>
-            <button className="styled-button flex" onClick={() => setIsNewGroupModalOpen(true)} style={{ borderTopLeftRadius: '0px', borderBottomLeftRadius: '0px' }}>
+            <button
+              className="styled-button flex"
+              onClick={() => {
+                if (isLogin()) {
+                  setIsNewGroupModalOpen(true);
+                }
+              }}
+              style={{ borderTopLeftRadius: '0px', borderBottomLeftRadius: '0px' }}
+            >
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
                 <path fillRule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
               </svg>

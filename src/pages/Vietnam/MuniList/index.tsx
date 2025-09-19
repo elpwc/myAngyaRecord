@@ -2,9 +2,9 @@ import { memo, useState } from 'react';
 import './index.css';
 import { Record } from '../../../utils/types';
 import { TinhVietnam } from '../addr';
-import { getCurrentFillColorByRecords, getCurrentForeColorByRecords } from '../../../utils/serverUtils';
-import { getStatusByMuniId, getStatusLevelByMuniId } from '../../../utils/map';
+import { getStatusLevelByMuniId } from '../../../utils/map';
 import RecordStatusDropdown from '../../../components/RecordStatusDropdown';
+import { isLogin } from '../../../utils/userUtils';
 
 interface Props {
   borderData: TinhVietnam[];
@@ -22,7 +22,7 @@ const MuniList = ({ borderData, records, isViewMode, onChangeStatus }: Props) =>
             <div className="municipalityName">{tinh.hantu}</div>
             <RecordStatusDropdown
               value={getStatusLevelByMuniId(tinh.id, records)}
-              disabled={isViewMode}
+              disabled={isViewMode || !isLogin()}
               onChange={(value: number) => {
                 onChangeStatus?.(tinh.id, Number(value));
               }}

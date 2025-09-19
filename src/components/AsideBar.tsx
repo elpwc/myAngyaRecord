@@ -80,17 +80,41 @@ export const AsideBar = ({
           })}
         </div>
       </div>
-      {isLogin() || isViewMode ? (
+      <div style={{ position: 'relative' }}>
         <RecordGroupToolbar recordGroup={currentRecordGroup} thisMapId={thisMapId} isViewMode={isViewMode} onSelectRecordGroup={onSelectRecordGroup} />
-      ) : (
-        <div style={{ height: '100%', backgroundColor: '#ffffffa1' }}>
-          <div style={{ padding: '10px', borderRadius: '5px', backgroundColor: 'white', margin: '20px', border: 'solid 1px #c1c1c1', paddingBottom: '30px' }}>
-            <LoginPanel direction="column" />
+        {list}
+        {!isLogin() && !isViewMode && (
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              backdropFilter: 'blur(2px)',
+              background: 'rgba(255,255,255,0.5)',
+              display: 'flex',
+              justifyContent: 'center',
+              zIndex: 1,
+            }}
+          >
+            <div
+              style={{
+                padding: '10px',
+                borderRadius: '5px',
+                height: 'fit-content',
+                backgroundColor: 'rgba(255,255,255,0.8)',
+                margin: '20px',
+                border: 'solid 1px #c1c1c1',
+                paddingBottom: '30px',
+                boxShadow: '0 2px 12px rgba(0,0,0,0.08)',
+              }}
+            >
+              <LoginPanel direction="column" />
+            </div>
           </div>
-        </div>
-      )}
-
-      {currentRecordGroup && list}
+        )}
+      </div>
     </motion.aside>
   );
 };

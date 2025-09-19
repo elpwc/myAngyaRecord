@@ -1,13 +1,12 @@
 import { memo, useState } from 'react';
-import { chihous_data, getStatusByMuniId, getStatusLevelByMuniId, recordStatus } from '../../../utils/map';
+import { chihous_data, getStatusLevelByMuniId } from '../../../utils/map';
 import './index.css';
 import { Record } from '../../../utils/types';
-import { mapStyles } from '../../../utils/mapStyles';
 import { getPrefNameOfMuniById } from '../geojsonUtils';
 import { Municipality } from '../addr';
-import Dropdown from '../../../components/Dropdown';
 import RecordStatusDropdown from '../../../components/RecordStatusDropdown';
-import { getCurrentFillColorByLevel, getCurrentFillColorByRecords, getCurrentForeColorByRecords } from '../../../utils/serverUtils';
+import { getCurrentFillColorByLevel } from '../../../utils/serverUtils';
+import { isLogin } from '../../../utils/userUtils';
 
 interface Props {
   muniBorderData: { municipalities: Municipality[]; prefecture: string }[];
@@ -166,8 +165,16 @@ const MuniList = ({ muniBorderData, records, showCheckbox, onSelectedPrefChanged
                             }}
                           >
                             {[5, 4, 3, 2, 1, 0].map(level => {
-                              const total = prefMuniBorder.municipalities.length;
-                              const value: number = Object.values(angyaStatus)[5 - level];
+                              let total = prefMuniBorder.municipalities.length;
+                              let value: number = Object.values(angyaStatus)[5 - level];
+                              if (isLogin()) {
+                                total = prefMuniBorder.municipalities.length;
+                                value = Object.values(angyaStatus)[5 - level];
+                              } else {
+                                // 未登录时显示颜色预览
+                                total = 100;
+                                value = Math.random() * 15;
+                              }
                               const widthPercent = total > 0 ? (value / total) * 100 : 0;
                               return (
                                 <div
@@ -189,7 +196,7 @@ const MuniList = ({ muniBorderData, records, showCheckbox, onSelectedPrefChanged
                                 <div className="municipalityRegion">{(muniBorder.shinkoukyoku ?? '') + (muniBorder.gun_seireishi ?? '')}</div>
                                 <RecordStatusDropdown
                                   value={getStatusLevelByMuniId(muniBorder.id, records)}
-                                  disabled={isViewMode}
+                                  disabled={isViewMode || !isLogin()}
                                   onChange={(value: number) => {
                                     onChangeStatus?.(muniBorder.id, Number(value));
                                   }}
