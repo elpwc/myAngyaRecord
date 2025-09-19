@@ -3,7 +3,7 @@ import { getGlobalState, setGlobalState } from './globalStore';
 import request from './request';
 
 export const isLogin = () => {
-  console.log(getGlobalState(), c_token(Number(c_uid())));
+  //console.log(getGlobalState(), c_token(Number(c_uid())));
   return c_token(Number(c_uid())) !== '';
   //return userInfoStorage.value.token !== undefined;
 };

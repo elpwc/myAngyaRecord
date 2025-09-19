@@ -25,12 +25,13 @@ export const GroupListModal = ({ show, mapid, onClose, onSelect }: Props) => {
   const [showNewModalToggleDisable, setshowNewModalToggleDisable] = useState(false);
   const [editOrDeletedRecordGroupIndex, seteditOrDeletedRecordGroupIndex] = useState(-1);
 
-  const refreshRecordGroups = () => {
+  const refreshRecordGroups = (onOK?: (data: RecordGroup[]) => void) => {
     getRecordGroups(
       mapid,
       data => {
         console.log(data);
         setrecordGroups(data);
+        onOK?.(data);
       },
       e => {
         console.log(e);
@@ -93,7 +94,7 @@ export const GroupListModal = ({ show, mapid, onClose, onSelect }: Props) => {
                               alert(errormsg);
                               setisPublicToggleDisable(false);
                             },
-                            { is_public: value }
+                            { is_public: Boolean(value) }
                           );
                         }}
                       />
@@ -118,7 +119,7 @@ export const GroupListModal = ({ show, mapid, onClose, onSelect }: Props) => {
                               alert(errormsg);
                               setshowNewModalToggleDisable(false);
                             },
-                            { show_lived_level: value }
+                            { show_lived_level: Boolean(value) }
                           );
                         }}
                       />
@@ -202,7 +203,9 @@ export const GroupListModal = ({ show, mapid, onClose, onSelect }: Props) => {
             isPublic,
             showLivedLevel,
             (data: any) => {
-              refreshRecordGroups();
+              refreshRecordGroups((data: RecordGroup[]) => {
+                onSelect?.(data[data.length - 1]);
+              });
               setshowNewModal(false);
             },
             errmsg => {
@@ -220,12 +223,16 @@ export const GroupListModal = ({ show, mapid, onClose, onSelect }: Props) => {
           setshowEditModal(false);
         }}
         onOk={(name: string, desc: string, isPublic: boolean, showLivedLevel: boolean) => {
+          console.log(name, desc, isPublic, showLivedLevel);
+          if (editOrDeletedRecordGroupIndex < 0) {
+            return;
+          }
           patchRecordGroup(
             recordGroups[editOrDeletedRecordGroupIndex].id,
             (data: any) => {
               refreshRecordGroups();
               seteditOrDeletedRecordGroupIndex(-1);
-              setshowNewModal(false);
+              setshowEditModal(false);
             },
             errmsg => {
               seteditOrDeletedRecordGroupIndex(-1);
@@ -234,8 +241,8 @@ export const GroupListModal = ({ show, mapid, onClose, onSelect }: Props) => {
             {
               name,
               desc,
-              is_public: isPublic,
-              show_lived_level: showLivedLevel,
+              is_public: Boolean(isPublic),
+              show_lived_level: Boolean(showLivedLevel),
             }
           );
         }}
