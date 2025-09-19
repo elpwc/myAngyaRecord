@@ -82,7 +82,7 @@ export default (props: P) => {
       },
       msg => {
         console.log(msg);
-        hint('top', 'ユーザー情報の取得に失敗しました', 'error');
+        hint('top', 'ユーザー情報の取得に失敗しました');
         navigate('/404');
       }
     );
