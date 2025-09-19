@@ -71,6 +71,7 @@ export const GroupListModal = ({ show, mapid, onClose, onSelect }: Props) => {
           return (
             <li
               className="recordGroupsListItem"
+              key={recordGroup.id}
               onClick={() => {
                 onSelect?.(recordGroup);
               }}
