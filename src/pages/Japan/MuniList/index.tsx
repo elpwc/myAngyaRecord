@@ -122,8 +122,12 @@ const MuniList = ({ muniBorderData, records, showCheckbox, onSelectedPrefChanged
                                 {prefMuniBorder.prefecture}
                               </label>
                             </span>
-                            <span style={{ color: '#7f8ebb', paddingRight: '10px' }}>
-                              {Math.round(((angyaStatus.live + angyaStatus.stay + angyaStatus.visit + angyaStatus.ground + angyaStatus.pass) / prefMuniBorder.municipalities.length) * 100)}%
+                            <span style={{ color: '#7f8ebb', paddingRight: '10px', fontSize: '12px'}}>
+                              {`踏${Math.round(
+                                ((angyaStatus.live + angyaStatus.stay + angyaStatus.visit + angyaStatus.ground + angyaStatus.pass) / prefMuniBorder.municipalities.length) * 100
+                              )}% 全${Math.round(
+                                ((angyaStatus.live * 6 + angyaStatus.stay * 5 + angyaStatus.visit * 4 + angyaStatus.ground * 3 + angyaStatus.pass * 2) / (prefMuniBorder.municipalities.length * 5)) * 100
+                              )}%`}
                             </span>
                           </div>
                           <button
