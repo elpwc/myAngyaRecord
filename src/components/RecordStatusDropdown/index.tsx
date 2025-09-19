@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './index.css';
 import { recordStatus } from '../../utils/map';
@@ -13,6 +13,10 @@ interface Props {
 export default function ({ value, disabled = false, onChange }: Props) {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(recordStatus[5 - value] || recordStatus[0]);
+
+  useEffect(() => {
+    setSelected(recordStatus[value]);
+  }, [value]);
 
   const toggle = () => {
     if (!disabled) setOpen(!open);
