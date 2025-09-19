@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
 import { Modal } from '../Modal';
 import { deleteRecordGroup, getRecordGroups, patchRecordGroup, postRecordGroup } from '../../utils/serverUtils';
-import { MapsId } from '../../utils/map';
+import { getMapUrlByMapsId, MapsId } from '../../utils/map';
 import { RecordGroup } from '../../utils/types';
 import './modals.css';
 import moment from 'moment';
 import { DeleteGroupModal } from './DeleteGroupModal';
 import { NewGroupModal } from './NewGroupModal';
 import Toggle from '../Toggle';
+import appconfig from '../../appconfig';
+import { useHint } from '../HintProvider';
 
 interface Props {
   show: boolean;
@@ -17,6 +19,8 @@ interface Props {
 }
 
 export const GroupListModal = ({ show, mapid, onClose, onSelect }: Props) => {
+  const hint = useHint();
+
   const [recordGroups, setrecordGroups] = useState<RecordGroup[]>([]);
   const [showDeleteModal, setshowDeleteModal] = useState(false);
   const [showNewModal, setshowNewModal] = useState(false);
@@ -160,6 +164,23 @@ export const GroupListModal = ({ show, mapid, onClose, onSelect }: Props) => {
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                       <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5" />
+                    </svg>
+                  </button>
+                  {/* ShareButton */}
+                  <button
+                    className="singleIcon-button"
+                    onClick={e => {
+                      e.stopPropagation();
+
+                      navigator.clipboard
+                        .writeText(`${appconfig.siteBaseURL}/${getMapUrlByMapsId(mapid)}/${recordGroup.id}`)
+                        .then(() => hint('bottom', 'この行脚記録のURLをｸﾘｯﾌﾟﾎﾞｰﾄにコピーしました！'))
+                        .catch(err => hint('bottom', 'この行脚記録のURLをｸﾘｯﾌﾟﾎﾞｰﾄにコピーできませんでした！', 'red', 2000));
+                    }}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                      <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1 1 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4 4 0 0 1-.128-1.287z" />
+                      <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243z" />
                     </svg>
                   </button>
                 </div>

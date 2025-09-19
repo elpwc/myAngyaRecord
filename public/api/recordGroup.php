@@ -36,11 +36,6 @@ switch ($request_type) {
     break;
 
   case 'GET':
-    if (!token_check()) {
-      echo json_encode(["res" => "token_error"]);
-      return;
-    }
-
     $id = isset($_GET['id']) ? escape_string($sqllink, $_GET['id']) : null;
     $uid = isset($_GET['uid']) ? escape_string($sqllink, $_GET['uid']) : null;
     $mapid = isset($_GET['mapid']) ? escape_string($sqllink, $_GET['mapid']) : null;

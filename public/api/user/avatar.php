@@ -17,6 +17,11 @@ mysqli_set_charset($sqllink, 'utf8mb4');
 
 switch ($request_type) {
   case 'POST':
+    if (!token_check()) {
+      echo json_encode(["res" => "token_error"]);
+      return;
+    }
+    
     $id = $_POST['id'] ?? null;
 
     error_log(json_encode($_POST));

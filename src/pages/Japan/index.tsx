@@ -81,8 +81,11 @@ export default (props: P) => {
     }
   };
 
-  const refreshRecords = (id: number | undefined = recordGroup?.id, show_lived_level: boolean = !(isLogin() && c_uid() === recordGroup?.uid.toString()) && (recordGroup?.show_lived_level ?? false)) => {
-    if (isLogin() && id) {
+  const refreshRecords = (
+    id: number | undefined = recordGroup?.id,
+    show_lived_level: boolean = !(isLogin() && c_uid() === recordGroup?.uid.toString()) && (recordGroup?.show_lived_level ?? false)
+  ) => {
+    if (id) {
       getRecords(
         id,
         (data: Record[]) => {
@@ -128,7 +131,8 @@ export default (props: P) => {
         (data: RecordGroup[]) => {
           if (data && data[0].mapid === thisMapId) {
             setrecordGroup(data[0]);
-            if (data[0].uid !== Number(c_uid())) {
+            if (data[0].uid !== Number(c_uid()) || !isLogin()) {
+            console.log(data[0].uid !== Number(c_uid()) || !isLogin())
               setIsViewMode(true);
             }
             refreshRecords(Number(currentRecordGroupId), data[0].show_lived_level);

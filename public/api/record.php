@@ -96,10 +96,6 @@ switch ($request_type) {
     break;
 
   case 'GET':
-    if (!token_check()) {
-      echo json_encode(["res" => "token_error", "records" => []]);
-      return;
-    }
     $id = isset($_GET['id']) ? escape_string($sqllink, $_GET['id']) : null;
     $group_id = isset($_GET['group_id']) ? escape_string($sqllink, $_GET['group_id']) : null;
 
