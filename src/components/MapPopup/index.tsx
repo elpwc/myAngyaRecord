@@ -132,10 +132,10 @@ export default ({ addr, name, comment, recordId, hasOpenningRecordGroup, groupId
                       // 記録がある場合のみ処理を続行
                       onClick(value.value);
                     } else {
-                      alert('まず記録を開くか・作成してください');
+                      hint('top', 'まず記録を開く・作成してくださいね', 'red', 2000);
                     }
                   } else {
-                    alert('まずログインしてから記録してください');
+                    hint('top', 'まずログインしてから記録してくださいね', 'red', 2000);
                   }
                   thisMap.closePopup();
                 }}
