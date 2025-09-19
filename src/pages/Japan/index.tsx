@@ -81,13 +81,25 @@ export default (props: P) => {
     }
   };
 
-  const refreshRecords = () => {
-    if (isLogin() && recordGroup?.id) {
+  const refreshRecords = (id: number | undefined = recordGroup?.id, show_lived_level: boolean = !(isLogin() && c_uid() === recordGroup?.uid.toString()) && (recordGroup?.show_lived_level ?? false)) => {
+    if (isLogin() && id) {
       getRecords(
-        recordGroup?.id,
-        (data: any) => {
+        id,
+        (data: Record[]) => {
           if (data) {
-            setrecords(data);
+            if (show_lived_level) {
+              setrecords(
+                data.map(record => {
+                  if (record.level === 5) {
+                    return { ...record, level: 4 };
+                  } else {
+                    return record;
+                  }
+                })
+              );
+            } else {
+              setrecords(data);
+            }
           }
         },
         errmsg => {
@@ -111,7 +123,6 @@ export default (props: P) => {
   // param.id
   useEffect(() => {
     if (currentRecordGroupId !== '-1') {
-      console.log(currentRecordGroupId);
       getRecordGroupById(
         Number(currentRecordGroupId),
         (data: RecordGroup[]) => {
@@ -120,15 +131,7 @@ export default (props: P) => {
             if (data[0].uid !== Number(c_uid())) {
               setIsViewMode(true);
             }
-            getRecords(
-              Number(currentRecordGroupId),
-              (recordsData: Record[]) => {
-                setrecords(recordsData);
-              },
-              errmsg => {
-                alert(errmsg);
-              }
-            );
+            refreshRecords(Number(currentRecordGroupId), data[0].show_lived_level);
           }
         },
         (errmsg: any) => {
