@@ -2,6 +2,7 @@ import { JSX, useEffect, useState } from 'react';
 import { AttributionControl, MapContainer, ScaleControl, TileLayer, useMap, useMapEvents } from 'react-leaflet';
 import { c_lat, c_lng, c_zoom } from '../utils/cookies';
 import { mapTiles } from '../utils/map';
+import { MapStyleControl } from './MapStyleControl';
 
 export const MapInstance = ({
   defaultLatLng,
@@ -26,7 +27,6 @@ export const MapInstance = ({
 }) => {
   const [currentZoom, setCurrentZoom] = useState(doSaveZoomToCookies ? (c_zoom() ? Number(c_zoom()) : defaultZoom) : defaultZoom);
   const [currentLatLng, setcurrentLatLng] = useState(doSaveLatLngToCookies ? [c_lat() ? Number(c_lat()) : defaultLatLng[0], c_lng() ? Number(c_lng()) : defaultLatLng[1]] : defaultLatLng);
-  const [currentMapStyle, setcurrentMapStyle] = useState(2);
 
   const ZoomListener = () => {
     const map = useMapEvents({
@@ -90,6 +90,7 @@ export const MapInstance = ({
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url={mapTiles.find(tile => tile.id === backgroundTile)?.url || mapTiles[0].url}
       />
+      <MapStyleControl position="bottomright" />
       {tileList}
     </MapContainer>
   );
