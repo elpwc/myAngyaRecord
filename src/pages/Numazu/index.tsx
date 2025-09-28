@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router';
 import './index.css';
 import '../../../node_modules/leaflet/dist/leaflet.css';
-import { Marker, Polygon, Popup, useMap } from 'react-leaflet';
+import { Marker, Polygon, Popup, Tooltip, useMap } from 'react-leaflet';
 import { getBounds, MapsId } from '../../utils/map';
 import MapPopup from '../../components/MapPopup';
 import L, { divIcon, LatLngTuple } from 'leaflet';
@@ -175,7 +175,7 @@ export default (props: P) => {
           position={center}
           icon={divIcon({
             className: 'munilabels',
-            html: `<span>${muniBorder.name}</span>`,
+            html: `<span>${muniBorder.name + ((records.find(r => r.admin_id === muniBorder.id)?.comment ?? '') !== '' ? '*' : '')}</span>`,
             iconSize: [60, 20],
             iconAnchor: [30, 10],
           })}
@@ -280,6 +280,7 @@ export default (props: P) => {
                         />
                       </Popup>
                       <MuniNameMarker center={center as LatLngTuple} muniBorder={border} currentZoom={currentZoom} layers={layers} />
+                      {(records.find(r => r.admin_id === border.id)?.comment ?? '') !== '' && <Tooltip>{records.find(r => r.admin_id === border.id)?.comment ?? ''}</Tooltip>}
                     </Polygon>
                   );
                 })

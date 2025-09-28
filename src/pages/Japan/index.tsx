@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { data, useLocation, useNavigate, useParams } from 'react-router';
 import './index.css';
 import '../../../node_modules/leaflet/dist/leaflet.css';
-import { Marker, Polygon, Polyline, Popup, useMap } from 'react-leaflet';
+import { Marker, Polygon, Polyline, Popup, Tooltip, useMap } from 'react-leaflet';
 import { getBounds, MapsId } from '../../utils/map';
 import { getMunicipalitiesData, getPrefecture_ShinkoukyokuData, getRailwaysData } from './geojsonUtils';
 import MapPopup from '../../components/MapPopup';
@@ -132,7 +132,7 @@ export default (props: P) => {
           if (data && data[0].mapid === thisMapId) {
             setrecordGroup(data[0]);
             if (data[0].uid !== Number(c_uid()) || !isLogin()) {
-            console.log(data[0].uid !== Number(c_uid()) || !isLogin())
+              console.log(data[0].uid !== Number(c_uid()) || !isLogin());
               setIsViewMode(true);
             }
             refreshRecords(Number(currentRecordGroupId), data[0].show_lived_level);
@@ -195,7 +195,9 @@ export default (props: P) => {
           position={center}
           icon={divIcon({
             className: 'munilabels',
-            html: `<span class="munilabels-specialCityName">${muniBorder.is_special_city_ward ? muniBorder.gun_seireishi : ''}</span><br /><span>${muniBorder.name}</span>`,
+            html: `<span class="munilabels-specialCityName">${muniBorder.is_special_city_ward ? muniBorder.gun_seireishi : ''}</span><br /><span>${
+              muniBorder.name + ((records.find(r => r.admin_id === muniBorder.id)?.comment ?? '') !== '' ? '*' : '')
+            }</span>`,
             iconSize: [60, 20],
             iconAnchor: [30, 10],
           })}
@@ -318,6 +320,7 @@ export default (props: P) => {
                             />
                           </Popup>
                           <MuniNameMarker center={center as LatLngTuple} muniBorder={muniBorder} currentZoom={currentZoom} layers={layers} />
+                          {(records.find(r => r.admin_id === muniBorder.id)?.comment ?? '') !== '' && <Tooltip>{records.find(r => r.admin_id === muniBorder.id)?.comment ?? ''}</Tooltip>}
                         </Polygon>
                       );
                     });

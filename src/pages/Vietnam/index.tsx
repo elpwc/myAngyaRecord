@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router';
 import './index.css';
 import '../../../node_modules/leaflet/dist/leaflet.css';
-import { Marker, Polygon, Polyline, Popup, useMap } from 'react-leaflet';
+import { Marker, Polygon, Polyline, Popup, Tooltip, useMap } from 'react-leaflet';
 import { getBounds, MapsId } from '../../utils/map';
 import MapPopup from '../../components/MapPopup';
 import L, { divIcon, LatLngTuple } from 'leaflet';
@@ -94,35 +94,35 @@ export default (props: P) => {
     refreshRecords();
   }, []);
 
-    // param.id
-    useEffect(() => {
-      if (currentRecordGroupId !== '-1') {
-        console.log(currentRecordGroupId);
-        getRecordGroupById(
-          Number(currentRecordGroupId),
-          (data: RecordGroup[]) => {
-            if (data && data[0].mapid === thisMapId) {
-              setrecordGroup(data[0]);
-              if (data[0].uid !== Number(c_uid())) {
-                setIsViewMode(true);
-              }
-              getRecords(
-                Number(currentRecordGroupId),
-                (recordsData: Record[]) => {
-                  setrecords(recordsData);
-                },
-                errmsg => {
-                  alert(errmsg);
-                }
-              );
+  // param.id
+  useEffect(() => {
+    if (currentRecordGroupId !== '-1') {
+      console.log(currentRecordGroupId);
+      getRecordGroupById(
+        Number(currentRecordGroupId),
+        (data: RecordGroup[]) => {
+          if (data && data[0].mapid === thisMapId) {
+            setrecordGroup(data[0]);
+            if (data[0].uid !== Number(c_uid())) {
+              setIsViewMode(true);
             }
-          },
-          (errmsg: any) => {
-            alert(errmsg);
+            getRecords(
+              Number(currentRecordGroupId),
+              (recordsData: Record[]) => {
+                setrecords(recordsData);
+              },
+              errmsg => {
+                alert(errmsg);
+              }
+            );
           }
-        );
-      }
-    }, [currentRecordGroupId]);
+        },
+        (errmsg: any) => {
+          alert(errmsg);
+        }
+      );
+    }
+  }, [currentRecordGroupId]);
 
   useEffect(() => {
     refreshRecords();
@@ -170,7 +170,7 @@ export default (props: P) => {
           position={center}
           icon={divIcon({
             className: 'munilabels',
-            html: `<span>${muniBorder.name}</span>`,
+            html: `<span>${muniBorder.name + ((records.find(r => r.admin_id === muniBorder.id)?.comment ?? '') !== '' ? '*' : '')}</span>`,
             iconSize: [60, 20],
             iconAnchor: [30, 10],
           })}
@@ -277,6 +277,7 @@ export default (props: P) => {
                         />
                       </Popup>
                       <MuniNameMarker center={center as LatLngTuple} muniBorder={border} currentZoom={currentZoom} layers={layers} />
+                      {(records.find(r => r.admin_id === border.id)?.comment ?? '') !== '' && <Tooltip>{records.find(r => r.admin_id === border.id)?.comment ?? ''}</Tooltip>}{' '}
                     </Polygon>
                   );
                 })
