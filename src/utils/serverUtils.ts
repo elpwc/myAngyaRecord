@@ -167,7 +167,7 @@ export const patchRecordGroup = async (
 
 export const deleteRecordGroup = async (id: number, onOK: (data: any) => void, onError: (msg: string) => void) => {
   return request(`/recordgroup.php`, {
-    method: 'POST',
+    method: 'DELETE',
     data: { id, uid: c_uid() },
   })
     .then(e => {
