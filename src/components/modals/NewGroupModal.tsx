@@ -98,7 +98,7 @@ export const NewGroupModal = ({ show, isEdit = false, groupData, onClose, onOk }
               setisPublic(e);
             }}
           />
-          <span>ランキングに公開</span>
+          <span>ランキングとプロファイルに公開</span>
         </label>
 
         <label>
