@@ -25,6 +25,15 @@ export const NewGroupModal = ({ show, isEdit = false, groupData, onClose, onOk }
     setshowLivedLevel(isEdit ? groupData?.show_lived_level ?? false : false);
   }, [groupData]);
 
+  useEffect(() => {
+    if (show === false) {
+      setname('');
+      setdesc('');
+      setisPublic(true);
+      setshowLivedLevel(false);
+    }
+  }, [show]);
+
   return (
     <Modal
       isOpen={show}
@@ -56,6 +65,22 @@ export const NewGroupModal = ({ show, isEdit = false, groupData, onClose, onOk }
             setname(e.target.value);
           }}
         />
+        <div className='flex'>
+          <span>候補：</span>
+          <ul className='flex' style={{listStyle: 'none'}}>
+            {['行脚記録', '旅行記録', '足跡'].map(candidate => {
+              return (
+                <li style={{color: '#2d72d2', cursor: 'pointer'}}
+                  onClick={() => {
+                    setname(candidate);
+                  }}
+                >
+                  {candidate}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
         <input
           type="text"
           placeholder="備考"
