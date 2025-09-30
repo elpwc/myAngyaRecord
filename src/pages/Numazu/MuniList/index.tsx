@@ -48,6 +48,9 @@ const MuniList = ({ areaData, borderData, records, onChangeStatus, isViewMode }:
                 pass: areaRecordData.filter(muni => {
                   return muni.level === 1;
                 }).length,
+                plan: areaRecordData.filter(muni => {
+                  return muni.level === 6;
+                }).length,
                 notReach: 0,
               };
               angyaStatus.notReach = areaAllOoazaData.length - (angyaStatus.live + angyaStatus.stay + angyaStatus.visit + angyaStatus.ground + angyaStatus.pass);
@@ -63,6 +66,7 @@ const MuniList = ({ areaData, borderData, records, onChangeStatus, isViewMode }:
                         <span>接地{angyaStatus.ground}</span>
                         <span>通過{angyaStatus.pass}</span>
                         <span>未踏{angyaStatus.notReach}</span>
+                        <span>計画{angyaStatus.plan}</span>
                       </span>
                       <span className="prefDropDownButtonIcon">
                         {expandedPrefectures.includes(area.name) ? (

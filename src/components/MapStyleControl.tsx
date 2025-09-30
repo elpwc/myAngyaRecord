@@ -30,7 +30,7 @@ export const MapStyleControl = ({ position }: Props) => {
                 <div>
                   {/*!isShownOnTop && <label>{mapStyle.title}</label>*/}
                   <div style={{ display: 'flex', borderRadius: '8px', border: 'none', width: 'fit-content' }}>
-                    {recordStatus.map(recordStatusItem => {
+                    {recordStatus.map((recordStatusItem, index) => {
                       return (
                         <div
                           key={recordStatusItem.value}
@@ -38,7 +38,7 @@ export const MapStyleControl = ({ position }: Props) => {
                             backgroundColor: mapStyle.bgcolor[recordStatusItem.value],
                             color: mapStyle.color[recordStatusItem.value],
                             padding: '6px',
-                            borderRadius: recordStatusItem.value === 5 ? '8px 0 0 8px' : recordStatusItem.value === 0 ? '0 8px 8px 0' : '0px',
+                            borderRadius: index === 0 ? '8px 0 0 8px' : index === recordStatus.length - 1 ? '0 8px 8px 0' : '0px',
                           }}
                         >
                           {recordStatusItem.name}
