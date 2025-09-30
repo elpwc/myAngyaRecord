@@ -8,6 +8,7 @@ import { postRecordGroup } from '../utils/serverUtils';
 import Avatar from './Avatar';
 import { getAvatarFullURL, isLogin } from '../utils/userUtils';
 import { Link } from 'react-router';
+import { useHint } from './HintProvider';
 
 export const RecordGroupToolbar = ({
   recordGroup,
@@ -20,6 +21,8 @@ export const RecordGroupToolbar = ({
   isViewMode: boolean;
   onSelectRecordGroup: (recordGroup: RecordGroup) => void;
 }) => {
+  const hint = useHint();
+
   const [isGroupListModalOpen, setIsGroupListModalOpen] = useState(false);
   const [isNewGroupModalOpen, setIsNewGroupModalOpen] = useState(false);
 
@@ -109,7 +112,9 @@ export const RecordGroupToolbar = ({
             isPublic,
             showLivedLevel,
             (data: any) => {
+              onSelectRecordGroup(data);
               setIsNewGroupModalOpen(false);
+              hint('bottom', '作成した記録に切り替えました');
             },
             errmsg => {
               alert(errmsg);

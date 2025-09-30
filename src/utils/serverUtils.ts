@@ -128,7 +128,7 @@ export const postRecordGroup = async (mapid: string, name: string, desc: string,
     .then(e => {
       switch (e.res) {
         case 'ok':
-          onOK(e.groups);
+          onOK(e.data);
           break;
         default:
           onError(e.res);

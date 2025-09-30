@@ -32,7 +32,22 @@ switch ($request_type) {
       (int)($data->show_lived_level === true ? 1 : 0),
     ];
     $insert_result = prepare_bind_execute($sqllink, $insert_sql, "isssii", $insert_params);
-    echo json_encode(["res" => $insert_result !== false ? "ok" : "error"]);
+    $last_id = $insert_result !== false ? mysqli_insert_id($sqllink) : null;
+
+    $record = null;
+    if ($last_id) {
+      $select_sql = "SELECT * FROM `recordgroup` WHERE `id` = ?";
+      $select_result = prepare_bind_execute($sqllink, $select_sql, "i", [$last_id]);
+      if ($select_result && $row = mysqli_fetch_assoc($select_result)) {
+        $record = $row;
+      }
+    }
+
+    echo json_encode([
+      "res" => $insert_result !== false ? "ok" : "error",
+      "id" => $last_id,
+      "data" => $record
+    ]);
     break;
 
   case 'GET':
