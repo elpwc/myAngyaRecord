@@ -65,12 +65,13 @@ export const NewGroupModal = ({ show, isEdit = false, groupData, onClose, onOk }
             setname(e.target.value);
           }}
         />
-        <div className='flex'>
+        <div className="flex">
           <span>候補：</span>
-          <ul className='flex' style={{listStyle: 'none'}}>
+          <ul className="flex" style={{ listStyle: 'none' }}>
             {['行脚記録', '旅行記録', '足跡'].map(candidate => {
               return (
-                <li style={{color: '#2d72d2', cursor: 'pointer'}}
+                <li
+                  style={{ color: '#2d72d2', cursor: 'pointer' }}
                   onClick={() => {
                     setname(candidate);
                   }}
