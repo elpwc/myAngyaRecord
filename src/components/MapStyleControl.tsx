@@ -7,6 +7,7 @@ import { useHint } from './HintProvider';
 import Dropdown from './Dropdown';
 import PrettyDropdown from './PrettyDropdown';
 import { c_mapStyle } from '../utils/cookies';
+import './MapStyleControl.css';
 
 interface Props {
   position: ControlPosition | undefined;
@@ -19,6 +20,7 @@ export const MapStyleControl = ({ position }: Props) => {
   const compo = (
     <div style={{ paddingBottom: '10px' }}>
       <PrettyDropdown
+      mainClassname='mapStyleControl-main-container'
         bordered={false}
         showArrow={false}
         optionStyle={{ backgroundColor: 'transparent' }}
@@ -29,7 +31,7 @@ export const MapStyleControl = ({ position }: Props) => {
               return (
                 <div>
                   {/*!isShownOnTop && <label>{mapStyle.title}</label>*/}
-                  <div style={{ display: 'flex', borderRadius: '8px', border: 'none', width: 'fit-content' }}>
+                  <div className='mapStyleControl-main' style={{ display: 'flex', borderRadius: '11px', border: 'none', width: 'fit-content' }}>
                     {recordStatus.map((recordStatusItem, index) => {
                       return (
                         <div

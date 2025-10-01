@@ -18,15 +18,32 @@ type PrettyDropdownProps = {
   value: string | number | null;
   onChange: (val: string | number) => void;
   placeholder?: string;
+  mainStyle?: React.CSSProperties;
   dropdownStyle?: React.CSSProperties;
   optionStyle?: React.CSSProperties;
+  mainClassname?: string;
+  dropdownClassname?: string;
+  optionClassname?: string;
   /** 是否显示边框 + padding */
   bordered?: boolean;
   /** 是否显示下拉箭头 */
   showArrow?: boolean;
 };
 
-export default function PrettyDropdown({ options, value, onChange, placeholder = '', dropdownStyle, optionStyle, bordered = true, showArrow = true }: PrettyDropdownProps) {
+export default function PrettyDropdown({
+  options,
+  value,
+  onChange,
+  placeholder = '',
+  mainStyle,
+  dropdownStyle,
+  optionStyle,
+  mainClassname,
+  dropdownClassname,
+  optionClassname,
+  bordered = true,
+  showArrow = true,
+}: PrettyDropdownProps) {
   const [open, setOpen] = useState(false);
   const [positionUp, setPositionUp] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -49,7 +66,11 @@ export default function PrettyDropdown({ options, value, onChange, placeholder =
 
   return (
     <div className={`pretty-dropdown ${bordered ? 'bordered' : 'unbordered'}`} ref={containerRef} style={bordered ? {} : { display: 'inline-block' }}>
-      <button className="pretty-dropdown-button" onClick={() => setOpen(prev => !prev)} style={bordered ? {} : { padding: 0, border: 'none', background: 'none' }}>
+      <button
+        className={'pretty-dropdown-button ' + mainClassname}
+        onClick={() => setOpen(prev => !prev)}
+        style={bordered ? { ...mainStyle } : { ...mainStyle, padding: 0, border: 'none', background: 'none' }}
+      >
         <span className="pretty-dropdown-selected">{selectedOption ? selectedOption.getCaption(true, false) : <span className="pretty-dropdown-placeholder">{placeholder}</span>}</span>
         {bordered && showArrow && <span className="pretty-dropdown-arrow">▼</span>}
       </button>
@@ -57,7 +78,7 @@ export default function PrettyDropdown({ options, value, onChange, placeholder =
       <AnimatePresence>
         {open && (
           <motion.ul
-            className="pretty-dropdown-menu"
+            className={'pretty-dropdown-menu ' + dropdownClassname}
             style={{
               ...dropdownStyle,
               top: positionUp ? 'auto' : '100%',
@@ -75,7 +96,7 @@ export default function PrettyDropdown({ options, value, onChange, placeholder =
             {options.map(option => (
               <motion.li
                 key={option.value}
-                className="pretty-dropdown-option"
+                className={'pretty-dropdown-option ' + optionClassname}
                 style={{
                   ...optionStyle,
                   padding: bordered ? '8px 12px' : 0,

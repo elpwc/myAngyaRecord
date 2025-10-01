@@ -1,0 +1,8 @@
+.mapStyleControl-main-container .mapStyleControl-main {
+  border: solid 3px #00000000 !important;
+  transition: all 0.2s;
+}
+
+.mapStyleControl-main-container .mapStyleControl-main:hover {
+  border: solid 3px #2d2d2d46 !important;
+}
