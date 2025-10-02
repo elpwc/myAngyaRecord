@@ -45,12 +45,12 @@ export const mapTiles = [
 
 export const recordStatus = [
   { name: '居住', value: 5, point: 5, desc: '住民票持ちもしくは連続１ヶ月以上住んだ場所' },
-  { name: '宿泊', value: 4, point:4, desc: '泊ったことある場所' },
-  { name: '訪問', value: 3, point:3,desc: '歩いた・遊んだ場所' },
-  { name: '接地', value: 2, point:2,desc: '乗り換えで歩いた場所' },
-  { name: '通過', value: 1,point:1, desc: '車から降りてなかった場所' },
-  { name: '未踏', value: 0,point:0, desc: '行ったことない場所' },
-  { name: '計画', value: 6,point:0, desc: '行こうと思っている場所' },
+  { name: '宿泊', value: 4, point: 4, desc: '泊ったことある場所' },
+  { name: '訪問', value: 3, point: 3, desc: '歩いた・遊んだ場所' },
+  { name: '接地', value: 2, point: 2, desc: '乗り換えで歩いた場所' },
+  { name: '通過', value: 1, point: 1, desc: '車から降りてなかった場所' },
+  { name: '未踏', value: 0, point: 0, desc: '行ったことない場所' },
+  { name: '計画', value: 6, point: 0, desc: '行こうと思っている場所' },
 ];
 
 export const getStatusTextByLevel = (level: number): string => {

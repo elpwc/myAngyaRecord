@@ -12,10 +12,10 @@ interface Props {
 
 export default function ({ value, disabled = false, onChange }: Props) {
   const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState(recordStatus[5 - value] || recordStatus[0]);
+  const [selected, setSelected] = useState(recordStatus.filter(recordState => recordState.value === value)[0] || recordStatus[0]);
 
   useEffect(() => {
-    setSelected(recordStatus[5 - value]);
+    setSelected(recordStatus.filter(recordState => recordState.value === value)[0]);
   }, [value]);
 
   const toggle = () => {
@@ -40,7 +40,7 @@ export default function ({ value, disabled = false, onChange }: Props) {
             {recordStatus.map((item, index) => (
               <motion.li
                 key={item.value}
-                style={{ backgroundColor: getCurrentFillColorByLevel(5 - index), color: getCurrentForeColorByLevel(5 - index) }}
+                style={{ backgroundColor: getCurrentFillColorByLevel(item.value), color: getCurrentForeColorByLevel(item.value) }}
                 className="RecordStatusDropdown-select-option"
                 onClick={() => handleSelect(item)}
                 whileHover={{ scale: 1.02 }}
