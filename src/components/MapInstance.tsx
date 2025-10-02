@@ -3,6 +3,7 @@ import { AttributionControl, MapContainer, ScaleControl, TileLayer, useMap, useM
 import { c_lat, c_lng, c_zoom } from '../utils/cookies';
 import { mapTiles } from '../utils/map';
 import { MapStyleControl } from './MapStyleControl';
+import LeafletLocateControl from './LeafletLocateControl';
 
 export const MapInstance = ({
   defaultLatLng,
@@ -85,6 +86,7 @@ export const MapInstance = ({
       <PaneSetter />
       <ScaleControl position="bottomleft" />
       <AttributionControl position="bottomright" prefix={'Dev by <a href="https://github.com/elpwc" target="_blank">@elpwc</a>'} />
+      <LeafletLocateControl position="bottomright" />
       <TileLayer
         pane="base"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

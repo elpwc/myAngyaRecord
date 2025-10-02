@@ -18,9 +18,9 @@ export const MapStyleControl = ({ position }: Props) => {
   const [currentMapStyle, setCurrentMapStyle] = useGlobalStore(s => s.mapStyle);
 
   const compo = (
-    <div style={{ paddingBottom: '10px' }}>
+    <div style={{ paddingBottom: '16px', paddingRight: '36px' }}>
       <PrettyDropdown
-      mainClassname='mapStyleControl-main-container'
+        mainClassname="mapStyleControl-main-container"
         bordered={false}
         showArrow={false}
         optionStyle={{ backgroundColor: 'transparent' }}
@@ -31,7 +31,7 @@ export const MapStyleControl = ({ position }: Props) => {
               return (
                 <div>
                   {/*!isShownOnTop && <label>{mapStyle.title}</label>*/}
-                  <div className='mapStyleControl-main' style={{ display: 'flex', borderRadius: '11px', border: 'none', width: 'fit-content' }}>
+                  <div className="mapStyleControl-main" style={{ display: 'flex', borderRadius: '11px', border: 'none', width: 'fit-content' }}>
                     {recordStatus.map((recordStatusItem, index) => {
                       return (
                         <div
