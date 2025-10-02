@@ -52,7 +52,7 @@ export default (props: P) => {
 
   const [currentZoom, setCurrentZoom] = useState(DEFAULT_ZOOM);
 
-  const [recordGroup, setrecordGroup] = useState<RecordGroup>();
+  const { currentRecordGroup, setCurrentRecordGroup } = useAppContext();
   const [records, setrecords] = useState<Record[]>([]);
 
   const [currentLatLng, setcurrentLatLng] = useState(DEFAULT_LAT_LNG);
@@ -75,7 +75,7 @@ export default (props: P) => {
         thisMapId,
         (data: any) => {
           if (data && data.length > 0) {
-            setrecordGroup(data[0]);
+            setCurrentRecordGroup(data[0]);
           }
         },
         errmsg => {
@@ -86,8 +86,8 @@ export default (props: P) => {
   };
 
   const refreshRecords = (
-    id: number | undefined = recordGroup?.id,
-    show_lived_level: boolean = !(isLogin() && c_uid() === recordGroup?.uid.toString()) && (recordGroup?.show_lived_level ?? false)
+    id: number | undefined = currentRecordGroup?.id,
+    show_lived_level: boolean = !(isLogin() && c_uid() === currentRecordGroup?.uid.toString()) && (currentRecordGroup?.show_lived_level ?? false)
   ) => {
     if (id) {
       getRecords(
@@ -134,7 +134,7 @@ export default (props: P) => {
         Number(currentRecordGroupId),
         (data: RecordGroup[]) => {
           if (data && data[0].mapid === thisMapId) {
-            setrecordGroup(data[0]);
+            setCurrentRecordGroup(data[0]);
             if (data[0].uid !== Number(c_uid()) || !isLogin()) {
               console.log(data[0].uid !== Number(c_uid()) || !isLogin());
               setIsViewMode(true);
@@ -151,7 +151,7 @@ export default (props: P) => {
 
   useEffect(() => {
     refreshRecords();
-  }, [recordGroup?.id]);
+  }, [currentRecordGroup?.id]);
 
   const handleMapBackgroundTileChange = (id: string) => {
     setCurrentBackgroundTileMap(id);
@@ -226,9 +226,9 @@ export default (props: P) => {
    * @param status
    */
   const changeRecordStatus = (muniId: string, status: number) => {
-    if (recordGroup?.id) {
+    if (currentRecordGroup?.id) {
       postRecord(
-        recordGroup?.id,
+        currentRecordGroup?.id,
         muniId,
         status,
         '',
@@ -246,7 +246,7 @@ export default (props: P) => {
   return (
     <div style={{ height: '100%', width: '100%', position: 'relative', display: 'flex' }}>
       <AsideBar
-        currentRecordGroup={recordGroup}
+        currentRecordGroup={currentRecordGroup}
         thisMapId={thisMapId}
         openMobileAsideMenu={props.openMobileAsideMenu}
         currentTileMap={currentBackgroundTileMap}
@@ -264,8 +264,8 @@ export default (props: P) => {
         }
         onCurrentBackgroundTileMapChange={handleMapBackgroundTileChange}
         onLayerChange={handleLayerChange}
-        onSelectRecordGroup={(recordGroup: RecordGroup) => {
-          setrecordGroup(recordGroup);
+        onSelectRecordGroup={(currentRecordGroup: RecordGroup) => {
+          setCurrentRecordGroup(currentRecordGroup);
         }}
       />
 
@@ -322,9 +322,9 @@ export default (props: P) => {
                                 name={muniBorder.name}
                                 comment={records.find(r => r.admin_id === muniBorder.id)?.comment ?? ''}
                                 recordId={records.find(r => r.admin_id === muniBorder.id)?.id}
-                                groupId={recordGroup?.id ?? 0}
+                                groupId={currentRecordGroup?.id ?? 0}
                                 adminId={muniBorder.id}
-                                hasOpenningRecordGroup={!!recordGroup?.id}
+                                hasOpenningRecordGroup={!!currentRecordGroup?.id}
                                 selected={records.find(r => r.admin_id === muniBorder.id)?.level ?? -1}
                                 isViewMode={isViewMode}
                                 onClick={value => {

@@ -45,7 +45,7 @@ export default (props: P) => {
 
   const [currentZoom, setCurrentZoom] = useState(c_zoom() ? Number(c_zoom()) : DEFAULT_ZOOM);
 
-  const [recordGroup, setrecordGroup] = useState<RecordGroup>();
+  const { currentRecordGroup, setCurrentRecordGroup } = useAppContext();
   const [records, setrecords] = useState<Record[]>([]);
 
   const [currentLatLng, setcurrentLatLng] = useState(DEFAULT_LAT_LNG);
@@ -65,7 +65,7 @@ export default (props: P) => {
         thisMapId,
         (data: any) => {
           if (data && data.length > 0) {
-            setrecordGroup(data[0]);
+            setCurrentRecordGroup(data[0]);
           }
         },
         errmsg => {
@@ -76,9 +76,9 @@ export default (props: P) => {
   };
 
   const refreshRecords = () => {
-    if (isLogin() && recordGroup?.id) {
+    if (isLogin() && currentRecordGroup?.id) {
       getRecords(
-        recordGroup?.id,
+        currentRecordGroup?.id,
         (data: any) => {
           if (data) {
             setrecords(data);
@@ -108,7 +108,7 @@ export default (props: P) => {
         Number(currentRecordGroupId),
         (data: RecordGroup[]) => {
           if (data && data[0].mapid === thisMapId) {
-            setrecordGroup(data[0]);
+            setCurrentRecordGroup(data[0]);
             if (data[0].uid !== Number(c_uid())) {
               setIsViewMode(true);
             }
@@ -132,7 +132,7 @@ export default (props: P) => {
 
   useEffect(() => {
     refreshRecords();
-  }, [recordGroup?.id]);
+  }, [currentRecordGroup?.id]);
 
   const handleMapBackgroundTileChange = (id: string) => {
     setCurrentBackgroundTileMap(id);
@@ -200,9 +200,9 @@ export default (props: P) => {
    * @param status
    */
   const changeRecordStatus = (muniId: string, status: number) => {
-    if (recordGroup?.id) {
+    if (currentRecordGroup?.id) {
       postRecord(
-        recordGroup?.id,
+        currentRecordGroup?.id,
         muniId,
         status,
         '',
@@ -220,7 +220,7 @@ export default (props: P) => {
   return (
     <div style={{ height: '100%', width: '100%', position: 'relative', display: 'flex' }}>
       <AsideBar
-        currentRecordGroup={recordGroup}
+        currentRecordGroup={currentRecordGroup}
         thisMapId={thisMapId}
         openMobileAsideMenu={props.openMobileAsideMenu}
         currentTileMap={currentBackgroundTileMap}
@@ -229,8 +229,8 @@ export default (props: P) => {
         list={<MuniList borderData={ooazaBorderData} areaData={areaBorderData} records={records} onChangeStatus={changeRecordStatus} isViewMode={isViewMode} />}
         onCurrentBackgroundTileMapChange={handleMapBackgroundTileChange}
         onLayerChange={handleLayerChange}
-        onSelectRecordGroup={(recordGroup: RecordGroup) => {
-          setrecordGroup(recordGroup);
+        onSelectRecordGroup={(currentRecordGroup: RecordGroup) => {
+          setCurrentRecordGroup(currentRecordGroup);
         }}
       />
 
@@ -281,9 +281,9 @@ export default (props: P) => {
                             name={border.name}
                             comment={records.find(r => r.admin_id === border.id)?.comment ?? ''}
                             recordId={records.find(r => r.admin_id === border.id)?.id}
-                            groupId={recordGroup?.id ?? 0}
+                            groupId={currentRecordGroup?.id ?? 0}
                             adminId={border.id}
-                            hasOpenningRecordGroup={!!recordGroup?.id}
+                            hasOpenningRecordGroup={!!currentRecordGroup?.id}
                             selected={records.find(r => r.admin_id === border.id)?.level ?? -1}
                             isViewMode={isViewMode}
                             onClick={value => {

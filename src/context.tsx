@@ -1,6 +1,7 @@
 import { createContext, JSX, useContext, useState } from 'react';
 import { c_mapStyle } from './utils/cookies';
 import { LoginUserInfo } from './utils/userUtils';
+import { RecordGroup } from './utils/types';
 
 export const AppContext = createContext<any | null>(null);
 
@@ -33,6 +34,7 @@ export const AppContextProvider = ({ children }: { children: JSX.Element }) => {
   });
   const [isContinuousEditOn, setIsContinuousEditOn] = useState(false);
   const [currentContinuousEditValue, setCurrentContinuousEditValue] = useState(0);
+  const [currentRecordGroup, setCurrentRecordGroup] = useState<RecordGroup>();
 
   return (
     <AppContext.Provider
@@ -47,6 +49,8 @@ export const AppContextProvider = ({ children }: { children: JSX.Element }) => {
         setIsContinuousEditOn,
         currentContinuousEditValue,
         setCurrentContinuousEditValue,
+        currentRecordGroup,
+        setCurrentRecordGroup,
       }}
     >
       <>
@@ -61,6 +65,8 @@ export const AppContextProvider = ({ children }: { children: JSX.Element }) => {
           setIsContinuousEditOn,
           currentContinuousEditValue,
           setCurrentContinuousEditValue,
+          currentRecordGroup,
+          setCurrentRecordGroup,
         })}
         {children}
       </>
