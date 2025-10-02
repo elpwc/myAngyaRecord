@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { data, useLocation, useNavigate, useParams } from 'react-router';
+import { useLocation, useNavigate, useParams } from 'react-router';
 import './index.css';
 import '../../../node_modules/leaflet/dist/leaflet.css';
 import { Marker, Polygon, Polyline, Popup, Tooltip, useMap } from 'react-leaflet';
@@ -346,6 +346,7 @@ export default (props: P) => {
               layers.railways &&
                 railwaysData.map((railwayLines, index) => {
                   return railwayLines.railwayClassCd === RailwayClassCd.NormalRailwayJR ? (
+                    // JR
                     <>
                       {/* 铁道底色 */}
                       <Polyline
@@ -363,6 +364,7 @@ export default (props: P) => {
                       />
                     </>
                   ) : (
+                    // 私鉄
                     <Polyline
                       key={railwayLines.companyName + railwayLines.lineName + index.toString()}
                       className="rail-line"

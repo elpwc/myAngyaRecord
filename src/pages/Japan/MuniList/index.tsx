@@ -35,7 +35,7 @@ const MuniList = ({ muniBorderData, records, showCheckbox, onSelectedPrefChanged
                   type="checkbox"
                   id={chihou.name}
                   checked={selectedChihous.includes(chihou.name)}
-                  onClick={(e: React.MouseEvent<HTMLInputElement>) => {
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     e.stopPropagation();
                     if (e.currentTarget.checked) {
                       setSelectedChihous(prev => [...prev, chihou.name]);
@@ -104,7 +104,7 @@ const MuniList = ({ muniBorderData, records, showCheckbox, onSelectedPrefChanged
                                     type="checkbox"
                                     id={prefMuniBorder.prefecture}
                                     checked={selectedPrefectures.includes(prefMuniBorder.prefecture)}
-                                    onClick={e => {
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                       e.stopPropagation();
                                       if (e.currentTarget.checked) {
                                         if (!selectedPrefectures.includes(prefMuniBorder.prefecture)) {

@@ -1,4 +1,4 @@
-import { useAppContext } from '../context';
+import { getContextRef } from '../context';
 import { c_uid } from './cookies';
 import { mapStyles } from './mapStyles';
 import request from './request';
@@ -331,7 +331,7 @@ export const getForecolorByRecords = (mapStyle: number, records: Record[], admin
 
 // 给出自治体id，和Record列表，返回这个自治体在这个Record列表中的当前主题的颜色
 export const getCurrentFillColorByRecords = (records: Record[], admin_id: string) => {
-  const { currentMapStyle } = useAppContext();
+  const { currentMapStyle } = getContextRef();
   const res = records.findIndex(record => {
     return record.admin_id === admin_id;
   });
@@ -343,7 +343,7 @@ export const getCurrentFillColorByRecords = (records: Record[], admin_id: string
 
 // 给出自治体id，和Record列表，返回这个自治体在这个Record列表中的当前主题的颜色
 export const getCurrentForeColorByRecords = (records: Record[], admin_id: string) => {
-  const { currentMapStyle } = useAppContext();
+  const { currentMapStyle } = getContextRef();
   const res = records.findIndex(record => {
     return record.admin_id === admin_id;
   });
@@ -355,12 +355,12 @@ export const getCurrentForeColorByRecords = (records: Record[], admin_id: string
 
 // 给出行脚level，返回当前主题的颜色
 export const getCurrentFillColorByLevel = (level: number) => {
-  const { currentMapStyle } = useAppContext();
+  const { currentMapStyle } = getContextRef();
   return mapStyles[currentMapStyle].bgcolor[level];
 };
 
 // 给出行脚level，返回当前主题的颜色
 export const getCurrentForeColorByLevel = (level: number) => {
-  const { currentMapStyle } = useAppContext();
+  const { currentMapStyle } = getContextRef();
   return mapStyles[currentMapStyle].color[level];
 };

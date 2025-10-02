@@ -71,6 +71,7 @@ export const NewGroupModal = ({ show, isEdit = false, groupData, onClose, onOk }
             {['行脚記録', '旅行記録', '足跡'].map(candidate => {
               return (
                 <li
+                  key={candidate}
                   style={{ color: '#2d72d2', cursor: 'pointer' }}
                   onClick={() => {
                     setname(candidate);

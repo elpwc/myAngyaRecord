@@ -2,7 +2,7 @@ import appconfig from '../appconfig';
 import { c_autoLogin, c_pw, c_token, c_uid, c_userName } from './cookies';
 import request from './request';
 import defaultAvatar from '../assets/defaultAvatar.png';
-import { setContextRef } from '../context';
+import { getContextRef } from '../context';
 
 export const isLogin = () => {
   //console.log(getGlobalState(), c_token(Number(c_uid())));
@@ -32,7 +32,12 @@ export const logout = () => {
   c_pw(Number(c_uid()), '');
   c_autoLogin(false);
 
-  setContextRef({ loginUserInfo: { id: -1, name: '', email: '', avatar: '', createTime: '', hitokoto: '', token: '', password: '' } });
+  const ctx = getContextRef();
+  if (!ctx) {
+    console.warn('Context not ready!');
+    return;
+  }
+  ctx.setLoginUserInfo({ loginUserInfo: { id: -1, name: '', email: '', avatar: '', createTime: '', hitokoto: '', token: '', password: '' } });
 };
 
 export const loginUser = async ({ email, password }: { email: string; password: string }) => {
@@ -62,17 +67,20 @@ export const loginCurrentUser = async () => {
       c_userName(uid, email);
       c_uid(String(uid));
 
-      setContextRef({
-        loginUserInfo: {
-          id: uid,
-          name: e.nickname,
-          email: email,
-          avatar: e.avatar,
-          createTime: e.create_date,
-          hitokoto: e.hitokoto,
-          token: e.token,
-          password: c_pw(Number(c_uid())),
-        },
+      const ctx = getContextRef();
+      if (!ctx) {
+        console.warn('Context not ready!');
+        return;
+      }
+      ctx.setLoginUserInfo({
+        id: uid,
+        name: e.nickname,
+        email: email,
+        avatar: e.avatar,
+        createTime: e.create_date,
+        hitokoto: e.hitokoto,
+        token: e.token,
+        password: c_pw(Number(c_uid())),
       });
     })
     .catch(e => {

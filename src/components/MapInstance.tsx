@@ -5,6 +5,8 @@ import { mapTiles } from '../utils/map';
 import { MapStyleControl } from './MapControls/MapStyleControl';
 import LeafletLocateControl from './MapControls/LeafletLocateControl';
 import { EditModeSwitchControl } from './MapControls/EditModeSwitchControl';
+import { RecordGroupInfoControl } from './MapControls/RecordGroupInfoControl';
+import { isLogin } from '../utils/userUtils';
 
 export const MapInstance = ({
   defaultLatLng,
@@ -89,6 +91,7 @@ export const MapInstance = ({
       <AttributionControl position="bottomright" prefix={'Dev by <a href="https://github.com/elpwc" target="_blank">@elpwc</a>'} />
       <LeafletLocateControl position="bottomright" />
       <EditModeSwitchControl position="topright" />
+      {isLogin() && <RecordGroupInfoControl position="topleft" />}
       <TileLayer
         pane="base"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
