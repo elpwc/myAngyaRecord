@@ -1,6 +1,6 @@
 .mapStyleControl-option-main {
   transition: all 0.2s;
-  border: solid 3px #00000000 !important;
+  border: solid 3px #00000029 !important;
 }
 
 .mapStyleControl-option {
@@ -28,7 +28,7 @@
 }
 
 .mapStyleControl-option-main:hover {
-  border: solid 3px #2d2d2d46 !important;
+  border: solid 3px #2d2d2d7e !important;
 }
 
 .mapStyleControl-dropdownlist {
