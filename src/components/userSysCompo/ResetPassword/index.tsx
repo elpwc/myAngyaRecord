@@ -4,7 +4,6 @@ import './index.css';
 import { Field, Form, Formik } from 'formik';
 import { resetPassword } from '../../../utils/userUtils';
 import { c_token, c_uid, c_userName } from '../../../utils/cookies';
-import { getGlobalState } from '../../../utils/globalStore';
 
 interface P {}
 

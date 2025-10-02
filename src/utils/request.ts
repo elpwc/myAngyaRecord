@@ -1,6 +1,5 @@
 import axios, { AxiosRequestHeaders, Method } from 'axios';
 import appconfig from '../appconfig';
-import { getGlobalState } from './globalStore';
 import { c_token, c_uid } from './cookies';
 
 // 更新services里的接口的方法：npm run openapi

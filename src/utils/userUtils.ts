@@ -1,8 +1,8 @@
 import appconfig from '../appconfig';
 import { c_autoLogin, c_pw, c_token, c_uid, c_userName } from './cookies';
-import { getGlobalState, setGlobalState } from './globalStore';
 import request from './request';
 import defaultAvatar from '../assets/defaultAvatar.png';
+import { setContextRef } from '../context';
 
 export const isLogin = () => {
   //console.log(getGlobalState(), c_token(Number(c_uid())));
@@ -32,7 +32,7 @@ export const logout = () => {
   c_pw(Number(c_uid()), '');
   c_autoLogin(false);
 
-  setGlobalState({ loginUserInfo: { id: -1, name: '', email: '', avatar: '', createTime: '', hitokoto: '', token: '', password: '' } });
+  setContextRef({ loginUserInfo: { id: -1, name: '', email: '', avatar: '', createTime: '', hitokoto: '', token: '', password: '' } });
 };
 
 export const loginUser = async ({ email, password }: { email: string; password: string }) => {
@@ -62,7 +62,7 @@ export const loginCurrentUser = async () => {
       c_userName(uid, email);
       c_uid(String(uid));
 
-      setGlobalState({
+      setContextRef({
         loginUserInfo: {
           id: uid,
           name: e.nickname,

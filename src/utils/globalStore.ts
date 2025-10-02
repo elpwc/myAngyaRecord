@@ -1,21 +1,27 @@
+/**
+ * NOT USED
+ */
+
 import { useSyncExternalStore } from 'react';
 import { LoginUserInfo } from './userUtils';
 import { c_mapStyle } from './cookies';
 
 // global vars store
 let state: any = {
-  mapStyle: Number(c_mapStyle()) || 0,
-  currentBackgroundTileMap: 'default',
-  loginUserInfo: {
-    id: -1,
-    name: '',
-    email: '',
-    avatar: '',
-    createTime: '',
-    hitokoto: '',
-    token: '',
-    password: '',
-  } as LoginUserInfo,
+  //mapStyle: Number(c_mapStyle()) || 0,
+  //currentBackgroundTileMap: 'default',
+  // loginUserInfo: {
+  //   id: -1,
+  //   name: '',
+  //   email: '',
+  //   avatar: '',
+  //   createTime: '',
+  //   hitokoto: '',
+  //   token: '',
+  //   password: '',
+  // } as LoginUserInfo,
+  //isContinuousEditOn: false,
+  //currentContinuousEditValue: 0,
 };
 
 const listeners = new Set<() => void>();

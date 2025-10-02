@@ -1,5 +1,4 @@
 import { ControlPosition } from 'leaflet';
-import { useGlobalStore } from '../../utils/globalStore';
 import { recordStatus } from '../../utils/map';
 import { mapStyles } from '../../utils/mapStyles';
 import { POSITION_CLASSES } from '../../utils/types';
@@ -7,6 +6,7 @@ import { useHint } from '../InfrastructureCompo/HintProvider';
 import PrettyDropdown from '../InfrastructureCompo/PrettyDropdown';
 import { c_mapStyle } from '../../utils/cookies';
 import './MapStyleControl.css';
+import { useAppContext } from '../../context';
 
 interface Props {
   position: ControlPosition | undefined;
@@ -14,7 +14,7 @@ interface Props {
 
 export const MapStyleControl = ({ position }: Props) => {
   const hint = useHint();
-  const [currentMapStyle, setCurrentMapStyle] = useGlobalStore(s => s.mapStyle);
+  const { currentMapStyle, setCurrentMapStyle } = useAppContext();
 
   const compo = (
     <div style={{ paddingBottom: '16px', paddingRight: '36px' }}>
@@ -30,13 +30,7 @@ export const MapStyleControl = ({ position }: Props) => {
             value: index,
             getCaption: (isShownOnTop?: boolean, isSelected?: boolean) => {
               return (
-                <div
-                  className={
-                    'mapStyleControl-option-container ' +
-                    (isShownOnTop ? '' : 'mapStyleControl-option-item-container ') +
-                    (isSelected ? 'mapStyleControl-option-selected-container' : '')
-                  }
-                >
+                <div className={'mapStyleControl-option-container ' + (isShownOnTop ? '' : 'mapStyleControl-option-item-container ') + (isSelected ? 'mapStyleControl-option-selected-container' : '')}>
                   {!isShownOnTop && <label>{mapStyle.title + (isSelected ? '(使用中)' : '')}</label>}
                   <div
                     className={'mapStyleControl-option ' + (isShownOnTop ? 'mapStyleControl-option-main ' : 'mapStyleControl-option-item ') + (isSelected ? 'mapStyleControl-option-selected' : '')}
@@ -65,7 +59,7 @@ export const MapStyleControl = ({ position }: Props) => {
         })}
         value={currentMapStyle}
         onChange={value => {
-          setCurrentMapStyle((s: any) => ({ ...s, mapStyle: value }));
+          setCurrentMapStyle(Number(value));
           c_mapStyle(value.toString());
           hint('bottom', '地図テーマを変更しました');
         }}

@@ -1,5 +1,5 @@
+import { useAppContext } from '../context';
 import { c_uid } from './cookies';
-import { getGlobalState } from './globalStore';
 import { mapStyles } from './mapStyles';
 import request from './request';
 import { RankingResponse, Record } from './types';
@@ -331,32 +331,36 @@ export const getForecolorByRecords = (mapStyle: number, records: Record[], admin
 
 // 给出自治体id，和Record列表，返回这个自治体在这个Record列表中的当前主题的颜色
 export const getCurrentFillColorByRecords = (records: Record[], admin_id: string) => {
+  const { currentMapStyle } = useAppContext();
   const res = records.findIndex(record => {
     return record.admin_id === admin_id;
   });
   if (res === -1) {
-    return mapStyles[getGlobalState().mapStyle].bgcolor[0];
+    return mapStyles[currentMapStyle].bgcolor[0];
   }
-  return mapStyles[getGlobalState().mapStyle].bgcolor[records[res].level];
+  return mapStyles[currentMapStyle].bgcolor[records[res].level];
 };
 
 // 给出自治体id，和Record列表，返回这个自治体在这个Record列表中的当前主题的颜色
 export const getCurrentForeColorByRecords = (records: Record[], admin_id: string) => {
+  const { currentMapStyle } = useAppContext();
   const res = records.findIndex(record => {
     return record.admin_id === admin_id;
   });
   if (res === -1) {
-    return mapStyles[getGlobalState().mapStyle].color[0];
+    return mapStyles[currentMapStyle].color[0];
   }
-  return mapStyles[getGlobalState().mapStyle].color[records[res].level];
+  return mapStyles[currentMapStyle].color[records[res].level];
 };
 
 // 给出行脚level，返回当前主题的颜色
 export const getCurrentFillColorByLevel = (level: number) => {
-  return mapStyles[getGlobalState().mapStyle].bgcolor[level];
+  const { currentMapStyle } = useAppContext();
+  return mapStyles[currentMapStyle].bgcolor[level];
 };
 
 // 给出行脚level，返回当前主题的颜色
 export const getCurrentForeColorByLevel = (level: number) => {
-  return mapStyles[getGlobalState().mapStyle].color[level];
+  const { currentMapStyle } = useAppContext();
+  return mapStyles[currentMapStyle].color[level];
 };
