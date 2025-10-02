@@ -18,14 +18,28 @@ export const RecordGroupInfoControl = ({ position }: Props) => {
   const { loginUserInfo, setLoginUserInfo }: { loginUserInfo: LoginUserInfo; setLoginUserInfo: (v: LoginUserInfo) => void } = useAppContext();
 
   const compo = (
-    <div style={{ marginLeft: '60px', marginTop: '10px', maxWidth: '90%', backgroundColor: 'white', borderRadius: '10px', display: 'flex', gap: '10px', alignItems: 'center', padding: '4px 10px' }}>
+    <div style={{ marginLeft: '60px', marginTop: '10px', maxWidth: '60%', backgroundColor: 'white', borderRadius: '10px', display: 'flex', gap: '10px', alignItems: 'center', padding: '4px 10px' }}>
       <Link to={'/user/' + loginUserInfo.id} target="_blank" style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
         <Avatar avatarUrl={loginUserInfo.avatar} width={30} />
         <span>{loginUserInfo.name}</span>
       </Link>
-      <div style={{ borderLeft: 'solid 1px gray', padding: '0 10px' }}>
+      <div style={{ borderLeft: 'solid 1px gray', padding: '0 10px', display: 'flex' }}>
         <span>{currentRecordGroup?.name}</span>
-        <span style={{ color: 'gray', paddingLeft: '6px' }}>{currentRecordGroup?.desc}</span>
+        <span
+          style={{
+            color: 'gray',
+            paddingLeft: '6px',
+            maxWidth: '80px',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            display: 'inline-block',
+            verticalAlign: 'bottom',
+          }}
+          title={currentRecordGroup?.desc}
+        >
+          {currentRecordGroup?.desc}
+        </span>
       </div>
 
       {/* ShareButton */}

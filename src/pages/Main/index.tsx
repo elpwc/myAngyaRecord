@@ -195,7 +195,7 @@ export default (props: P) => {
                       transition={{ duration: 0.2 }}
                     >
                       {menuItems.map((menuItem, index) => (
-                        <motion.li key={menuItem.title} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.15 }}>
+                        <motion.li style={{ listStyle: 'none' }} key={menuItem.title} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.15 }}>
                           <button
                             className={`dropDownMenu-item${menuItem.disabled ? ' disabled' : ''}${index === (currentMap === -1 ? 0 : currentMap) ? ' selected' : ''}`}
                             style={{
