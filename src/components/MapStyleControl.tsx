@@ -4,7 +4,6 @@ import { recordStatus } from '../utils/map';
 import { mapStyles } from '../utils/mapStyles';
 import { POSITION_CLASSES } from '../utils/types';
 import { useHint } from './HintProvider';
-import Dropdown from './Dropdown';
 import PrettyDropdown from './PrettyDropdown';
 import { c_mapStyle } from '../utils/cookies';
 import './MapStyleControl.css';
@@ -23,15 +22,26 @@ export const MapStyleControl = ({ position }: Props) => {
         mainClassname="mapStyleControl-main-container"
         bordered={false}
         showArrow={false}
+        dropdownClassname="mapStyleControl-dropdownlist"
+        dropdownStyle={{ backgroundColor: '#ffffff98', backdropFilter: 'blur(2px)' }}
         optionStyle={{ backgroundColor: 'transparent' }}
         options={mapStyles.map((mapStyle, index) => {
           return {
             value: index,
             getCaption: (isShownOnTop?: boolean, isSelected?: boolean) => {
               return (
-                <div>
-                  {/*!isShownOnTop && <label>{mapStyle.title}</label>*/}
-                  <div className="mapStyleControl-main" style={{ display: 'flex', borderRadius: '11px', border: 'none', width: 'fit-content' }}>
+                <div
+                  className={
+                    'mapStyleControl-option-container ' +
+                    (isShownOnTop ? '' : 'mapStyleControl-option-item-container ') +
+                    (isSelected ? 'mapStyleControl-option-selected-container' : '')
+                  }
+                >
+                  {!isShownOnTop && <label>{mapStyle.title + (isSelected ? '(使用中)' : '')}</label>}
+                  <div
+                    className={'mapStyleControl-option ' + (isShownOnTop ? 'mapStyleControl-option-main ' : 'mapStyleControl-option-item ') + (isSelected ? 'mapStyleControl-option-selected' : '')}
+                    style={{}}
+                  >
                     {recordStatus.map((recordStatusItem, index) => {
                       return (
                         <div

@@ -87,6 +87,7 @@ export default function PrettyDropdown({
               padding: bordered ? '4px 0' : 0,
               border: bordered ? undefined : 'none',
               boxShadow: bordered ? undefined : 'none',
+              maxHeight: '100vh',
             }}
             initial={{ opacity: 0, y: positionUp ? 10 : -10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -96,7 +97,7 @@ export default function PrettyDropdown({
             {options.map(option => (
               <motion.li
                 key={option.value}
-                className={'pretty-dropdown-option ' + optionClassname}
+                className={'pretty-dropdown-option ' + (optionClassname ?? '')}
                 style={{
                   ...optionStyle,
                   padding: bordered ? '8px 12px' : 0,

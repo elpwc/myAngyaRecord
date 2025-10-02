@@ -1,8 +1,39 @@
-.mapStyleControl-main-container .mapStyleControl-main {
-  border: solid 3px #00000000 !important;
+.mapStyleControl-option-main {
   transition: all 0.2s;
+  border: solid 3px #00000000 !important;
 }
 
-.mapStyleControl-main-container .mapStyleControl-main:hover {
+.mapStyleControl-option {
+  display: flex;
+  border-radius: 11px;
+  border: none;
+  width: fit-content;
+}
+
+.mapStyleControl-option-item-container {
+  transition: all 0.2s;
+  padding: 2px;
+  border-radius: 4px;
+}
+.mapStyleControl-option-item-container:hover {
+  background-color: #ffffffef;
+}
+
+.mapStyleControl-option-selected-container {
+  background-color: #fffffff6;
+}
+
+.mapStyleControl-option-selected-container label {
+  font-weight: bold;
+}
+
+.mapStyleControl-option-main:hover {
   border: solid 3px #2d2d2d46 !important;
+}
+
+.mapStyleControl-dropdownlist {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 4px !important;
 }
