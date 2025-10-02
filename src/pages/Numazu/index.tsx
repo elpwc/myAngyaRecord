@@ -51,6 +51,9 @@ export default (props: P) => {
   const [currentLatLng, setcurrentLatLng] = useState(DEFAULT_LAT_LNG);
 
   const { currentBackgroundTileMap, setCurrentBackgroundTileMap } = useAppContext();
+  // 連続塗り関連
+  const { isContinuousEditOn, setIsContinuousEditOn } = useAppContext();
+  const { currentContinuousEditValue, setCurrentContinuousEditValue } = useAppContext();
 
   const showAreaLevelColor = useMemo(() => layers.area && !layers.ooaza, [layers.area, layers.ooaza]);
 
@@ -262,23 +265,33 @@ export default (props: P) => {
                         weight: 0.4,
                       }}
                       positions={border.coordinates}
+                      eventHandlers={{
+                        // https://github.com/PaulLeCam/react-leaflet/issues/899
+                        click: e => {
+                          if (isContinuousEditOn) {
+                            changeRecordStatus(border.id, currentContinuousEditValue);
+                          }
+                        },
+                      }}
                     >
-                      <Popup closeOnClick className="popupStyle">
-                        <MapPopup
-                          addr={border.area ? border.area + '地区' : ''}
-                          name={border.name}
-                          comment={records.find(r => r.admin_id === border.id)?.comment ?? ''}
-                          recordId={records.find(r => r.admin_id === border.id)?.id}
-                          groupId={recordGroup?.id ?? 0}
-                          adminId={border.id}
-                          hasOpenningRecordGroup={!!recordGroup?.id}
-                          selected={records.find(r => r.admin_id === border.id)?.level ?? -1}
-                          isViewMode={isViewMode}
-                          onClick={value => {
-                            changeRecordStatus(border.id, value);
-                          }}
-                        />
-                      </Popup>
+                      {!isContinuousEditOn && (
+                        <Popup closeOnClick className="popupStyle">
+                          <MapPopup
+                            addr={border.area ? border.area + '地区' : ''}
+                            name={border.name}
+                            comment={records.find(r => r.admin_id === border.id)?.comment ?? ''}
+                            recordId={records.find(r => r.admin_id === border.id)?.id}
+                            groupId={recordGroup?.id ?? 0}
+                            adminId={border.id}
+                            hasOpenningRecordGroup={!!recordGroup?.id}
+                            selected={records.find(r => r.admin_id === border.id)?.level ?? -1}
+                            isViewMode={isViewMode}
+                            onClick={value => {
+                              changeRecordStatus(border.id, value);
+                            }}
+                          />
+                        </Popup>
+                      )}
                       <MuniNameMarker center={center as LatLngTuple} muniBorder={border} currentZoom={currentZoom} layers={layers} />
                       {(records.find(r => r.admin_id === border.id)?.comment ?? '') !== '' && <Tooltip>{records.find(r => r.admin_id === border.id)?.comment ?? ''}</Tooltip>}
                     </Polygon>

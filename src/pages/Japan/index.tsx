@@ -59,6 +59,10 @@ export default (props: P) => {
 
   const { currentBackgroundTileMap, setCurrentBackgroundTileMap } = useAppContext();
 
+  // 連続塗り関連
+  const { isContinuousEditOn, setIsContinuousEditOn } = useAppContext();
+  const { currentContinuousEditValue, setCurrentContinuousEditValue } = useAppContext();
+
   const showTodofukenLevelColor = useMemo(() => layers.pref && !layers.muni, [layers.pref, layers.muni]);
 
   const showSubprefectureLevelColor = useMemo(() => layers.pref && layers.sinkoukyoku && !layers.muni, [layers.pref, layers.muni]);
@@ -302,23 +306,34 @@ export default (props: P) => {
                             weight: 0.4,
                           }}
                           positions={muniBorder.coordinates}
+                          eventHandlers={{
+                            // https://github.com/PaulLeCam/react-leaflet/issues/899
+                            click: e => {
+                              if (isContinuousEditOn) {
+                                changeRecordStatus(muniBorder.id, currentContinuousEditValue);
+                              }
+                            },
+                          }}
                         >
-                          <Popup closeOnClick className="popupStyle">
-                            <MapPopup
-                              addr={(muniBorder.pref ?? '') + (muniBorder.shinkoukyoku ?? '') + (muniBorder.gun_seireishi ?? '')}
-                              name={muniBorder.name}
-                              comment={records.find(r => r.admin_id === muniBorder.id)?.comment ?? ''}
-                              recordId={records.find(r => r.admin_id === muniBorder.id)?.id}
-                              groupId={recordGroup?.id ?? 0}
-                              adminId={muniBorder.id}
-                              hasOpenningRecordGroup={!!recordGroup?.id}
-                              selected={records.find(r => r.admin_id === muniBorder.id)?.level ?? -1}
-                              isViewMode={isViewMode}
-                              onClick={value => {
-                                changeRecordStatus(muniBorder.id, value);
-                              }}
-                            />
-                          </Popup>
+                          {!isContinuousEditOn && (
+                            <Popup closeOnClick className="popupStyle">
+                              <MapPopup
+                                addr={(muniBorder.pref ?? '') + (muniBorder.shinkoukyoku ?? '') + (muniBorder.gun_seireishi ?? '')}
+                                name={muniBorder.name}
+                                comment={records.find(r => r.admin_id === muniBorder.id)?.comment ?? ''}
+                                recordId={records.find(r => r.admin_id === muniBorder.id)?.id}
+                                groupId={recordGroup?.id ?? 0}
+                                adminId={muniBorder.id}
+                                hasOpenningRecordGroup={!!recordGroup?.id}
+                                selected={records.find(r => r.admin_id === muniBorder.id)?.level ?? -1}
+                                isViewMode={isViewMode}
+                                onClick={value => {
+                                  changeRecordStatus(muniBorder.id, value);
+                                }}
+                              />
+                            </Popup>
+                          )}
+
                           <MuniNameMarker center={center as LatLngTuple} muniBorder={muniBorder} currentZoom={currentZoom} layers={layers} />
                           {(records.find(r => r.admin_id === muniBorder.id)?.comment ?? '') !== '' && <Tooltip>{records.find(r => r.admin_id === muniBorder.id)?.comment ?? ''}</Tooltip>}
                         </Polygon>
