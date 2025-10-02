@@ -62,8 +62,9 @@ export const AsideBar = ({
       style={{
         borderRight: '1px solid #ccc',
         zIndex: 3500,
-        position: isMobile ? 'absolute' : 'unset',
-        height: '100%',
+        position: isMobile ? 'absolute' : 'initial',
+        height: 'calc(100vh - 46.18px)',
+        maxWidth: isMobile ? '100%' : '45%',
       }}
       initial="closed"
       animate={(isMobile && openMobileAsideMenu) || !isMobile ? 'open' : 'closed'}
@@ -72,48 +73,56 @@ export const AsideBar = ({
         closed: { x: '-100%', opacity: 0, transition: { duration: 0.15 }, transitionEnd: { display: 'none' } },
       }}
     >
-      <div>
-        <MapBackgroundTilesSwitcher currentTileMap={currentTileMap} onChange={onCurrentBackgroundTileMapChange} />
-        <div className="map-tiles-checkbox-group">
-          {layers.map(layer => {
-            return <LayerCheckbox key={layer.name} layer={layer} onChange={onLayerChange} />;
-          })}
+      <div
+        style={{
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        <div style={{ flexShrink: 0 }}>
+          <MapBackgroundTilesSwitcher currentTileMap={currentTileMap} onChange={onCurrentBackgroundTileMapChange} />
+          <div className="map-tiles-checkbox-group">
+            {layers.map(layer => {
+              return <LayerCheckbox key={layer.name} layer={layer} onChange={onLayerChange} />;
+            })}
+          </div>
         </div>
-      </div>
-      <div style={{ position: 'relative' }}>
-        <RecordGroupToolbar recordGroup={currentRecordGroup} thisMapId={thisMapId} isViewMode={isViewMode} onSelectRecordGroup={onSelectRecordGroup} />
-        {list}
-        {!isLogin() && !isViewMode && (
-          <div
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              backdropFilter: 'blur(2px)',
-              background: 'rgba(255,255,255,0.5)',
-              display: 'flex',
-              justifyContent: 'center',
-              zIndex: 1,
-            }}
-          >
+        <div style={{ position: 'relative', flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+          <RecordGroupToolbar recordGroup={currentRecordGroup} thisMapId={thisMapId} isViewMode={isViewMode} onSelectRecordGroup={onSelectRecordGroup} />
+          {list}
+          {!isLogin() && !isViewMode && (
             <div
               style={{
-                padding: '10px',
-                borderRadius: '5px',
-                height: 'fit-content',
-                backgroundColor: 'rgba(255,255,255,0.8)',
-                margin: '20px',
-                border: 'solid 1px #c1c1c1',
-                paddingBottom: '30px',
-                boxShadow: '0 2px 12px rgba(0,0,0,0.08)',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                backdropFilter: 'blur(2px)',
+                background: 'rgba(255,255,255,0.5)',
+                display: 'flex',
+                justifyContent: 'center',
+                zIndex: 1,
               }}
             >
-              <LoginPanel direction="column" />
+              <div
+                style={{
+                  padding: '10px',
+                  borderRadius: '5px',
+                  height: 'fit-content',
+                  backgroundColor: 'rgba(255,255,255,0.8)',
+                  margin: '20px',
+                  border: 'solid 1px #c1c1c1',
+                  paddingBottom: '30px',
+                  boxShadow: '0 2px 12px rgba(0,0,0,0.08)',
+                }}
+              >
+                <LoginPanel direction="column" />
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </motion.aside>
   );

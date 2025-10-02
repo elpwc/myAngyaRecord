@@ -12,7 +12,12 @@
   font-size: 12px;
 }
 
-.prefDropdownButtonOpen {
+.prefInfoContainerTitle {
+  background-color: white;
+  z-index: 5;
+}
+
+.prefInfoContainerTitleOpen {
   position: sticky;
   top: 0;
 }
@@ -28,15 +33,16 @@
 
 .municipalitiesList {
   width: 100%;
-  max-height: calc(100vh - 240px);
   overflow-y: scroll;
   background: rgba(255, 255, 255, 0.9);
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  height: -webkit-fill-available;
+  flex: 1;
+  min-height: 0;
+  padding-bottom: 600px;
 }
 
-.municipalityAreaItem{
+.municipalityAreaItem {
   padding: 1px 12px;
   gap: 8px;
   border-bottom: 1px solid #eee;
@@ -47,7 +53,7 @@
 .municipalityItem {
   padding: 1px 12px;
   display: flex;
-  align-items: center;;
+  align-items: center;
   gap: 8px;
   border-bottom: 1px solid #eee;
   font-size: 12px;

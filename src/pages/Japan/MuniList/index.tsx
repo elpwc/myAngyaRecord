@@ -96,68 +96,69 @@ const MuniList = ({ muniBorderData, records, showCheckbox, onSelectedPrefChanged
                     return (
                       <div key={prefMuniBorder.prefecture}>
                         <div className="prefInfoContainer">
-                          <div className="flex" style={{ padding: '0 4px', justifyContent: 'space-between' }}>
-                            <span>
-                              {showCheckbox && (
-                                <input
-                                  type="checkbox"
-                                  id={prefMuniBorder.prefecture}
-                                  checked={selectedPrefectures.includes(prefMuniBorder.prefecture)}
-                                  onClick={e => {
-                                    e.stopPropagation();
-                                    if (e.currentTarget.checked) {
-                                      if (!selectedPrefectures.includes(prefMuniBorder.prefecture)) {
-                                        setSelectedPrefectures(prev => [...prev, prefMuniBorder.prefecture]);
+                          <div className={'prefInfoContainerTitle ' + (expandedPrefectures.includes(prefMuniBorder.prefecture) ? 'prefInfoContainerTitleOpen' : '')}>
+                            <div className="flex" style={{ padding: '0 4px', justifyContent: 'space-between' }}>
+                              <span>
+                                {showCheckbox && (
+                                  <input
+                                    type="checkbox"
+                                    id={prefMuniBorder.prefecture}
+                                    checked={selectedPrefectures.includes(prefMuniBorder.prefecture)}
+                                    onClick={e => {
+                                      e.stopPropagation();
+                                      if (e.currentTarget.checked) {
+                                        if (!selectedPrefectures.includes(prefMuniBorder.prefecture)) {
+                                          setSelectedPrefectures(prev => [...prev, prefMuniBorder.prefecture]);
+                                        }
+                                        if (onSelectedPrefChanged) {
+                                          onSelectedPrefChanged([...selectedPrefectures, prefMuniBorder.prefecture]);
+                                        }
+                                      } else {
+                                        setSelectedPrefectures((prev: string[]) => prev.filter(pref => pref !== prefMuniBorder.prefecture));
+                                        if (onSelectedPrefChanged) {
+                                          onSelectedPrefChanged(selectedPrefectures.filter(c => c !== prefMuniBorder.prefecture));
+                                        }
                                       }
-                                      if (onSelectedPrefChanged) {
-                                        onSelectedPrefChanged([...selectedPrefectures, prefMuniBorder.prefecture]);
-                                      }
-                                    } else {
-                                      setSelectedPrefectures((prev: string[]) => prev.filter(pref => pref !== prefMuniBorder.prefecture));
-                                      if (onSelectedPrefChanged) {
-                                        onSelectedPrefChanged(selectedPrefectures.filter(c => c !== prefMuniBorder.prefecture));
-                                      }
-                                    }
-                                  }}
-                                />
-                              )}
-                              <label htmlFor={prefMuniBorder.prefecture} style={{ padding: '0 4px' }}>
-                                {prefMuniBorder.prefecture}
-                              </label>
-                            </span>
-                            <span style={{ color: '#7f8ebb', paddingRight: '10px', fontSize: '12px'}}>
-                              {`踏${Math.round(
-                                ((angyaStatus.live + angyaStatus.stay + angyaStatus.visit + angyaStatus.ground + angyaStatus.pass) / prefMuniBorder.municipalities.length) * 100
-                              )}% 全${Math.round(
-                                ((angyaStatus.live * 6 + angyaStatus.stay * 5 + angyaStatus.visit * 4 + angyaStatus.ground * 3 + angyaStatus.pass * 2) / (prefMuniBorder.municipalities.length * 5)) * 100
-                              )}%`}
-                            </span>
+                                    }}
+                                  />
+                                )}
+                                <label htmlFor={prefMuniBorder.prefecture} style={{ padding: '0 4px' }}>
+                                  {prefMuniBorder.prefecture}
+                                </label>
+                              </span>
+                              <span style={{ color: '#7f8ebb', paddingRight: '10px', fontSize: '12px' }}>
+                                {`踏${Math.round(
+                                  ((angyaStatus.live + angyaStatus.stay + angyaStatus.visit + angyaStatus.ground + angyaStatus.pass) / prefMuniBorder.municipalities.length) * 100
+                                )}% 全${Math.round(
+                                  ((angyaStatus.live * 6 + angyaStatus.stay * 5 + angyaStatus.visit * 4 + angyaStatus.ground * 3 + angyaStatus.pass * 2) / (prefMuniBorder.municipalities.length * 5)) *
+                                    100
+                                )}%`}
+                              </span>
+                            </div>
+                            <button className={'prefDropdownButton'} onClick={() => togglePrefecture(prefMuniBorder.prefecture)}>
+                              <span className="prefDropdownButton-status">
+                                <span>居住{angyaStatus.live}</span>
+                                <span>宿泊{angyaStatus.stay}</span>
+                                <span>訪問{angyaStatus.visit}</span>
+                                <span>接地{angyaStatus.ground}</span>
+                                <span>通過{angyaStatus.pass}</span>
+                                <span>未踏{angyaStatus.notReach}</span>
+                                <span>計画{angyaStatus.plan}</span>
+                              </span>
+                              <span className="prefDropDownButtonIcon">
+                                {expandedPrefectures.includes(prefMuniBorder.prefecture) ? (
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+                                  </svg>
+                                ) : (
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z" />
+                                  </svg>
+                                )}
+                              </span>
+                            </button>
                           </div>
-                          <button
-                            className={'prefDropdownButton ' + (expandedPrefectures.includes(prefMuniBorder.prefecture) ? 'prefDropdownButtonOpen' : '')}
-                            onClick={() => togglePrefecture(prefMuniBorder.prefecture)}
-                          >
-                            <span className="prefDropdownButton-status">
-                              <span>居住{angyaStatus.live}</span>
-                              <span>宿泊{angyaStatus.stay}</span>
-                              <span>訪問{angyaStatus.visit}</span>
-                              <span>接地{angyaStatus.ground}</span>
-                              <span>通過{angyaStatus.pass}</span>
-                              <span>未踏{angyaStatus.notReach}</span>
-                              <span>計画{angyaStatus.plan}</span>
-                            </span>
-                            <span className="prefDropDownButtonIcon">
-                              {expandedPrefectures.includes(prefMuniBorder.prefecture) ? (
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                  <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
-                                </svg>
-                              ) : (
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                  <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z" />
-                                </svg>
-                              )}
-                            </span>
-                          </button>
+
                           <div
                             className="progress"
                             style={{

@@ -277,7 +277,7 @@ export default (props: P) => {
                         />
                       </Popup>
                       <MuniNameMarker center={center as LatLngTuple} muniBorder={border} currentZoom={currentZoom} layers={layers} />
-                      {(records.find(r => r.admin_id === border.id)?.comment ?? '') !== '' && <Tooltip>{records.find(r => r.admin_id === border.id)?.comment ?? ''}</Tooltip>}{' '}
+                      {(records.find(r => r.admin_id === border.id)?.comment ?? '') !== '' && <Tooltip>{records.find(r => r.admin_id === border.id)?.comment ?? ''}</Tooltip>}
                     </Polygon>
                   );
                 })
