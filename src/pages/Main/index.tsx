@@ -5,7 +5,7 @@ import './index.css';
 import { isLogin, loginCurrentUser, logout } from '../../utils/userUtils';
 import { useIsMobile } from '../../utils/hooks';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useHint } from '../../components/HintProvider';
+import { useHint } from '../../components/InfrastructureCompo/HintProvider';
 import { getGlobalState } from '../../utils/globalStore';
 import { c_uid, c_userNickName } from '../../utils/cookies';
 

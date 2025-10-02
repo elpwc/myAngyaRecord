@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Modal } from '../Modal';
+import { Modal } from '../InfrastructureCompo/Modal';
 import { deleteRecordGroup, getRecordGroups, patchRecordGroup, postRecordGroup } from '../../utils/serverUtils';
 import { getMapUrlByMapsId, MapsId } from '../../utils/map';
 import { RecordGroup } from '../../utils/types';
@@ -7,9 +7,9 @@ import './modals.css';
 import moment from 'moment';
 import { DeleteGroupModal } from './DeleteGroupModal';
 import { NewGroupModal } from './NewGroupModal';
-import Toggle from '../Toggle';
+import Toggle from '../InfrastructureCompo/Toggle';
 import appconfig from '../../appconfig';
-import { useHint } from '../HintProvider';
+import { useHint } from '../InfrastructureCompo/HintProvider';
 
 interface Props {
   show: boolean;

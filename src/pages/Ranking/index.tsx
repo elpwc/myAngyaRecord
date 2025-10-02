@@ -5,9 +5,9 @@ import './index.css';
 import { getMapTitleByMapsId, getMapUrlByMapsId, MapsId } from '../../utils/map';
 import { getRanking } from '../../utils/serverUtils';
 import { Ranking } from '../../utils/types';
-import Pagination from '../../components/Pagination';
+import Pagination from '../../components/InfrastructureCompo/Pagination';
 import { useIsMobile } from '../../utils/hooks';
-import Avatar from '../../components/Avatar';
+import Avatar from '../../components/InfrastructureCompo/Avatar';
 
 interface P {
   mapId: MapsId;

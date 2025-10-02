@@ -1,11 +1,11 @@
 import { ControlPosition } from 'leaflet';
-import { useGlobalStore } from '../utils/globalStore';
-import { recordStatus } from '../utils/map';
-import { mapStyles } from '../utils/mapStyles';
-import { POSITION_CLASSES } from '../utils/types';
-import { useHint } from './HintProvider';
-import PrettyDropdown from './PrettyDropdown';
-import { c_mapStyle } from '../utils/cookies';
+import { useGlobalStore } from '../../utils/globalStore';
+import { recordStatus } from '../../utils/map';
+import { mapStyles } from '../../utils/mapStyles';
+import { POSITION_CLASSES } from '../../utils/types';
+import { useHint } from '../InfrastructureCompo/HintProvider';
+import PrettyDropdown from '../InfrastructureCompo/PrettyDropdown';
+import { c_mapStyle } from '../../utils/cookies';
 import './MapStyleControl.css';
 
 interface Props {

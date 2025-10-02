@@ -5,7 +5,7 @@ import { useMap } from 'react-leaflet';
 import { isLogin } from '../../utils/userUtils';
 import { recordStatus } from '../../utils/map';
 import { getCurrentFillColorByLevel, getCurrentForeColorByLevel, patchRecord, postRecord } from '../../utils/serverUtils';
-import { useHint } from '../HintProvider';
+import { useHint } from '../InfrastructureCompo/HintProvider';
 
 interface P {
   addr: string;

@@ -4,7 +4,7 @@ import './index.css';
 import App from './App';
 import { BrowserRouter } from 'react-router';
 import appconfig from './appconfig';
-import { HintProvider } from './components/HintProvider';
+import { HintProvider } from './components/InfrastructureCompo/HintProvider';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(

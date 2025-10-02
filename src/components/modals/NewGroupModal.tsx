@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Modal } from '../Modal';
-import Toggle from '../Toggle';
+import { Modal } from '../InfrastructureCompo/Modal';
+import Toggle from '../InfrastructureCompo/Toggle';
 import { RecordGroup } from '../../utils/types';
 
 interface Props {

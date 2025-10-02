@@ -2,8 +2,8 @@ import { JSX, useEffect, useState } from 'react';
 import { AttributionControl, MapContainer, ScaleControl, TileLayer, useMap, useMapEvents } from 'react-leaflet';
 import { c_lat, c_lng, c_zoom } from '../utils/cookies';
 import { mapTiles } from '../utils/map';
-import { MapStyleControl } from './MapStyleControl';
-import LeafletLocateControl from './LeafletLocateControl';
+import { MapStyleControl } from './MapControls/MapStyleControl';
+import LeafletLocateControl from './MapControls/LeafletLocateControl';
 
 export const MapInstance = ({
   defaultLatLng,

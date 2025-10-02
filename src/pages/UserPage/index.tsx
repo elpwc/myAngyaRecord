@@ -2,19 +2,19 @@ import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router';
 import './index.css';
-import { Modal } from '../../components/Modal';
+import { Modal } from '../../components/InfrastructureCompo/Modal';
 import defaultAvatar from '../../assets/defaultAvatar.png';
 import { RecordGroup } from '../../utils/types';
 import { mapStyles } from '../../utils/mapStyles';
 import { getMapTitleByMapsId, getMapUrlByMapsId, recordStatus } from '../../utils/map';
 import { useGlobalStore } from '../../utils/globalStore';
-import { useHint } from '../../components/HintProvider';
+import { useHint } from '../../components/InfrastructureCompo/HintProvider';
 import { getRecordGroupsInAllMapsByUserID, getUserInfoById, updateUserAvatar, updateUserInfo } from '../../utils/serverUtils';
 import imageCompression from 'browser-image-compression';
 import { c_mapStyle, c_uid } from '../../utils/cookies';
 import { getAvatarFullURL, logout } from '../../utils/userUtils';
-import Coffee from '../../components/Coffee';
-import OuterLink from '../../components/OuterLink';
+import Coffee from '../../components/InfrastructureCompo/Coffee';
+import OuterLink from '../../components/InfrastructureCompo/OuterLink';
 
 interface P {}
 

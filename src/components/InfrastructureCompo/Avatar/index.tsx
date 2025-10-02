@@ -1,7 +1,7 @@
 import React from 'react';
 import { useEffect } from 'react';
 import './index.css';
-import { getAvatarFullURL } from '../../utils/userUtils';
+import { getAvatarFullURL } from '../../../utils/userUtils';
 
 interface P {
   avatarUrl?: string;
