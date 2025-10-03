@@ -9,7 +9,7 @@ import MapPopup from '../../components/MapPopup';
 import L, { divIcon, LatLngTuple } from 'leaflet';
 import { getCurrentFillColorByRecords, getCurrentForeColorByRecords, getRecordGroupById, getRecordGroups, getRecords, postRecord } from '../../utils/serverUtils';
 import MuniList from './MuniList';
-import { Record, RecordGroup } from '../../utils/types';
+import { PrivateRailwayLineStyle, Record, RecordGroup } from '../../utils/types';
 import { isLogin } from '../../utils/userUtils';
 import { useIsMobile } from '../../utils/hooks';
 import { AsideBar, LayerCheckboxInfo } from '../../components/AsideBar';
@@ -18,6 +18,7 @@ import { InstitutionTypeCd, JapanRailway, Municipality, Prefecture, RailwayClass
 import { getShinkoukyokuFillColor, getShinkoukyokuForeColor, getTodofukenFillColor, getTodofukenForeColor } from './utils';
 import { c_uid } from '../../utils/cookies';
 import { useAppContext } from '../../context';
+import { RailwayPolyline } from '../../components/MapContents/RailwayPolyline';
 
 interface P {
   openMobileAsideMenu: boolean;
@@ -58,6 +59,7 @@ export default (props: P) => {
   const [currentLatLng, setcurrentLatLng] = useState(DEFAULT_LAT_LNG);
 
   const { currentBackgroundTileMap, setCurrentBackgroundTileMap } = useAppContext();
+  const { privateRailwayLineStyle, setPrivateRailwayLineStyle } = useAppContext();
 
   // 連続塗り関連
   const { isContinuousEditOn, setIsContinuousEditOn } = useAppContext();
@@ -363,8 +365,21 @@ export default (props: P) => {
                         pathOptions={{ weight: 1.5, color: 'white', opacity: 1, fillOpacity: 1, dashArray: '10,10', dashOffset: '10' }}
                       />
                     </>
-                  ) : (
-                    // 私鉄
+                  ) : railwayLines.companyName.includes('地下鉄') ||
+                    railwayLines.companyName.includes('メトロ') ||
+                    ['東京都', '名古屋市', '大阪市高速電気軌道', '札幌市', '仙台市', '横浜市', '京都市', '神戸市', '福岡市'].includes(railwayLines.companyName) ? (
+                    // 地下鉄
+                    <Polyline
+                      key={railwayLines.companyName + railwayLines.lineName + index.toString()}
+                      className="rail-line"
+                      pane="railways"
+                      positions={railwayLines.coordinates}
+                      pathOptions={{ weight: 1, color: '#1f7197ff', opacity: 1, fillOpacity: 1 }}
+                    />
+                  ) : // 私鉄
+                  privateRailwayLineStyle === PrivateRailwayLineStyle.PlusLine ? (
+                    <RailwayPolyline key={railwayLines.companyName + railwayLines.lineName + index.toString()} latlngs={railwayLines.coordinates} type={0} />
+                  ) : privateRailwayLineStyle === PrivateRailwayLineStyle.RedLine ? (
                     <Polyline
                       key={railwayLines.companyName + railwayLines.lineName + index.toString()}
                       className="rail-line"
@@ -372,6 +387,8 @@ export default (props: P) => {
                       positions={railwayLines.coordinates}
                       pathOptions={{ weight: 1, color: 'darkred', opacity: 1, fillOpacity: 1 }}
                     />
+                  ) : (
+                    <></>
                   );
                 })
             }

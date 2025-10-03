@@ -63,4 +63,9 @@ export const POSITION_CLASSES = {
   bottomright: 'leaflet-bottom leaflet-right',
   topleft: 'leaflet-top leaflet-left',
   topright: 'leaflet-top leaflet-right',
+};
+
+export enum PrivateRailwayLineStyle {
+  RedLine = 0,
+  PlusLine = 1,
 }

@@ -1,5 +1,6 @@
 /* eslint-disable no-else-return */
 import cookie from 'react-cookies';
+import { PrivateRailwayLineStyle } from './types';
 
 export const c_token = (userid: number, token?: string): string => {
   if (token !== null && token !== undefined) {
@@ -95,11 +96,20 @@ export const c_showfilter = (value?: string): string => {
   }
 };
 
-export const c_mapStyle = (value?: string): string => {
+export const c_mapStyle = (value?: number): number => {
   if (value !== null && value !== undefined) {
-    cookie.save('mapStyle', value ?? '', { path: '/' });
-    return value ?? '';
+    cookie.save('mapStyle', value.toString() ?? 1, { path: '/' });
+    return value ?? 1;
   } else {
-    return cookie.load('mapStyle') ?? '';
+    return Number(cookie.load('mapStyle')) ?? 1;
+  }
+};
+
+export const c_privateRailwayLineStyle = (value?: PrivateRailwayLineStyle): PrivateRailwayLineStyle => {
+  if (value !== null && value !== undefined) {
+    cookie.save('privateRailwayLineStyle', value.toString() ?? '0', { path: '/' });
+    return value ?? PrivateRailwayLineStyle.RedLine;
+  } else {
+    return (Number(cookie.load('privateRailwayLineStyle')) as PrivateRailwayLineStyle) ?? PrivateRailwayLineStyle.RedLine;
   }
 };

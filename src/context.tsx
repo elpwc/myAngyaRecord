@@ -1,7 +1,7 @@
 import { createContext, JSX, useContext, useState } from 'react';
-import { c_mapStyle } from './utils/cookies';
+import { c_mapStyle, c_privateRailwayLineStyle } from './utils/cookies';
 import { LoginUserInfo } from './utils/userUtils';
-import { RecordGroup } from './utils/types';
+import { PrivateRailwayLineStyle, RecordGroup } from './utils/types';
 
 export const AppContext = createContext<any | null>(null);
 
@@ -20,7 +20,7 @@ export const getContextRef = () => latestContext;
 
 export const AppContextProvider = ({ children }: { children: JSX.Element }) => {
   // globals
-  const [currentMapStyle, setCurrentMapStyle] = useState<number>(Number(c_mapStyle()) || 0);
+  const [currentMapStyle, setCurrentMapStyle] = useState<number>(c_mapStyle() ?? 1);
   const [currentBackgroundTileMap, setCurrentBackgroundTileMap] = useState('default');
   const [loginUserInfo, setLoginUserInfo] = useState<LoginUserInfo>({
     id: -1,
@@ -35,6 +35,7 @@ export const AppContextProvider = ({ children }: { children: JSX.Element }) => {
   const [isContinuousEditOn, setIsContinuousEditOn] = useState(false);
   const [currentContinuousEditValue, setCurrentContinuousEditValue] = useState(0);
   const [currentRecordGroup, setCurrentRecordGroup] = useState<RecordGroup>();
+  const [privateRailwayLineStyle, setPrivateRailwayLineStyle] = useState<PrivateRailwayLineStyle>(c_privateRailwayLineStyle() ?? PrivateRailwayLineStyle.RedLine);
 
   return (
     <AppContext.Provider
@@ -51,6 +52,8 @@ export const AppContextProvider = ({ children }: { children: JSX.Element }) => {
         setCurrentContinuousEditValue,
         currentRecordGroup,
         setCurrentRecordGroup,
+        privateRailwayLineStyle,
+        setPrivateRailwayLineStyle,
       }}
     >
       <>
@@ -67,6 +70,8 @@ export const AppContextProvider = ({ children }: { children: JSX.Element }) => {
           setCurrentContinuousEditValue,
           currentRecordGroup,
           setCurrentRecordGroup,
+          privateRailwayLineStyle,
+          setPrivateRailwayLineStyle,
         })}
         {children}
       </>
