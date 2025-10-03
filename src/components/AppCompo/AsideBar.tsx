@@ -1,9 +1,9 @@
-import { useIsMobile } from '../utils/hooks';
+import { useIsMobile } from '../../utils/hooks';
 import { MapBackgroundTilesSwitcher } from './MapBackgroundTilesSwitcher/MapBackgroundTilesSwitcher';
-import { isLogin } from '../utils/userUtils';
+import { isLogin } from '../../utils/userUtils';
 import { RecordGroupToolbar } from './RecordGroupToolbar';
-import { RecordGroup } from '../utils/types';
-import { MapsId } from '../utils/map';
+import { RecordGroup } from '../../utils/types';
+import { MapsId } from '../../utils/map';
 import { LoginPanel } from './LoginPanel';
 import { JSX } from 'react';
 import { motion } from 'framer-motion';

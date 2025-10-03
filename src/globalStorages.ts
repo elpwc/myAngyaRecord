@@ -1,3 +1,6 @@
+/**
+ * NOT USED
+ */
 import Storage from './utils/storage';
 import { UserInfo } from './utils/types';
 

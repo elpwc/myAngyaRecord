@@ -4,7 +4,7 @@ import { Link, useLocation, useNavigate, useParams } from 'react-router';
 import './index.css';
 import { Modal } from '../../components/InfrastructureCompo/Modal';
 import defaultAvatar from '../../assets/defaultAvatar.png';
-import { PrivateRailwayLineStyle, RecordGroup } from '../../utils/types';
+import { RecordGroup } from '../../utils/types';
 import { mapStyles } from '../../utils/mapStyles';
 import { getMapTitleByMapsId, getMapUrlByMapsId, recordStatus } from '../../utils/map';
 import { useHint } from '../../components/InfrastructureCompo/HintProvider';
@@ -13,6 +13,7 @@ import imageCompression from 'browser-image-compression';
 import { c_mapStyle, c_privateRailwayLineStyle, c_uid } from '../../utils/cookies';
 import { getAvatarFullURL, logout } from '../../utils/userUtils';
 import { useAppContext } from '../../context';
+import { PrivateRailwayLineStyle } from '../../utils/mapInfo';
 
 interface P {}
 

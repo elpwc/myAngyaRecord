@@ -5,7 +5,7 @@ import { Ooaza, OoazaArea } from '../addr';
 import { getOoazaInstanceById } from '../geojsonUtils';
 import { getCurrentFillColorByLevel } from '../../../utils/serverUtils';
 import { getStatusLevelByMuniId } from '../../../utils/map';
-import RecordStatusDropdown from '../../../components/RecordStatusDropdown';
+import RecordStatusDropdown from '../../../components/AppCompo/RecordStatusDropdown';
 import { isLogin } from '../../../utils/userUtils';
 
 interface Props {

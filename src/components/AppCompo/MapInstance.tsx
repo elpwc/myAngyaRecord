@@ -1,12 +1,12 @@
 import { JSX, useEffect, useState } from 'react';
 import { AttributionControl, MapContainer, ScaleControl, TileLayer, useMap, useMapEvents } from 'react-leaflet';
-import { c_lat, c_lng, c_zoom } from '../utils/cookies';
-import { mapTiles } from '../utils/map';
-import { MapStyleControl } from './MapControls/MapStyleControl';
-import LeafletLocateControl from './MapControls/LeafletLocateControl';
-import { EditModeSwitchControl } from './MapControls/EditModeSwitchControl';
-import { RecordGroupInfoControl } from './MapControls/RecordGroupInfoControl';
-import { isLogin } from '../utils/userUtils';
+import { c_lat, c_lng, c_zoom } from '../../utils/cookies';
+import { mapTiles } from '../../utils/map';
+import { MapStyleControl } from '../MapControls/MapStyleControl';
+import LeafletLocateControl from '../MapControls/LeafletLocateControl';
+import { EditModeSwitchControl } from '../MapControls/EditModeSwitchControl';
+import { RecordGroupInfoControl } from '../MapControls/RecordGroupInfoControl';
+import { isLogin } from '../../utils/userUtils';
 
 export const MapInstance = ({
   defaultLatLng,

@@ -1,4 +1,4 @@
-import { mapTiles } from '../../utils/map';
+import { mapTiles } from '../../../utils/map';
 import defaultBg from './default.png';
 import mapBg from './map.png';
 import sateBg from './sate.png';

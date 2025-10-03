@@ -1,6 +1,6 @@
 import tinhVietnamJson from '../../geojson/vietnam/diaphantinhvn.geojson';
 import vietnamRailwaysJson from '../../geojson/vietnam/vietnamRailways.geojson';
-import { Railway } from '../../utils/addr';
+import { Railway } from '../../utils/mapInfo';
 import { getGeoJsonData } from '../../utils/map';
 import { TinhVietnam } from './addr';
 

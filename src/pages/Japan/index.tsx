@@ -9,16 +9,17 @@ import MapPopup from '../../components/MapPopup';
 import L, { divIcon, LatLngTuple } from 'leaflet';
 import { getCurrentFillColorByRecords, getCurrentForeColorByRecords, getRecordGroupById, getRecordGroups, getRecords, postRecord } from '../../utils/serverUtils';
 import MuniList from './MuniList';
-import { PrivateRailwayLineStyle, Record, RecordGroup } from '../../utils/types';
+import { Record, RecordGroup } from '../../utils/types';
 import { isLogin } from '../../utils/userUtils';
 import { useIsMobile } from '../../utils/hooks';
-import { AsideBar, LayerCheckboxInfo } from '../../components/AsideBar';
-import { MapInstance } from '../../components/MapInstance';
+import { AsideBar, LayerCheckboxInfo } from '../../components/AppCompo/AsideBar';
+import { MapInstance } from '../../components/AppCompo/MapInstance';
 import { InstitutionTypeCd, JapanRailway, Municipality, Prefecture, RailwayClassCd } from './addr';
 import { getShinkoukyokuFillColor, getShinkoukyokuForeColor, getTodofukenFillColor, getTodofukenForeColor } from './utils';
 import { c_uid } from '../../utils/cookies';
 import { useAppContext } from '../../context';
 import { RailwayPolyline } from '../../components/MapContents/RailwayPolyline';
+import { PrivateRailwayLineStyle } from '../../utils/mapInfo';
 
 interface P {
   openMobileAsideMenu: boolean;

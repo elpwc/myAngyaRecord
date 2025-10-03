@@ -1,6 +1,6 @@
 /* eslint-disable no-else-return */
 import cookie from 'react-cookies';
-import { PrivateRailwayLineStyle } from './types';
+import { PrivateRailwayLineStyle } from './mapInfo';
 
 export const c_token = (userid: number, token?: string): string => {
   if (token !== null && token !== undefined) {

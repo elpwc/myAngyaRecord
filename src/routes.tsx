@@ -13,7 +13,7 @@ import Ranking from './pages/Ranking';
 import { MapsId } from './utils/map';
 import Vietnam from './pages/Vietnam';
 import UserPage from './pages/UserPage';
-import Footer from './components/Footer';
+import Footer from './components/AppCompo/Footer';
 
 export const AppRoutes = () => {
   const [openMobileAsideMenu, setopenMobileAsideMenu] = useState(true);

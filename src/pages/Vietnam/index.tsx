@@ -11,12 +11,12 @@ import { Record, RecordGroup } from '../../utils/types';
 import { isLogin } from '../../utils/userUtils';
 import { c_uid, c_zoom } from '../../utils/cookies';
 import { useIsMobile } from '../../utils/hooks';
-import { AsideBar, LayerCheckboxInfo } from '../../components/AsideBar';
-import { MapInstance } from '../../components/MapInstance';
+import { AsideBar, LayerCheckboxInfo } from '../../components/AppCompo/AsideBar';
+import { MapInstance } from '../../components/AppCompo/MapInstance';
 import { TinhVietnam } from './addr';
 import { getRailwaysData, getTinhVietnamData } from './geojsonUtils';
 import MuniList from './MuniList';
-import { Railway, RailwayType } from '../../utils/addr';
+import { Railway, RailwayType } from '../../utils/mapInfo';
 import { useAppContext } from '../../context';
 
 interface P {

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './index.css';
-import { recordStatus } from '../../utils/map';
-import { getCurrentFillColorByLevel, getCurrentForeColorByLevel } from '../../utils/serverUtils';
+import { recordStatus } from '../../../utils/map';
+import { getCurrentFillColorByLevel, getCurrentForeColorByLevel } from '../../../utils/serverUtils';
 
 interface Props {
   value: number;

@@ -1,4 +1,4 @@
-import { AdministratorPolygonInfo } from '../../utils/addr';
+import { AdministratorPolygonInfo } from '../../utils/mapInfo';
 
 export interface Ooaza extends AdministratorPolygonInfo {
   area: string;

@@ -1,4 +1,4 @@
-import { AdministratorPolygonInfo } from '../../utils/addr';
+import { AdministratorPolygonInfo } from '../../utils/mapInfo';
 
 export enum TinhType {
   Tinh = 1,

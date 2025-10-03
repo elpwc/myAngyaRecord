@@ -4,7 +4,7 @@ import './index.css';
 import { Record } from '../../../utils/types';
 import { getPrefNameOfMuniById } from '../geojsonUtils';
 import { Municipality } from '../addr';
-import RecordStatusDropdown from '../../../components/RecordStatusDropdown';
+import RecordStatusDropdown from '../../../components/AppCompo/RecordStatusDropdown';
 import { getCurrentFillColorByLevel } from '../../../utils/serverUtils';
 import { isLogin } from '../../../utils/userUtils';
 

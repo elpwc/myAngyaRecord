@@ -1,7 +1,8 @@
 import { createContext, JSX, useContext, useState } from 'react';
 import { c_mapStyle, c_privateRailwayLineStyle } from './utils/cookies';
 import { LoginUserInfo } from './utils/userUtils';
-import { PrivateRailwayLineStyle, RecordGroup } from './utils/types';
+import { RecordGroup } from './utils/types';
+import { PrivateRailwayLineStyle } from './utils/mapInfo';
 
 export const AppContext = createContext<any | null>(null);
 
@@ -18,7 +19,7 @@ export const setContextRef = (ctx: any) => {
 };
 export const getContextRef = () => latestContext;
 
-export const AppContextProvider = ({ children }: { children: JSX.Element }) => {
+export const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
   // globals
   const [currentMapStyle, setCurrentMapStyle] = useState<number>(c_mapStyle() ?? 1);
   const [currentBackgroundTileMap, setCurrentBackgroundTileMap] = useState('default');

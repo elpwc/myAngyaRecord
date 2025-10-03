@@ -18,3 +18,8 @@ export enum RailwayType {
   highSpeedRailway = 1,
   metro = 2,
 }
+
+export enum PrivateRailwayLineStyle {
+  RedLine = 0,
+  PlusLine = 1,
+}

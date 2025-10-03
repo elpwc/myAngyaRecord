@@ -3,7 +3,7 @@ import './index.css';
 import { Record } from '../../../utils/types';
 import { TinhVietnam } from '../addr';
 import { getStatusLevelByMuniId } from '../../../utils/map';
-import RecordStatusDropdown from '../../../components/RecordStatusDropdown';
+import RecordStatusDropdown from '../../../components/AppCompo/RecordStatusDropdown';
 import { isLogin } from '../../../utils/userUtils';
 
 interface Props {

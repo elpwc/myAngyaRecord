@@ -1,4 +1,4 @@
-import { AdministratorPolygonInfo, Railway } from '../../utils/addr';
+import { AdministratorPolygonInfo, Railway } from '../../utils/mapInfo';
 
 /** 都道府県 & 支庁 */
 export interface Prefecture extends AdministratorPolygonInfo {}

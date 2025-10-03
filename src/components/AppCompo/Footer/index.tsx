@@ -1,8 +1,8 @@
 import React from 'react';
 import { useEffect } from 'react';
 import './index.css';
-import Coffee from '../InfrastructureCompo/Coffee';
-import OuterLink from '../InfrastructureCompo/OuterLink';
+import Coffee from '../../InfrastructureCompo/Coffee';
+import OuterLink from '../../InfrastructureCompo/OuterLink';
 
 interface P {}
 
