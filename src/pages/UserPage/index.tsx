@@ -14,6 +14,7 @@ import { c_mapStyle, c_privateRailwayLineStyle, c_uid } from '../../utils/cookie
 import { getAvatarFullURL, logout } from '../../utils/userUtils';
 import { useAppContext } from '../../context';
 import { PrivateRailwayLineStyle } from '../../utils/mapInfo';
+import { GroupControlButtonGroup } from '../../components/modals/GroupControlButtonGroup';
 
 interface P {}
 
@@ -165,13 +166,14 @@ export default (props: P) => {
           {recordGroups.map((group: RecordGroup) => {
             if (userId === c_uid() || group.is_public) {
               return (
-                <Link key={group.id} to={`/${getMapUrlByMapsId(group.mapid)}/` + group.id} target="_blank" className="link">
-                  <li className="record-item">
+                <li key={group.id} className="record-item">
+                  <Link to={`/${getMapUrlByMapsId(group.mapid)}/` + group.id} target="_blank" className="link">
                     <div className="record-title">{getMapTitleByMapsId(group.mapid) + ' ' + group.name + ' ' + (group.is_public ? '' : '(非公開)')}</div>
                     <div className="record-date">{group.create_date}</div>
                     {group.desc && <div className="record-desc">{group.desc}</div>}
-                  </li>
-                </Link>
+                  </Link>
+                  {isSelfUser && <GroupControlButtonGroup recordGroup={group} direction='row' onRecordGroupsInfoUpdate={() => refreshRecordGroups()} />}
+                </li>
               );
             } else {
               return <></>;

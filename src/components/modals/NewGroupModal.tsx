@@ -23,7 +23,7 @@ export const NewGroupModal = ({ show, isEdit = false, groupData, onClose, onOk }
     setdesc(isEdit ? groupData?.desc ?? '' : '');
     setisPublic(isEdit ? groupData?.is_public ?? true : true);
     setshowLivedLevel(isEdit ? groupData?.show_lived_level ?? false : false);
-  }, [groupData]);
+  }, [groupData, show]);
 
   useEffect(() => {
     if (show === false) {

@@ -77,7 +77,10 @@
 
 .record-item {
   border-bottom: 1px solid #eee;
-  padding: 12px 0;
+  padding: 12px 10px;
+  display: flex;
+  justify-content: space-between;
+  
 }
 .record-item:hover {
   background-color: #f1f1f1;

@@ -8,7 +8,7 @@
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  border: none;
+  border: 1px solid #d8d8d8;
   background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
   color: white;
   display: flex;
@@ -64,10 +64,12 @@
   border: none;
   border-radius: 8px;
   margin: 6px 0;
-  padding: 6px 12px;
+  padding: 8px 6px;
   font-size: 14px;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: solid 3px white;
+  font-size: 12px;
 }
 
 @media (any-hover: hover) {
@@ -79,4 +81,5 @@
 
 .editModeSwitchControl-option-selected {
   border: solid 3px black;
+  font-weight: bold;
 }

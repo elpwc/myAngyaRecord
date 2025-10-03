@@ -5,6 +5,7 @@ import { mapStyles } from '../../utils/mapStyles';
 import { recordStatus } from '../../utils/map';
 import './EditModeSwitchControl.css';
 import { useAppContext } from '../../context';
+import { isLogin } from '../../utils/userUtils';
 
 interface Props {
   position: ControlPosition | undefined;
@@ -21,7 +22,16 @@ export const EditModeSwitchControl = ({ position }: Props) => {
   return (
     <div className={positionClass}>
       <div className="leaflet-control editModeSwitchControl">
-        <button className={`editModeSwitchControl-toggle ${isContinuousEditOn ? 'on' : ''}`} onClick={() => setIsContinuousEditOn(!isContinuousEditOn)}>
+        <button
+          className={`editModeSwitchControl-toggle ${isContinuousEditOn ? 'on' : ''}`}
+          onClick={() => {
+            if (isLogin()) {
+              setIsContinuousEditOn(!isContinuousEditOn);
+            } else {
+              hint('top', 'まずログインしてから記録してくださいね', 'red', 2000);
+            }
+          }}
+        >
           <span className="label">連続塗り</span>
           <span className="status">{isContinuousEditOn ? 'ON' : 'OFF'}</span>
         </button>
