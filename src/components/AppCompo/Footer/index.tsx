@@ -46,6 +46,9 @@ export default (props: P) => {
             <OuterLink link="https://nlftp.mlit.go.jp/ksj/index.html" color="#b4b4b4ff">
               国土数値情報ダウンロードサイト
             </OuterLink>
+            <OuterLink link="https://data.gov.hk/tc-data/dataset/hk-had-json1-hong-kong-administrative-boundaries/resource/30d55605-5be1-4038-8e92-3641f9b9448b" color="#b4b4b4ff">
+              開放數據平台 DATA.GOV.HK
+            </OuterLink>
           </div>
         </div>
       </div>

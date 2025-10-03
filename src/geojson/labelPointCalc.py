@@ -3,7 +3,7 @@ from polylabel import polylabel
 import json, os
 
 
-def process_single_file(filename, newFilename):
+def add_label_point_to_a_file(filename, newFilename):
     with open(filename, encoding="utf-8") as f:
         geojson = json.load(f)
 
@@ -25,15 +25,25 @@ def process_single_file(filename, newFilename):
         json.dump(geojson, f, ensure_ascii=False, indent=2)
 
 
-folder_path = "./src/geojson/japan/todofuken"
+def process_folder():
+    folder_path = "./src/geojson/japan/todofuken"
 
-for filename in os.listdir(folder_path):
-    name = os.path.splitext(filename)[0]
-    ext = os.path.splitext(filename)[1]
-    old_path = os.path.join(folder_path, filename)
-    new_path = os.path.join(folder_path, name[:-1] + ext)
-    if not os.path.isfile(old_path):
-        continue
+    for filename in os.listdir(folder_path):
+        name = os.path.splitext(filename)[0]
+        ext = os.path.splitext(filename)[1]
+        old_path = os.path.join(folder_path, filename)
+        new_path = os.path.join(folder_path, name[:-1] + ext)
+        if not os.path.isfile(old_path):
+            continue
 
-    if len(name) == 17:
-        process_single_file(old_path, new_path)
+        if len(name) == 17:
+            add_label_point_to_a_file(old_path, new_path)
+
+
+def process_single_file():
+    old_path = "./src/geojson/hongkong/hksar_18_district_boundary_.geojson"
+    new_path = "./src/geojson/hongkong/hksar_18_district_boundary.geojson"
+    add_label_point_to_a_file(old_path, new_path)
+
+
+process_single_file()
