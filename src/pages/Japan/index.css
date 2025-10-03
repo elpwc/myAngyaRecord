@@ -68,13 +68,20 @@
   pointer-events: none !important;
 }
 
-.munilabels-specialCityName {
+.pnl {
+  text-align: center;
+}
+
+.pnls {
+}
+
+.mls {
   font-size: 10px;
   color: rgb(75, 75, 75);
 }
 
-.placeNameLabel {
-  text-align: center;
+.mlm {
+  margin-top: -4px;
 }
 
 .popupStyle .leaflet-popup-content-wrapper {

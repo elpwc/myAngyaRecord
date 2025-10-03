@@ -178,7 +178,7 @@ export default (props: P) => {
           position={center}
           icon={divIcon({
             className: 'munilabels',
-            html: `<span>${muniBorder.name + ((records.find(r => r.admin_id === muniBorder.id)?.comment ?? '') !== '' ? '*' : '')}</span>`,
+            html: `<p class="pnl">${muniBorder.name + ((records.find(r => r.admin_id === muniBorder.id)?.comment ?? '') !== '' ? '*' : '')}</p>`,
             iconSize: [60, 20],
             iconAnchor: [30, 10],
           })}
@@ -324,7 +324,7 @@ export default (props: P) => {
                           position={center as LatLngTuple}
                           icon={divIcon({
                             className: 'munilabels',
-                            html: `<p class="placeNameLabel">${border.name}</p>`,
+                            html: `<p class="pnl">${border.name}</p>`,
                             iconSize: [60, 20],
                           })}
                         />

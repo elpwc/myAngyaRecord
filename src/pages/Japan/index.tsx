@@ -201,9 +201,17 @@ export default (props: P) => {
           position={center}
           icon={divIcon({
             className: 'munilabels',
-            html: `<span class="munilabels-specialCityName">${muniBorder.is_special_city_ward ? muniBorder.gun_seireishi : ''}</span><br /><span>${
-              muniBorder.name + ((records.find(r => r.admin_id === muniBorder.id)?.comment ?? '') !== '' ? '*' : '')
-            }</span>`,
+            /**
+             * pnl: place name label
+             * pnls: place name label specialCityNameLabel
+             * mls: munilabels-specialCityName
+             * ml: munilabels-muni name
+             */
+            html: muniBorder.is_special_city_ward
+              ? `<p class="pnl mls">${muniBorder.is_special_city_ward ? muniBorder.gun_seireishi : ''}</p><p class="pnl mlm">${
+                  muniBorder.name + ((records.find(r => r.admin_id === muniBorder.id)?.comment ?? '') !== '' ? '*' : '')
+                }</p>`
+              : `<p class="pnl">${muniBorder.name + ((records.find(r => r.admin_id === muniBorder.id)?.comment ?? '') !== '' ? '*' : '')}</p>`,
             iconSize: [60, 20],
             iconAnchor: [30, 10],
           })}
@@ -293,7 +301,7 @@ export default (props: P) => {
                   .map(prefMuniBorder => {
                     return prefMuniBorder.municipalities.map((muniBorder: Municipality) => {
                       // 计算中心点
-                      const center = getBounds(muniBorder.coordinates);
+                      // const center = getBounds(muniBorder.coordinates);
 
                       return (
                         <Polygon
@@ -336,7 +344,7 @@ export default (props: P) => {
                             </Popup>
                           )}
 
-                          <MuniNameMarker center={center as LatLngTuple} muniBorder={muniBorder} currentZoom={currentZoom} layers={layers} />
+                          <MuniNameMarker center={muniBorder.labelPos as LatLngTuple} muniBorder={muniBorder} currentZoom={currentZoom} layers={layers} />
                           {(records.find(r => r.admin_id === muniBorder.id)?.comment ?? '') !== '' && <Tooltip>{records.find(r => r.admin_id === muniBorder.id)?.comment ?? ''}</Tooltip>}
                         </Polygon>
                       );
@@ -397,7 +405,7 @@ export default (props: P) => {
               layers.pref &&
                 prefBorderData.map((prefBorder: Prefecture) => {
                   // 计算中心点
-                  const center = getBounds(prefBorder.coordinates);
+                  // const center = getBounds(prefBorder.coordinates);
                   return (
                     <Polygon
                       pane="pref"
@@ -415,10 +423,10 @@ export default (props: P) => {
                       {((showTodofukenLevelColor && layers.placename) || (currentZoom < 8 && layers.placename)) && (
                         <Marker
                           pane="muniNames"
-                          position={center as LatLngTuple}
+                          position={prefBorder.labelPos as LatLngTuple}
                           icon={divIcon({
                             className: 'munilabels',
-                            html: `<p class="placeNameLabel">${prefBorder.name}</p>`,
+                            html: `<p class="pnl">${prefBorder.name}</p>`,
                             iconSize: [60, 20],
                           })}
                         />
@@ -432,7 +440,7 @@ export default (props: P) => {
               layers.sinkoukyoku &&
                 shinkouBorderData.map(shinkouBorder => {
                   // 计算中心点
-                  const center = getBounds(shinkouBorder.coordinates);
+                  // const center = getBounds(shinkouBorder.coordinates);
                   return (
                     <Polygon
                       pane="subpref"
@@ -450,10 +458,10 @@ export default (props: P) => {
                       {((showTodofukenLevelColor && showSubprefectureLevelColor && layers.placename) || (currentZoom < 8 && layers.placename)) && (
                         <Marker
                           pane="muniNames"
-                          position={center as LatLngTuple}
+                          position={shinkouBorder.labelPos as LatLngTuple}
                           icon={divIcon({
                             className: 'munilabels',
-                            html: `<span class="placeNameLabel">${shinkouBorder.name}</span>`,
+                            html: `<p class="pnl">${shinkouBorder.name}</p>`,
                             iconSize: [60, 20],
                           })}
                         />

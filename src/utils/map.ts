@@ -150,6 +150,9 @@ const getTheLargestPolygon = (coordinates: [number, number][][]) => {
   }, coordinates[0]);
 };
 
+/**
+ * NOT USED
+ */
 // 计算多边形的中心点
 export const getBounds = (coordinates: [number, number][][]) => {
   const bounds = getTheLargestPolygon(coordinates).reduce(

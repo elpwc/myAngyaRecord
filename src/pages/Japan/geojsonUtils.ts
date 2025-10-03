@@ -81,6 +81,7 @@ export const getMunicipalitiesData = async (): Promise<
                 return [point[1], point[0]];
               });
             }),
+            labelPos: [feature.properties.label_point[1], feature.properties.label_point[0]],
           } as Municipality;
         })
         .filter((muni: Municipality) => {
