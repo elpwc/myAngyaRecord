@@ -60,7 +60,7 @@ export const MapStyleControl = ({ position }: Props) => {
         value={currentMapStyle}
         onChange={value => {
           setCurrentMapStyle(Number(value));
-          c_mapStyle(value.toString());
+          c_mapStyle(Number(value));
           hint('bottom', '地図テーマを変更しました');
         }}
       />

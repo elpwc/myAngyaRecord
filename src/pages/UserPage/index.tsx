@@ -4,16 +4,14 @@ import { Link, useLocation, useNavigate, useParams } from 'react-router';
 import './index.css';
 import { Modal } from '../../components/InfrastructureCompo/Modal';
 import defaultAvatar from '../../assets/defaultAvatar.png';
-import { RecordGroup } from '../../utils/types';
+import { PrivateRailwayLineStyle, RecordGroup } from '../../utils/types';
 import { mapStyles } from '../../utils/mapStyles';
 import { getMapTitleByMapsId, getMapUrlByMapsId, recordStatus } from '../../utils/map';
 import { useHint } from '../../components/InfrastructureCompo/HintProvider';
 import { getRecordGroupsInAllMapsByUserID, getUserInfoById, updateUserAvatar, updateUserInfo } from '../../utils/serverUtils';
 import imageCompression from 'browser-image-compression';
-import { c_mapStyle, c_uid } from '../../utils/cookies';
+import { c_mapStyle, c_privateRailwayLineStyle, c_uid } from '../../utils/cookies';
 import { getAvatarFullURL, logout } from '../../utils/userUtils';
-import Coffee from '../../components/InfrastructureCompo/Coffee';
-import OuterLink from '../../components/InfrastructureCompo/OuterLink';
 import { useAppContext } from '../../context';
 
 interface P {}
@@ -45,6 +43,7 @@ export default (props: P) => {
   const [recordGroups, setRecordGroups] = useState<RecordGroup[]>([]);
 
   const { currentMapStyle, setCurrentMapStyle } = useAppContext();
+  const { privateRailwayLineStyle, setPrivateRailwayLineStyle } = useAppContext();
 
   const [isSelfUser, setIsSelfUser] = useState(userId === c_uid() && userId !== '-1');
 
@@ -60,6 +59,7 @@ export default (props: P) => {
       }
     );
   };
+  console.log(privateRailwayLineStyle);
 
   useEffect(() => {
     document.title = 'ユーザー設定 - My行脚記録';
@@ -129,16 +129,18 @@ export default (props: P) => {
       <section className="user-header">
         <img src={userInfo.avatar} alt="avatar" className="avatar" />
         <div className="user-meta">
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '12px' }}>
-            <h1 className="username">{userInfo.name}</h1>
-            <span>{userInfo.hitokoto}</span>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '4px' }}>
+            <h1 className="username flex">
+              {userInfo.name}
+              <span style={{ fontSize: '12px', color: '#c0c0c0', fontWeight: 'normal', marginLeft: '4px' }}>{userId}</span>
+            </h1>
+            <span style={{ fontSize: '14px' }}>{userInfo.hitokoto}</span>
             <div style={{ display: 'flex', flexDirection: 'column', fontSize: '12px', color: '#c0c0c0' }}>
-              <span>id: {userId}</span>
-              <span>{userInfo.createTime}から利用している</span>
+              <span>{`${userInfo.createTime.split(' ')[0]}`}から利用している</span>
             </div>
           </div>
           {isSelfUser && (
-            <div className="flex">
+            <div className="flex" style={{ flexWrap: 'wrap' }}>
               <button className="edit-btn" onClick={() => setShowEditModal(true)}>
                 プロフィール編集
               </button>
@@ -178,83 +180,79 @@ export default (props: P) => {
       </section>
 
       {isSelfUser && (
-        <section className="system-settings">
+        <section className="system-settings" id="settings">
           <h2>システム設定</h2>
-          <span>地図テーマ</span>
-          {mapStyles.map((mapStyle, index) => {
-            return (
-              <div key={mapStyle.name} style={{ marginBottom: '12px' }}>
-                <label>
-                  <input
-                    type="radio"
-                    name="mapStyle"
-                    value={mapStyle.name}
-                    defaultChecked={currentMapStyle === index}
-                    onClick={e => {
-                      if (e.currentTarget.checked) {
-                        setCurrentMapStyle(index);
-                        c_mapStyle(index.toString());
-                        hint('bottom', '地図テーマを変更しました');
-                      }
-                    }}
-                  />
-                  <span>{mapStyle.title}</span>
-                  <div style={{ display: 'flex', borderRadius: '8px', border: 'solid 1px #e0e0e0', width: 'fit-content' }}>
-                    {recordStatus.map((recordStatusItem, index) => {
-                      return (
-                        <div
-                          key={recordStatusItem.value}
-                          style={{
-                            backgroundColor: mapStyle.bgcolor[recordStatusItem.value],
-                            color: mapStyle.color[recordStatusItem.value],
-                            padding: '6px',
-                            borderRadius: index === 0 ? '8px 0 0 8px' : index === recordStatus.length - 1 ? '0 8px 8px 0' : '0px',
-                          }}
-                        >
-                          {recordStatusItem.name}
-                        </div>
-                      );
-                    })}
-                  </div>
-                </label>
-              </div>
-            );
-          })}
+          <div className="system-settings-item">
+            <span className="system-settings-item-title">地図テーマ</span>
+            {mapStyles.map((mapStyle, index) => {
+              return (
+                <div key={mapStyle.name} style={{ marginBottom: '12px' }}>
+                  <label>
+                    <input
+                      type="radio"
+                      name="mapStyle"
+                      value={mapStyle.name}
+                      defaultChecked={currentMapStyle === index}
+                      onClick={e => {
+                        if (e.currentTarget.checked) {
+                          setCurrentMapStyle(index);
+                          c_mapStyle(index);
+                          hint('bottom', '地図テーマを変更しました');
+                        }
+                      }}
+                    />
+                    <span>{mapStyle.title}</span>
+                    <div style={{ display: 'flex', borderRadius: '8px', border: 'solid 1px #e0e0e0', width: 'fit-content' }}>
+                      {recordStatus.map((recordStatusItem, index) => {
+                        return (
+                          <div
+                            key={recordStatusItem.value}
+                            style={{
+                              backgroundColor: mapStyle.bgcolor[recordStatusItem.value],
+                              color: mapStyle.color[recordStatusItem.value],
+                              padding: '6px',
+                              borderRadius: index === 0 ? '8px 0 0 8px' : index === recordStatus.length - 1 ? '0 8px 8px 0' : '0px',
+                            }}
+                          >
+                            {recordStatusItem.name}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </label>
+                </div>
+              );
+            })}
+          </div>
+          <div className="system-settings-item" style={{ fontSize: '16px' }}>
+            <span className="system-settings-item-title">私鉄線様式</span>
+            <label>
+              <input
+                type="radio"
+                name="privateRailwayLineStyle"
+                checked={privateRailwayLineStyle === PrivateRailwayLineStyle.PlusLine}
+                onChange={e => {
+                  setPrivateRailwayLineStyle(PrivateRailwayLineStyle.PlusLine);
+                  c_privateRailwayLineStyle(PrivateRailwayLineStyle.PlusLine);
+                }}
+              />
+              +++++様式<span style={{ color: 'gray', fontSize: '14px' }}>（地図の操作が重たくなる可能性有り）</span>
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="privateRailwayLineStyle"
+                checked={privateRailwayLineStyle === PrivateRailwayLineStyle.RedLine}
+                onChange={e => {
+                  setPrivateRailwayLineStyle(PrivateRailwayLineStyle.RedLine);
+                  c_privateRailwayLineStyle(PrivateRailwayLineStyle.RedLine);
+                }}
+              />
+              赤い線様式
+            </label>
+          </div>
         </section>
       )}
-
-      <section className="system-settings">
-        <h2>About</h2>
-        <p>
-          My行脚記録を使用していただき、誠にありがとうございます
-          <br />
-          <br />
-          開発者の<OuterLink link="https://x.com/elpwc">うに</OuterLink>です
-          <br />
-          <br />
-          My行脚記録は訪れた場所を「<span style={{ color: 'red' }}>色</span>」で記録できる地図サービスです
-          <br />
-          地図上の行政区をクリックするだけで、訪問状況をシンプルに残せます
-          <br />
-          色分けすることで、自分だけの「旅の履歴書」を直感的に作成できます
-          <br />
-          地図を眺めれば、これまでの旅の足跡がひと目でわかり、まだ行っていない場所への興味も広がります
-          <br />
-          <br />
-          このサイトが、みんなの思い出の記録と次の冒険のきっかけになりますように
-          <br />
-          <br />
-        </p>
-        <p>もし気に入ったら、コーヒー１杯でご褒美してくれると大変喜びます</p>
-        <br />
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <Coffee />
-        </div>
-      </section>
-
-      <footer className="page-footer">
-        <p>My行脚記録 © 2025</p>
-      </footer>
 
       <Modal
         isOpen={showEditModal}

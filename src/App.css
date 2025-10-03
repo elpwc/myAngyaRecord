@@ -77,6 +77,12 @@ input[type='text']:focus {
   gap: 4px;
   align-items: center;
 }
+.flex-wrap {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  flex-wrap: wrap;
+}
 
 .link {
   text-decoration: none;

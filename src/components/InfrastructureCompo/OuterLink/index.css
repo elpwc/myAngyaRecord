@@ -1,12 +1,11 @@
 .outerlink {
   text-decoration: none;
-  color: rgb(5, 99, 207);
   transition: all 0.3s;
   display: inline-flex;
 }
 .outerlink:hover {
   text-decoration: none;
-  color: rgb(10, 35, 83);
+  color: rgb(10, 35, 83) !important;
 }
 
 .outerlink-svgicon {

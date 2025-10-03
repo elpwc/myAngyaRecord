@@ -7,6 +7,8 @@ import Avatar from '../InfrastructureCompo/Avatar';
 import { LoginUserInfo } from '../../utils/userUtils';
 import { Link } from 'react-router';
 import appconfig from '../../appconfig';
+import { getUserInfoById } from '../../utils/serverUtils';
+import { useEffect, useState } from 'react';
 
 interface Props {
   position: ControlPosition | undefined;
@@ -15,13 +17,37 @@ interface Props {
 export const RecordGroupInfoControl = ({ position }: Props) => {
   const hint = useHint();
   const { currentRecordGroup, setCurrentRecordGroup } = useAppContext();
-  const { loginUserInfo, setLoginUserInfo }: { loginUserInfo: LoginUserInfo; setLoginUserInfo: (v: LoginUserInfo) => void } = useAppContext();
+  const [currentViewingUserInfo, setCurrentViewingUserInfo] = useState<LoginUserInfo>();
+
+  useEffect(() => {
+    getUserInfoById(
+      currentRecordGroup?.uid,
+      data => {
+        setCurrentViewingUserInfo(data);
+      },
+      e => {
+        console.log(e);
+      }
+    );
+  }, [currentRecordGroup?.uid]);
 
   const compo = (
-    <div style={{ marginLeft: '60px', marginTop: '10px', maxWidth: '60%', backgroundColor: 'white', borderRadius: '10px', display: 'flex', gap: '10px', alignItems: 'center', padding: '4px 10px' }}>
-      <Link to={'/user/' + loginUserInfo.id} target="_blank" style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-        <Avatar avatarUrl={loginUserInfo.avatar} width={30} />
-        <span>{loginUserInfo.name}</span>
+    <div
+      style={{
+        marginLeft: '60px',
+        marginTop: '10px',
+        backgroundColor: 'white',
+        borderRadius: '10px',
+        display: 'flex',
+        gap: '10px',
+        alignItems: 'center',
+        padding: '4px 10px',
+        border: 'solid 1px #bdbdbdff',
+      }}
+    >
+      <Link to={'/user/' + currentViewingUserInfo?.id} target="_blank" style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+        <Avatar avatarUrl={currentViewingUserInfo?.avatar} width={30} />
+        <span>{currentViewingUserInfo?.name}</span>
       </Link>
       <div style={{ borderLeft: 'solid 1px gray', padding: '0 10px', display: 'flex' }}>
         <span>{currentRecordGroup?.name}</span>
