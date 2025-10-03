@@ -103,23 +103,23 @@ export default (props: P) => {
 
             <menu id="regionMenu">
               {menuItems.map((menuItem, index) => (
-                <div key={menuItem.title} className={`regionMenuItem ${menuItem.disabled ? 'regionMenuItem-disabled ' : ''}  ${index === currentMap ? 'selected' : ''}`}>
-                  <Link
-                    className={`regionMenuLink ${menuItem.disabled ? 'regionMenuLink-disabled ' : ''}`}
-                    to={menuItem.link}
-                    aria-disabled={menuItem.disabled}
-                    onClick={e => {
-                      if (!menuItem.disabled) {
-                        setcurrentMap(index);
-                        setcurrentLocation('');
-                      } else {
-                        e.preventDefault();
-                      }
-                    }}
-                  >
+                <Link
+                  className={`regionMenuLink ${menuItem.disabled ? 'regionMenuLink-disabled ' : ''}`}
+                  to={menuItem.link}
+                  aria-disabled={menuItem.disabled}
+                  onClick={e => {
+                    if (!menuItem.disabled) {
+                      setcurrentMap(index);
+                      setcurrentLocation('');
+                    } else {
+                      e.preventDefault();
+                    }
+                  }}
+                >
+                  <div key={menuItem.title} className={`regionMenuItem ${menuItem.disabled ? 'regionMenuItem-disabled ' : ''}  ${index === currentMap ? 'selected' : ''}`}>
                     {menuItem.title}
-                  </Link>
-                </div>
+                  </div>
+                </Link>
               ))}
             </menu>
 
