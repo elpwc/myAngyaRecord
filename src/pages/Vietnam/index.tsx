@@ -322,7 +322,7 @@ export default (props: P) => {
                       className="rail-line"
                       pane="railways"
                       positions={railwayLines.coordinates}
-                      pathOptions={{ weight: 1, color: 'darkred', opacity: 1, fillOpacity: 1 }}
+                      pathOptions={{ weight: 1, color: '#1f7197ff', opacity: 1, fillOpacity: 1 }}
                     />
                   );
                 })
