@@ -1,10 +1,9 @@
 import { ControlPosition } from 'leaflet';
 import { useHint } from '../InfrastructureCompo/HintProvider';
-import { POSITION_CLASSES } from '../../utils/types';
+import { POSITION_CLASSES, User } from '../../utils/types';
 import './EditModeSwitchControl.css';
 import { useAppContext } from '../../context';
 import Avatar from '../InfrastructureCompo/Avatar';
-import { LoginUserInfo } from '../../utils/userUtils';
 import { Link } from 'react-router';
 import appconfig from '../../appconfig';
 import { getUserInfoById } from '../../utils/serverUtils';
@@ -17,18 +16,20 @@ interface Props {
 export const RecordGroupInfoControl = ({ position }: Props) => {
   const hint = useHint();
   const { currentRecordGroup, setCurrentRecordGroup } = useAppContext();
-  const [currentViewingUserInfo, setCurrentViewingUserInfo] = useState<LoginUserInfo>();
+  const [currentViewingUserInfo, setCurrentViewingUserInfo] = useState<User>();
 
   useEffect(() => {
-    getUserInfoById(
-      currentRecordGroup?.uid,
-      data => {
-        setCurrentViewingUserInfo(data);
-      },
-      e => {
-        console.log(e);
-      }
-    );
+    if (currentRecordGroup?.uid) {
+      getUserInfoById(
+        currentRecordGroup?.uid,
+        data => {
+          setCurrentViewingUserInfo(data);
+        },
+        e => {
+          console.log(e);
+        }
+      );
+    }
   }, [currentRecordGroup?.uid]);
 
   const compo = (
@@ -46,7 +47,7 @@ export const RecordGroupInfoControl = ({ position }: Props) => {
       }}
     >
       <Link to={'/user/' + currentViewingUserInfo?.id} target="_blank" style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-        <Avatar avatarUrl={currentViewingUserInfo?.avatar} width={30} />
+        <Avatar avatarUrl={currentViewingUserInfo?.avatar_url} width={30} />
         <span>{currentViewingUserInfo?.name}</span>
       </Link>
       <div style={{ borderLeft: 'solid 1px gray', padding: '0 10px', display: 'flex' }}>

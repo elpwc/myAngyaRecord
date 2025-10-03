@@ -14,6 +14,7 @@ export interface User {
   last_login: string | null;
   email: string;
   verified: boolean;
+  avatar_url: string;
 }
 
 export interface RecordGroup {
