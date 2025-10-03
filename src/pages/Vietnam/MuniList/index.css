@@ -1,16 +1,4 @@
-.municipalityItem {
-  padding: 1px 12px;
-  display: grid;
-  grid-template-columns: 2fr 2fr 1fr;
-  gap: 8px;
-  border-bottom: 1px solid #eee;
-  font-size: 12px;
-  background-color: rgb(173, 173, 173);
-}
 
-.municipalityItem:hover {
-  background: rgba(0, 0, 0, 0.05);
-}
 
 .municipalityName {
   font-weight: 500;

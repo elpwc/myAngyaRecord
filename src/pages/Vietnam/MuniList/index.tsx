@@ -19,7 +19,19 @@ const MuniList = ({ borderData, records, isViewMode, onChangeStatus }: Props) =>
       <div>
         {borderData.map(tinh => (
           <div key={tinh.id} className="municipalityItem">
-            <div className="municipalityName">{tinh.hantu}</div>
+            <div
+              className="municipalityName"
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                width: '60%',
+              }}
+            >
+              <p>{tinh.name}</p>
+              <p>{tinh.hantu}</p>
+              <p>{tinh.ja}</p>
+            </div>
             <RecordStatusDropdown
               value={getStatusLevelByMuniId(tinh.id, records)}
               disabled={isViewMode || !isLogin()}
