@@ -13,7 +13,7 @@ import { c_uid, c_zoom } from '../../utils/cookies';
 import { useIsMobile } from '../../utils/hooks';
 import { AsideBar, LayerCheckboxInfo } from '../../components/AppCompo/AsideBar';
 import { MapInstance } from '../../components/AppCompo/MapInstance';
-import { getMuniBorderData, getMuniInstanceById, getRailwaysData } from './geojsonUtils';
+import { getMuniBorderData, getRailwaysData } from './geojsonUtils';
 import MuniList from './MuniList';
 import { Railway, RailwayType } from '../../utils/mapInfo';
 import { useAppContext } from '../../context';
@@ -31,8 +31,8 @@ export default (props: P) => {
 
   const currentRecordGroupId = params.id || '-1';
 
-  const DEFAULT_LAT_LNG: [number, number] = [22.341828, 114.137908];
-  const DEFAULT_ZOOM = 10;
+  const DEFAULT_LAT_LNG: [number, number] = [22.36085452732528, 114.11768916896023];
+  const DEFAULT_ZOOM = 11;
   const thisMapId = MapsId.Hongkong;
 
   const [isViewMode, setIsViewMode] = useState(false);
@@ -96,6 +96,7 @@ export default (props: P) => {
     refreshRecordGroups();
     refreshRecords();
   }, []);
+  console.log(currentZoom, currentLatLng);
 
   // param.id
   useEffect(() => {
