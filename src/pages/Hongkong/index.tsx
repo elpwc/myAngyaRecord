@@ -322,7 +322,7 @@ export default (props: P) => {
                       className="rail-line"
                       pane="railways"
                       positions={railwayLines.coordinates}
-                      pathOptions={{ weight: 1, color: '#1f7197ff', opacity: 1, fillOpacity: 1 }}
+                      pathOptions={{ weight: 1, color: railwayLines.type === RailwayType.metro ? '#1f7197ff' : '#7ab652ff', opacity: 1, fillOpacity: 1 }}
                     />
                   );
                 })

@@ -17,6 +17,9 @@ export enum RailwayType {
   railway = 0,
   highSpeedRailway = 1,
   metro = 2,
+  tram = 3,
+  lightrail = 4,
+  monorail = 5,
 }
 
 export enum PrivateRailwayLineStyle {

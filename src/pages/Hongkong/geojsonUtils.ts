@@ -1,8 +1,7 @@
 import HongkongJson from '../../geojson/hongkong/hksar_district.geojson';
-import vietnamRailwaysJson from '../../geojson/vietnam/vietnamRailways.geojson';
-import { Railway } from '../../utils/mapInfo';
+import vietnamRailwaysJson from '../../geojson/hongkong/hkrailway.geojson';
 import { getGeoJsonData } from '../../utils/map';
-import { HongkongDistrict } from './addr';
+import { HongkongDistrict, HongkongRailway } from './addr';
 
 export const getMuniBorderData = async () => {
   const geojsondata = await getGeoJsonData(HongkongJson);
@@ -49,10 +48,11 @@ export const getRailwaysData = async () => {
   const geojsondata = await getGeoJsonData(vietnamRailwaysJson);
   return geojsondata.features.map((railwayFeature: any) => {
     return {
-      type: railwayFeature.properties.type,
+      type: railwayFeature.properties.railway,
       lineName: railwayFeature.properties.name,
+      lineNameEn: railwayFeature.properties.nameen,
       coordinates: getRailwayCoordinates(railwayFeature.geometry),
-    } as Railway;
+    } as HongkongRailway;
   });
 };
 
