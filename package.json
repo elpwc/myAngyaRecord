@@ -20,7 +20,8 @@
     "react-google-recaptcha": "^3.1.0",
     "react-leaflet": "^5.0.0-rc.2",
     "react-router": "^7.1.1",
-    "react-scripts": "5.0.1"
+    "react-scripts": "5.0.1",
+    "turf": "^3.0.14"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -52,6 +53,7 @@
     "@types/react-cookies": "^0.1.4",
     "@types/react-dom": "^19.0.2",
     "@types/react-google-recaptcha": "^2.1.9",
+    "@types/turf": "^3.5.32",
     "eslint-plugin-html": "^8.1.2"
   }
 }

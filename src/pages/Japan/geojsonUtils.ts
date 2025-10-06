@@ -4,6 +4,36 @@ import railwaysJson from '../../geojson/japan/railways.geojson';
 import { allPrefJsons } from './geojsonReader';
 import { getGeoJsonData } from '../../utils/map';
 import { JapanRailway, Municipality, Prefecture } from './addr';
+import turf from 'turf';
+
+// 使用truf.js的union()实时计算都道府县边界测试（2025-10-07）
+// 遅すぎるﾝｺﾞ...ページ切り替えるたびに3秒ほど固まっちゃう
+export const todofuken_union_test = async () => {
+  return allPrefJsons.map((todofuken, index) => {
+    let merged = todofuken[2].features[0];
+    for (let i = 1; i < todofuken[2].features.length; i++) {
+      const result = turf.union(merged, todofuken[2].features[i]);
+      if (result) merged = result;
+    }
+    return {
+      id: index.toString(),
+      name: merged.properties.N03_001,
+      coordinates: merged.geometry.coordinates.map((area: any) => {
+        if (typeof area[0][0] === 'number') {
+          // 只有一个polygon
+          return area.map((point: any) => {
+            return [point[1], point[0]];
+          });
+        }
+        // 有多个polygon
+        return area[0].map((point: any) => {
+          return [point[1], point[0]];
+        });
+      }),
+      labelPos: [merged.properties.label_point[1], merged.properties.label_point[0]],
+    } as Prefecture;
+  });
+};
 
 /**
  * 解析都道府县或者北海道振兴局数据
