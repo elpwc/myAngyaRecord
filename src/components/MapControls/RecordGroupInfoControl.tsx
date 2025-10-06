@@ -35,8 +35,6 @@ export const RecordGroupInfoControl = ({ position }: Props) => {
   const compo = (
     <div
       style={{
-        marginLeft: '60px',
-        marginTop: '10px',
         backgroundColor: 'white',
         borderRadius: '10px',
         display: 'flex',
@@ -90,7 +88,15 @@ export const RecordGroupInfoControl = ({ position }: Props) => {
   const positionClass = (position && POSITION_CLASSES[position]) || POSITION_CLASSES.topright;
   return (
     <div className={positionClass}>
-      <div className="leaflet-control">{compo}</div>
+      <div
+        className="leaflet-control"
+        style={{
+          marginLeft: '50px',
+          marginTop: '12px',
+        }}
+      >
+        {compo}
+      </div>
     </div>
   );
 };

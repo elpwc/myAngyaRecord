@@ -17,7 +17,7 @@ export const MapStyleControl = ({ position }: Props) => {
   const { currentMapStyle, setCurrentMapStyle } = useAppContext();
 
   const compo = (
-    <div style={{ paddingBottom: '16px', paddingRight: '36px' }}>
+    <div>
       <PrettyDropdown
         mainClassname="mapStyleControl-main-container"
         bordered={false}
@@ -70,7 +70,9 @@ export const MapStyleControl = ({ position }: Props) => {
   const positionClass = (position && POSITION_CLASSES[position]) || POSITION_CLASSES.topright;
   return (
     <div className={positionClass}>
-      <div className="leaflet-control">{compo}</div>
+      <div className="leaflet-control" style={{ marginBottom: '26px', marginRight: '50px' }}>
+        {compo}
+      </div>
     </div>
   );
 };
