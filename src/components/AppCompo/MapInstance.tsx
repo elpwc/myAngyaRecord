@@ -7,6 +7,7 @@ import LeafletLocateControl from '../MapControls/LeafletLocateControl';
 import { EditModeSwitchControl } from '../MapControls/EditModeSwitchControl';
 import { RecordGroupInfoControl } from '../MapControls/RecordGroupInfoControl';
 import { isLogin } from '../../utils/userUtils';
+import './mapInstanceStyle.css';
 
 export const MapInstance = ({
   defaultLatLng,
@@ -83,7 +84,7 @@ export const MapInstance = ({
   };
 
   return (
-    <MapContainer center={[currentLatLng[0], currentLatLng[1]]} zoom={currentZoom} scrollWheelZoom={true} attributionControl={false} className="mapContainer">
+    <MapContainer center={[currentLatLng[0], currentLatLng[1]]} zoom={currentZoom} scrollWheelZoom={true} attributionControl={false} className="mapContainer mapContainer-blueBackground">
       <ZoomListener />
       <MapCenterTracker />
       <PaneSetter />
