@@ -21,7 +21,7 @@ export const getContextRef = () => latestContext;
 
 export const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
   // globals
-  const [currentMapStyle, setCurrentMapStyle] = useState<number>(c_mapStyle() ?? 1);
+  const [currentMapStyle, setCurrentMapStyle] = useState<number>(c_mapStyle() || 1);
   const [currentBackgroundTileMap, setCurrentBackgroundTileMap] = useState('default');
   const [loginUserInfo, setLoginUserInfo] = useState<LoginUserInfo>({
     id: -1,
@@ -36,7 +36,7 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
   const [isContinuousEditOn, setIsContinuousEditOn] = useState(false);
   const [currentContinuousEditValue, setCurrentContinuousEditValue] = useState(0);
   const [currentRecordGroup, setCurrentRecordGroup] = useState<RecordGroup>();
-  const [privateRailwayLineStyle, setPrivateRailwayLineStyle] = useState<PrivateRailwayLineStyle>(c_privateRailwayLineStyle() ?? PrivateRailwayLineStyle.RedLine);
+  const [privateRailwayLineStyle, setPrivateRailwayLineStyle] = useState<PrivateRailwayLineStyle>(c_privateRailwayLineStyle() || PrivateRailwayLineStyle.RedLine);
 
   return (
     <AppContext.Provider
