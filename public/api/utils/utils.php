@@ -7,6 +7,7 @@
 
 require dirname(__FILE__) . '/../private/illegal_words_list.php';
 require dirname(__FILE__) . '/../utils/mailSender.php';
+require dirname(__FILE__) . '/../private/admin.php';
 
 /**
  * 防注入
@@ -78,8 +79,8 @@ function cator_to_cn_censorship($text)
 
 function send_verification_mail($target, $verify_code, $isForgetPassword = false)
 {
-  $url_prefix = 'http://localhost:3000/';
-  $url = $url_prefix . ($isForgetPassword ? ('resetpassword?acc=') : ('register?acc=')) . $target . '&v=' . $verify_code; //'https://www.elpwc.com/otogemap/';
+  $url_prefix = SITEBASEURL;
+  $url = $url_prefix . ($isForgetPassword ? ('/resetpassword?acc=') : ('/register?acc=')) . $target . '&v=' . $verify_code;
 
   $res =  sendMail(
     $target,
@@ -130,15 +131,16 @@ function send_verification_mail($target, $verify_code, $isForgetPassword = false
       color: #333;
     }
   </style>
-  <p class="text">' . ($isForgetPassword ? '下の「アカウント認証」で、パスワード再設定してください：<br /><br />
+  <p class="text">' . ($isForgetPassword ? '下の「アカウント認証」をクリックして、パスワード再設定してください：<br /><br />
     Click the link below to reset your password:' : 'My行脚記録を使っていただいてありがとうございます！<br />
-    下の「アカウント認証」で、作成を完成してください：<br /><br />
+    下の「アカウント認証」をクリックして、アカウント作成を完成してください：<br /><br />
     Click the link below to complete your registration:') . '
   </p>
   <a class="button" href="' . $url . '" target="_blank">アカウント認証</a><br /><br />
   <p style="color: rgb(0, 0, 0)">' . date('Y-m-d H:i:s') . '</p><br />
-  <p style="font-size: 10px; color: rgb(155, 155, 155);width: 100%; overflow-wrap: break-word;">Button URL: <a
-      href="' . $url . '">' . $url . '</a>
+  <p style="font-size: 10px; color: rgb(155, 155, 155);width: 100%; overflow-wrap: break-word;">
+  上のボタンが使えなければ、ここのURLをお使いください（If the button above cannot be used, please use this link）: <br/>
+  <a href="' . $url . '">' . $url . '</a>
   </p>
 </div>
         '
