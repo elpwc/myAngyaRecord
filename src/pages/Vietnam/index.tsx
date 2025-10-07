@@ -93,6 +93,7 @@ export default (props: P) => {
       settinhBorderData(await getTinhVietnamData());
       setrailwaysData(await getRailwaysData());
     })();
+    setCurrentRecordGroup(undefined);
     refreshRecordGroups();
     refreshRecords();
   }, []);

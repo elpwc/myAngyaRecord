@@ -103,6 +103,7 @@ export default (props: P) => {
       setooazaBorderData(await getTaiwanTownData());
       setrailwaysData(await getRailwaysData());
     })();
+    setCurrentRecordGroup(undefined);
     refreshRecordGroups();
     refreshRecords();
   }, []);

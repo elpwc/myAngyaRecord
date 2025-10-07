@@ -6,7 +6,7 @@ import { RecordGroup } from '../../utils/types';
 import { useState } from 'react';
 import { postRecordGroup } from '../../utils/serverUtils';
 import Avatar from '../InfrastructureCompo/Avatar';
-import { getAvatarFullURL, isLogin } from '../../utils/userUtils';
+import { isLogin } from '../../utils/userUtils';
 import { Link } from 'react-router';
 import { useHint } from '../InfrastructureCompo/HintProvider';
 

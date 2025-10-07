@@ -126,6 +126,7 @@ export default (props: P) => {
       setmuniBorderData(await getMunicipalitiesData());
       setrailwaysData(await getRailwaysData());
     })();
+    setCurrentRecordGroup(undefined);
     refreshRecordGroups();
     refreshRecords();
   }, []);

@@ -96,6 +96,7 @@ export default (props: P) => {
       setareaBorderData(await getNumazuAreaData());
       setooazaBorderData(await getNumazuOoazaData());
     })();
+    setCurrentRecordGroup(undefined);
     refreshRecordGroups();
     refreshRecords();
   }, []);
