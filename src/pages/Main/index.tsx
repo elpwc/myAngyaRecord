@@ -104,6 +104,7 @@ export default (props: P) => {
             <menu id="regionMenu">
               {menuItems.map((menuItem, index) => (
                 <Link
+                  key={menuItem.title}
                   className={`regionMenuLink ${menuItem.disabled ? 'regionMenuLink-disabled ' : ''}`}
                   to={menuItem.link}
                   aria-disabled={menuItem.disabled}

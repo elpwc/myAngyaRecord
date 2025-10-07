@@ -16,7 +16,6 @@ interface P {
 
 export const GroupControlButtonGroup = ({ recordGroup, onRecordGroupsInfoUpdate, direction = 'column' }: P) => {
   const hint = useHint();
-  console.log(recordGroup);
 
   const [showEditModal, setshowEditModal] = useState(false);
   const [showDeleteModal, setshowDeleteModal] = useState(false);

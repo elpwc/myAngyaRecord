@@ -59,7 +59,7 @@ export default (props: P) => {
       <ul className="RankingList" style={{ width: isMobile ? '95%' : '60%' }}>
         {ranking.map(rank => {
           return (
-            <li className="RankingListItem">
+            <li className="RankingListItem" key={rank.id}>
               <span className="rankPosition">第{rank.ranking}位</span>
               <div className="rankInfo">
                 <div className="rankInfoTop">

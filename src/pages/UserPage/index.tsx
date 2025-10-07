@@ -61,7 +61,6 @@ export default (props: P) => {
       }
     );
   };
-  console.log(privateRailwayLineStyle);
 
   useEffect(() => {
     document.title = 'ユーザー設定 - My行脚記録';
