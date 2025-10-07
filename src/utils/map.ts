@@ -10,6 +10,7 @@ export enum MapsId {
   Numazu = 'numazu',
   Vietnam = 'vietnam',
   Hongkong = 'hongkong',
+  Taiwan = 'taiwan',
 }
 
 export const getMapTitleByMapsId = (mapsId: MapsId) => {
@@ -22,6 +23,8 @@ export const getMapTitleByMapsId = (mapsId: MapsId) => {
       return 'ベトナム';
     case MapsId.Hongkong:
       return '香港';
+    case MapsId.Taiwan:
+      return '台湾';
     default:
       return '';
   }
@@ -37,6 +40,8 @@ export const getMapUrlByMapsId = (mapsId: MapsId) => {
       return 'vietnam';
     case MapsId.Hongkong:
       return 'hongkong';
+    case MapsId.Taiwan:
+      return 'taiwan';
     default:
       return '';
   }

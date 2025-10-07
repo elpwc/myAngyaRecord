@@ -13,11 +13,13 @@ import { c_uid, c_zoom } from '../../utils/cookies';
 import { useIsMobile } from '../../utils/hooks';
 import { AsideBar, LayerCheckboxInfo } from '../../components/AppCompo/AsideBar';
 import { MapInstance } from '../../components/AppCompo/MapInstance';
-import { getMuniBorderData, getRailwaysData } from './geojsonUtils';
+import { getRailwaysData, getTaiwanCountyData, getTaiwanTownData } from './geojsonUtils';
+import { getAreaFillColor, getAreaForeColor } from './utils';
 import MuniList from './MuniList';
-import { Railway, RailwayType } from '../../utils/mapInfo';
 import { useAppContext } from '../../context';
-import { HongkongDistrict } from './addr';
+import { TaiwanCounty, TaiwanTown } from './addr';
+import { PrivateRailwayLineStyle, Railway, RailwayType } from '../../utils/mapInfo';
+import { RailwayPolyline } from '../../components/MapContents/RailwayPolyline';
 
 interface P {
   openMobileAsideMenu: boolean;
@@ -31,17 +33,18 @@ export default (props: P) => {
 
   const currentRecordGroupId = params.id || '-1';
 
-  const DEFAULT_LAT_LNG: [number, number] = [22.36085452732528, 114.11768916896023];
-  const DEFAULT_ZOOM = 11;
-  const thisMapId = MapsId.Hongkong;
+  const DEFAULT_LAT_LNG: [number, number] = [23.618074034239307, 120.77147081162761];
+  const DEFAULT_ZOOM = 8;
 
   const [isViewMode, setIsViewMode] = useState(false);
   const [layers, setLayers] = useState({
-    district: true,
-    railways: true,
+    county: true,
+    town: true,
     placename: true,
+    railways: true,
   });
-  const [borderData, setBorderData]: [HongkongDistrict[], any] = useState([]);
+  const [areaBorderData, setareaBorderData]: [TaiwanCounty[], any] = useState([]);
+  const [ooazaBorderData, setooazaBorderData]: [TaiwanTown[], any] = useState([]);
   const [railwaysData, setrailwaysData]: [Railway[], any] = useState([]);
 
   const [currentZoom, setCurrentZoom] = useState(c_zoom() ? Number(c_zoom()) : DEFAULT_ZOOM);
@@ -52,9 +55,15 @@ export default (props: P) => {
   const [currentLatLng, setcurrentLatLng] = useState(DEFAULT_LAT_LNG);
 
   const { currentBackgroundTileMap, setCurrentBackgroundTileMap } = useAppContext();
+  const { privateRailwayLineStyle, setPrivateRailwayLineStyle } = useAppContext();
+
   // 連続塗り関連
   const { isContinuousEditOn, setIsContinuousEditOn } = useAppContext();
   const { currentContinuousEditValue, setCurrentContinuousEditValue } = useAppContext();
+
+  const showCountyLevelColor = useMemo(() => layers.county && !layers.town, [layers.county, layers.town]);
+
+  const thisMapId = MapsId.Taiwan;
 
   const refreshRecordGroups = () => {
     if (isLogin()) {
@@ -90,7 +99,8 @@ export default (props: P) => {
 
   useEffect(() => {
     (async () => {
-      setBorderData(await getMuniBorderData());
+      setareaBorderData(await getTaiwanCountyData());
+      setooazaBorderData(await getTaiwanTownData());
       setrailwaysData(await getRailwaysData());
     })();
     refreshRecordGroups();
@@ -142,7 +152,7 @@ export default (props: P) => {
     }));
   };
 
-  const PANES = ['district', 'railways', 'muniNames'];
+  const PANES = ['town', 'county', 'railways', 'muniNames'];
 
   const MuniNameMarker = useCallback(
     ({
@@ -152,12 +162,12 @@ export default (props: P) => {
       layers,
     }: {
       center: LatLngTuple;
-      muniBorder: HongkongDistrict;
+      muniBorder: TaiwanTown;
       currentZoom: number;
       layers: {
-        district: boolean;
+        county: boolean;
+        town: boolean;
         placename: boolean;
-        railways: boolean;
       };
     }) => {
       const map = useMap();
@@ -167,7 +177,8 @@ export default (props: P) => {
         return bounds.contains(point);
       })();
 
-      return layers.placename ? (
+      if (!(currentZoom >= 9 && layers.placename && isInView)) return null;
+      return (
         <Marker
           pane="muniNames"
           position={center}
@@ -178,15 +189,14 @@ export default (props: P) => {
             iconAnchor: [30, 10],
           })}
         />
-      ) : (
-        <></>
       );
     },
     [currentZoom, currentLatLng, layers]
   );
 
   const LAYERS: LayerCheckboxInfo[] = [
-    { name: 'district', title: '区界', checked: layers.district },
+    { name: 'county', title: '県市境界', checked: layers.county },
+    { name: 'town', title: '郷境界', checked: layers.town },
     { name: 'placename', title: '地名表示', checked: layers.placename },
     { name: 'railways', title: '鉄道路線', checked: layers.railways },
   ];
@@ -223,7 +233,7 @@ export default (props: P) => {
         currentTileMap={currentBackgroundTileMap}
         layers={LAYERS}
         isViewMode={isViewMode}
-        list={<MuniList borderData={borderData} records={records} isViewMode={isViewMode} onChangeStatus={changeRecordStatus} />}
+        list={<MuniList townData={ooazaBorderData} countyData={areaBorderData} records={records} onChangeStatus={changeRecordStatus} isViewMode={isViewMode} />}
         onCurrentBackgroundTileMapChange={handleMapBackgroundTileChange}
         onLayerChange={handleLayerChange}
         onSelectRecordGroup={(currentRecordGroup: RecordGroup) => {
@@ -243,15 +253,15 @@ export default (props: P) => {
         tileList={
           <>
             {
-              /* 行政区 */
-              layers.district &&
-                borderData.map((border: HongkongDistrict) => {
+              /* 郷 */
+              layers.town &&
+                ooazaBorderData.map((border: TaiwanTown) => {
                   // 计算中心点
                   const center = getBounds(border.coordinates);
 
                   return (
                     <Polygon
-                      pane="district"
+                      pane="town"
                       key={border.id}
                       className="muniBorder"
                       pathOptions={{
@@ -274,7 +284,7 @@ export default (props: P) => {
                       {!isContinuousEditOn && (
                         <Popup closeOnClick className="popupStyle">
                           <MapPopup
-                            addr={''}
+                            addr={border.countyCode ? border.countyCode + '地区' : ''}
                             name={border.name}
                             comment={records.find(r => r.admin_id === border.id)?.comment ?? ''}
                             recordId={records.find(r => r.admin_id === border.id)?.id}
@@ -291,6 +301,41 @@ export default (props: P) => {
                       )}
                       <MuniNameMarker center={center as LatLngTuple} muniBorder={border} currentZoom={currentZoom} layers={layers} />
                       {(records.find(r => r.admin_id === border.id)?.comment ?? '') !== '' && <Tooltip>{records.find(r => r.admin_id === border.id)?.comment ?? ''}</Tooltip>}
+                    </Polygon>
+                  );
+                })
+            }
+            {
+              /* 県市 */
+              layers.county &&
+                areaBorderData.map((border: TaiwanCounty) => {
+                  // 计算中心点
+                  const center = getBounds(border.coordinates);
+                  return (
+                    <Polygon
+                      key={border.id}
+                      pane="county"
+                      pathOptions={{
+                        fillColor: showCountyLevelColor ? getAreaFillColor(ooazaBorderData, records, border.id) : '#ffffff',
+                        opacity: 1,
+                        fillOpacity: showCountyLevelColor ? (currentBackgroundTileMap !== 'blank' ? 0.6 : 1) : 0,
+                        weight: 0.7,
+                        color: showCountyLevelColor ? getAreaForeColor(ooazaBorderData, records, border.id) : 'black',
+                      }}
+                      positions={border.coordinates}
+                      interactive={false}
+                    >
+                      {((showCountyLevelColor && layers.placename) || (currentZoom < 9 && layers.placename)) && (
+                        <Marker
+                          pane="muniNames"
+                          position={center as LatLngTuple}
+                          icon={divIcon({
+                            className: 'munilabels',
+                            html: `<p class="pnl">${border.name}</p>`,
+                            iconSize: [60, 20],
+                          })}
+                        />
+                      )}
                     </Polygon>
                   );
                 })
@@ -316,6 +361,20 @@ export default (props: P) => {
                         pathOptions={{ weight: 1.5, color: 'white', opacity: 1, fillOpacity: 1, dashArray: '10,10', dashOffset: '10' }}
                       />
                     </>
+                  ) : railwayLines.type === RailwayType.private ? (
+                    privateRailwayLineStyle === PrivateRailwayLineStyle.PlusLine ? (
+                      <RailwayPolyline key={railwayLines.lineName + index.toString()} latlngs={railwayLines.coordinates} type={0} />
+                    ) : privateRailwayLineStyle === PrivateRailwayLineStyle.RedLine ? (
+                      <Polyline
+                        key={railwayLines.lineName + railwayLines.lineName + index.toString()}
+                        className="rail-line"
+                        pane="railways"
+                        positions={railwayLines.coordinates}
+                        pathOptions={{ weight: 1, color: 'darkred', opacity: 1, fillOpacity: 1 }}
+                      />
+                    ) : (
+                      <></>
+                    )
                   ) : (
                     <Polyline
                       key={railwayLines.lineName + index.toString()}

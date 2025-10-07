@@ -49,6 +49,9 @@ export default (props: P) => {
             <OuterLink link="https://data.gov.hk/tc-data/dataset/hk-had-json1-hong-kong-administrative-boundaries/resource/30d55605-5be1-4038-8e92-3641f9b9448b" color="#b4b4b4ff">
               開放數據平台 DATA.GOV.HK
             </OuterLink>
+            <OuterLink link="https://data.nat.gov.tw/dataset/7441" color="#b4b4b4ff">
+              政府資料開放平臺 DATA.GOV.TW
+            </OuterLink>
           </div>
         </div>
       </div>

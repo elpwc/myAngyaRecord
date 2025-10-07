@@ -1,0 +1,9 @@
+[out:json][timeout:60];
+{{geocodeArea:Taiwan}}->.searchArea;
+
+way["railway"]["railway"="narrow_gauge"]["usage"="main"](area.searchArea);
+
+way["railway"]["railway"="narrow_gauge"]["service"!~"spur|siding|yard|crossover|switch"](area.searchArea);
+
+
+out geom;

@@ -15,6 +15,7 @@ import Vietnam from './pages/Vietnam';
 import UserPage from './pages/UserPage';
 import Footer from './components/AppCompo/Footer';
 import Hongkong from './pages/Hongkong';
+import Taiwan from './pages/Taiwan';
 
 export const AppRoutes = () => {
   const [openMobileAsideMenu, setopenMobileAsideMenu] = useState(true);
@@ -39,6 +40,8 @@ export const AppRoutes = () => {
         <Route path="vietnam/:id" element={<Vietnam openMobileAsideMenu={openMobileAsideMenu} />}></Route>
         <Route path="hongkong" element={<Hongkong openMobileAsideMenu={openMobileAsideMenu} />}></Route>
         <Route path="hongkong/:id" element={<Hongkong openMobileAsideMenu={openMobileAsideMenu} />}></Route>
+        <Route path="taiwan" element={<Taiwan openMobileAsideMenu={openMobileAsideMenu} />}></Route>
+        <Route path="taiwan/:id" element={<Taiwan openMobileAsideMenu={openMobileAsideMenu} />}></Route>
 
         <Route path="ranking">
           <Route index element={<Navigate to="japan" replace />} />
@@ -46,6 +49,7 @@ export const AppRoutes = () => {
           <Route path="numazu" element={<Ranking mapId={MapsId.Numazu} />}></Route>
           <Route path="vietnam" element={<Ranking mapId={MapsId.Vietnam} />}></Route>
           <Route path="hongkong" element={<Ranking mapId={MapsId.Hongkong} />}></Route>
+          <Route path="taiwan" element={<Ranking mapId={MapsId.Taiwan} />}></Route>
         </Route>
 
         <Route path="login" element={<Login />}></Route>

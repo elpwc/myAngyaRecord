@@ -30,7 +30,7 @@ export default (props: P) => {
     { title: '日本', link: '/japan', disabled: false },
     { title: '沼津', link: '/numazu', disabled: false },
     { title: '中国本土', link: '/mainlandchina', disabled: true },
-    { title: '台湾', link: '/taiwan', disabled: true },
+    { title: '台湾', link: '/taiwan', disabled: false },
     { title: '韓国', link: '/korea', disabled: true },
     { title: 'ベトナム', link: '/vietnam', disabled: false },
     { title: '香港', link: '/hongkong', disabled: false },
