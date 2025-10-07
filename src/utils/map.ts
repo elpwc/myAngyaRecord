@@ -53,40 +53,58 @@ export const mapTiles = [
   { id: 'satellite', name: '写真', url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}' },
 ];
 
-export const recordStatus = [
-  { name: '居住', value: 5, point: 5, desc: '住民票持ちもしくは連続１ヶ月以上住んだ場所' },
-  { name: '宿泊', value: 4, point: 4, desc: '泊ったことある場所' },
-  { name: '訪問', value: 3, point: 3, desc: '歩いた・遊んだ場所' },
-  { name: '接地', value: 2, point: 2, desc: '乗り換えで歩いた場所' },
-  { name: '通過', value: 1, point: 1, desc: '車から降りてなかった場所' },
-  { name: '未踏', value: 0, point: 0, desc: '行ったことない場所' },
-  { name: '計画', value: 6, point: 0, desc: '行こうと思っている場所' },
+export enum RecordStatus {
+  Live = 5,
+  Stay = 4,
+  Walk = 3,
+  Stand = 2,
+  Pass = 1,
+  None = 0,
+  // -1 是 undefined 佔位符
+  Plan = -2,
+}
+
+export const maxRecordStatus = (status1: RecordStatus, status2: RecordStatus): RecordStatus => {
+  if (status1 > status2) {
+    return status1;
+  }
+  return status2;
+};
+
+export const recordStatus: { name: string; value: RecordStatus; point: number; desc: string }[] = [
+  { name: '居住', value: RecordStatus.Live, point: 5, desc: '住民票持ちもしくは連続１ヶ月以上住んだ場所' },
+  { name: '宿泊', value: RecordStatus.Stay, point: 4, desc: '泊ったことある場所' },
+  { name: '訪問', value: RecordStatus.Walk, point: 3, desc: '歩いた・遊んだ場所' },
+  { name: '接地', value: RecordStatus.Stand, point: 2, desc: '乗り換えで歩いた場所' },
+  { name: '通過', value: RecordStatus.Pass, point: 1, desc: '車から降りてなかった場所' },
+  { name: '未踏', value: RecordStatus.None, point: 0, desc: '行ったことない場所' },
+  { name: '計画', value: RecordStatus.Plan, point: 0, desc: '行こうと思っている場所' },
 ];
 
-export const getStatusTextByLevel = (level: number): string => {
+export const getStatusByLevel = (level: number): RecordStatus => {
   switch (level) {
     case 5:
-      return '居住';
+      return RecordStatus.Live;
     case 4:
-      return '宿泊';
+      return RecordStatus.Stay;
     case 3:
-      return '訪問';
+      return RecordStatus.Walk;
     case 2:
-      return '接地';
+      return RecordStatus.Stand;
     case 1:
-      return '通過';
+      return RecordStatus.Pass;
     case 0:
-      return '未踏';
-    case 6:
-      return '計画';
+      return RecordStatus.None;
+    case -2:
+      return RecordStatus.Plan;
     default:
-      return '未踏';
+      return RecordStatus.None;
   }
 };
 
-export const getStatusByMuniId = (muniId: string, records: Record[]): string => {
+export const getStatusByMuniId = (muniId: string, records: Record[]): RecordStatus => {
   const record = records.find(r => r.admin_id === muniId);
-  return record ? getStatusTextByLevel(record.level) : '未踏';
+  return record ? getStatusByLevel(record.level) : RecordStatus.None;
 };
 
 export const getStatusLevelByMuniId = (muniId: string, records: Record[]): number => {

@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS `record`(
 	`id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     `group_id` INT UNSIGNED,
     `admin_id` VARCHAR(32),
-    `level` TINYINT UNSIGNED,
+    `level` TINYINT,
     `data` VARCHAR(256),
     `is_deleted` BOOLEAN DEFAULT FALSE,
     `create_date` DATETIME DEFAULT CURRENT_TIMESTAMP,

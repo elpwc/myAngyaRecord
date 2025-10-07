@@ -5,7 +5,7 @@ import './index.css';
 import { Modal } from '../../components/InfrastructureCompo/Modal';
 import defaultAvatar from '../../assets/defaultAvatar.png';
 import { RecordGroup } from '../../utils/types';
-import { mapStyles } from '../../utils/mapStyles';
+import { getMapStyleBgColor, getMapStyleColor, mapStyles } from '../../utils/mapStyles';
 import { getMapTitleByMapsId, getMapUrlByMapsId, recordStatus } from '../../utils/map';
 import { useHint } from '../../components/InfrastructureCompo/HintProvider';
 import { getRecordGroupsInAllMapsByUserID, getUserInfoById, updateUserAvatar, updateUserInfo } from '../../utils/serverUtils';
@@ -172,7 +172,7 @@ export default (props: P) => {
                     <div className="record-date">{group.create_date}</div>
                     {group.desc && <div className="record-desc">{group.desc}</div>}
                   </Link>
-                  {isSelfUser && <GroupControlButtonGroup recordGroup={group} direction='row' onRecordGroupsInfoUpdate={() => refreshRecordGroups()} />}
+                  {isSelfUser && <GroupControlButtonGroup recordGroup={group} direction="row" onRecordGroupsInfoUpdate={() => refreshRecordGroups()} />}
                 </li>
               );
             } else {
@@ -206,15 +206,15 @@ export default (props: P) => {
                     />
                     <span>{mapStyle.title}</span>
                     <div style={{ display: 'flex', borderRadius: '8px', border: 'solid 1px #e0e0e0', width: 'fit-content' }}>
-                      {recordStatus.map((recordStatusItem, index) => {
+                      {recordStatus.map((recordStatusItem, jndex) => {
                         return (
                           <div
                             key={recordStatusItem.value}
                             style={{
-                              backgroundColor: mapStyle.bgcolor[recordStatusItem.value],
-                              color: mapStyle.color[recordStatusItem.value],
+                              backgroundColor: getMapStyleBgColor(index, recordStatusItem.value),
+                              color: getMapStyleColor(index, recordStatusItem.value),
                               padding: '6px',
-                              borderRadius: index === 0 ? '8px 0 0 8px' : index === recordStatus.length - 1 ? '0 8px 8px 0' : '0px',
+                              borderRadius: jndex === 0 ? '8px 0 0 8px' : jndex === recordStatus.length - 1 ? '0 8px 8px 0' : '0px',
                             }}
                           >
                             {recordStatusItem.name}

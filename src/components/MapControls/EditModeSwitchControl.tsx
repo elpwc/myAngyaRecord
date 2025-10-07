@@ -1,7 +1,7 @@
 import { ControlPosition } from 'leaflet';
 import { useHint } from '../InfrastructureCompo/HintProvider';
 import { POSITION_CLASSES } from '../../utils/types';
-import { mapStyles } from '../../utils/mapStyles';
+import { getMapStyleBgColor, getMapStyleColor } from '../../utils/mapStyles';
 import { recordStatus } from '../../utils/map';
 import './EditModeSwitchControl.css';
 import { useAppContext } from '../../context';
@@ -42,8 +42,8 @@ export const EditModeSwitchControl = ({ position }: Props) => {
               key={recordStatusItem.value}
               className={'editModeSwitchControl-option ' + (currentContinuousEditValue === recordStatusItem.value ? 'editModeSwitchControl-option-selected' : '')}
               style={{
-                backgroundColor: mapStyles[currentMapStyle].bgcolor[recordStatusItem.value],
-                color: mapStyles[currentMapStyle].color[recordStatusItem.value],
+                backgroundColor: getMapStyleBgColor(currentMapStyle, recordStatusItem.value),
+                color: getMapStyleColor(currentMapStyle, recordStatusItem.value),
               }}
               onClick={() => setCurrentContinuousEditValue(recordStatusItem.value)}
             >

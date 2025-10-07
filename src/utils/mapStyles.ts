@@ -1,3 +1,5 @@
+import { RecordStatus } from './map';
+
 export const mapStyles = [
   {
     name: 'classic',
@@ -37,3 +39,11 @@ export const mapStyles = [
     color: ['black', 'black', 'black', 'black', 'black', 'black', 'black'],
   },
 ];
+
+export const getMapStyleColor = (id: number, status: RecordStatus) => {
+  return mapStyles[id].color[status === RecordStatus.Plan ? 6 : status];
+};
+
+export const getMapStyleBgColor = (id: number, status: RecordStatus) => {
+  return mapStyles[id].bgcolor[status === RecordStatus.Plan ? 6 : status];
+};

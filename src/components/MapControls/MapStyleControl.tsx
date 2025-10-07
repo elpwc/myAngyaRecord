@@ -1,6 +1,6 @@
 import { ControlPosition } from 'leaflet';
 import { recordStatus } from '../../utils/map';
-import { mapStyles } from '../../utils/mapStyles';
+import { getMapStyleBgColor, getMapStyleColor, mapStyles } from '../../utils/mapStyles';
 import { POSITION_CLASSES } from '../../utils/types';
 import { useHint } from '../InfrastructureCompo/HintProvider';
 import PrettyDropdown from '../InfrastructureCompo/PrettyDropdown';
@@ -36,15 +36,15 @@ export const MapStyleControl = ({ position }: Props) => {
                     className={'mapStyleControl-option ' + (isShownOnTop ? 'mapStyleControl-option-main ' : 'mapStyleControl-option-item ') + (isSelected ? 'mapStyleControl-option-selected' : '')}
                     style={{}}
                   >
-                    {recordStatus.map((recordStatusItem, index) => {
+                    {recordStatus.map((recordStatusItem, jndex) => {
                       return (
                         <div
                           key={recordStatusItem.value}
                           style={{
-                            backgroundColor: mapStyle.bgcolor[recordStatusItem.value],
-                            color: mapStyle.color[recordStatusItem.value],
+                            backgroundColor: getMapStyleBgColor(index, recordStatusItem.value),
+                            color: getMapStyleColor(index, recordStatusItem.value),
                             padding: '6px',
-                            borderRadius: index === 0 ? '8px 0 0 8px' : index === recordStatus.length - 1 ? '0 8px 8px 0' : '0px',
+                            borderRadius: jndex === 0 ? '8px 0 0 8px' : jndex === recordStatus.length - 1 ? '0 8px 8px 0' : '0px',
                           }}
                         >
                           {recordStatusItem.name}
