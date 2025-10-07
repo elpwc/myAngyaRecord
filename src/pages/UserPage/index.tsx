@@ -36,6 +36,7 @@ export default (props: P) => {
     name: '',
     hitokoto: '',
     createTime: '',
+    email: '',
   });
   const [profileEditModalAvatar, setProfileEditModalAvatar] = useState(defaultAvatar);
   const [profileEditModalUsername, setProfileEditModalUsername] = useState('');
@@ -76,6 +77,7 @@ export default (props: P) => {
           name: data.name || '',
           hitokoto: data.hitokoto || '',
           createTime: data.create_date || '',
+          email: data.email || '',
         });
         setProfileEditModalAvatar(getAvatarFullURL(data.avatar_url));
         setProfileEditModalUsername(data.name || '');
@@ -311,7 +313,7 @@ export default (props: P) => {
           </label>
           <label>
             パスワード
-            <a href="">パスワード変更</a>
+            <Link to={'/emailverify?email=' + userInfo.email + '&forgetpassword=1'}>パスワード変更</Link>
           </label>
         </div>
       </Modal>
