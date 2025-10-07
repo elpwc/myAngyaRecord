@@ -1,10 +1,9 @@
 <?php
-require dirname(__FILE__) . '/private/dbcfg.php';
-require dirname(__FILE__) . '/private/admin.php';
-require dirname(__FILE__) . '/utils/utils.php';
-require dirname(__FILE__) . '/utils/sqlgenerator.php';
-require dirname(__FILE__) . '/utils/cors.php';
-require dirname(__FILE__) . '/user/token.php';
+@require dirname(__FILE__) . '/private/dbcfg.php';
+@require dirname(__FILE__) . '/utils/utils.php';
+@require dirname(__FILE__) . '/utils/sqlgenerator.php';
+@require dirname(__FILE__) . '/utils/cors.php';
+@require dirname(__FILE__) . '/user/token.php';
 
 session_start();
 

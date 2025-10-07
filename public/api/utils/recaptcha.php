@@ -1,5 +1,5 @@
 <?php
-require dirname(__FILE__) . '/../private/recaptcha_key.php';
+@require dirname(__FILE__) . '/../private/recaptcha_key.php';
 
 error_log(RECAPTCHA_SITE_KEY);
 function verify_recaptcha($token)

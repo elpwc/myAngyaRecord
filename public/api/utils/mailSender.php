@@ -1,6 +1,6 @@
 <?php
-require dirname(__FILE__) . '/../private/emailcfg.php';
-require dirname(__FILE__) . '/../../vendor/autoload.php';
+@require dirname(__FILE__) . '/../private/emailcfg.php';
+@require dirname(__FILE__) . '/../../vendor/autoload.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;

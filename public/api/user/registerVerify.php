@@ -1,8 +1,8 @@
 <?php
-require dirname(__FILE__) . '/../private/dbcfg.php';
-require dirname(__FILE__) . '/../utils/cors.php';
-require dirname(__FILE__) . '/../private/verifygen.php';
-require dirname(__FILE__) . '/../utils/utils.php';
+@require dirname(__FILE__) . '/../private/dbcfg.php';
+@require dirname(__FILE__) . '/../utils/cors.php';
+@require dirname(__FILE__) . '/../private/verifygen.php';
+@require dirname(__FILE__) . '/../utils/utils.php';
 
 session_start();
 

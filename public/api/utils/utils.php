@@ -5,9 +5,9 @@
  * @author wniko
  */
 
-require dirname(__FILE__) . '/../private/illegal_words_list.php';
-require dirname(__FILE__) . '/../utils/mailSender.php';
-require dirname(__FILE__) . '/../private/admin.php';
+@require dirname(__FILE__) . '/../private/illegal_words_list.php';
+@require dirname(__FILE__) . '/../utils/mailSender.php';
+@require dirname(__FILE__) . '/../private/admin.php';
 
 /**
  * 防注入
