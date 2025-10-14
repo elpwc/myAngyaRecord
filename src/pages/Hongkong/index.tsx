@@ -6,7 +6,7 @@ import { Marker, Polygon, Polyline, Popup, Tooltip, useMap } from 'react-leaflet
 import { getBounds, MapsId } from '../../utils/map';
 import MapPopup from '../../components/MapPopup';
 import L, { divIcon, LatLngTuple } from 'leaflet';
-import { getCurrentFillColorByRecords, getCurrentForeColorByRecords, getRecordGroupById, getRecordGroups, getRecords, postRecord } from '../../utils/serverUtils';
+import { getCurrentFillColorByRecords, getCurrentForeColorByRecords, getRecordGroupById, getRecordGroups, getRecords, postRecord, postRecordGroup } from '../../utils/serverUtils';
 import { Record, RecordGroup } from '../../utils/types';
 import { isLogin } from '../../utils/userUtils';
 import { c_uid, c_zoom } from '../../utils/cookies';
@@ -18,6 +18,8 @@ import MuniList from './MuniList';
 import { Railway, RailwayType } from '../../utils/mapInfo';
 import { useAppContext } from '../../context';
 import { HongkongDistrict } from './addr';
+import { AskGroupModal } from '../../components/modals/AskGroupModal';
+import { NewGroupModal } from '../../components/modals/NewGroupModal';
 
 interface P {
   openMobileAsideMenu: boolean;
@@ -55,6 +57,9 @@ export default (props: P) => {
   // 連続塗り関連
   const { isContinuousEditOn, setIsContinuousEditOn } = useAppContext();
   const { currentContinuousEditValue, setCurrentContinuousEditValue } = useAppContext();
+
+  const [showCreateNewRecordGroupModal, setShowCreateNewRecordGroupModal] = React.useState(false);
+  const [showNewGroupModal, setShowNewGroupModal] = React.useState(false);
 
   const refreshRecordGroups = () => {
     if (isLogin()) {
@@ -286,6 +291,10 @@ export default (props: P) => {
                             onClick={value => {
                               changeRecordStatus(border.id, value);
                             }}
+                            mapId={thisMapId}
+                            onNewGroupModalNeedToBeOpenned={() => {
+                              setShowCreateNewRecordGroupModal(true);
+                            }}
                           />
                         </Popup>
                       )}
@@ -329,6 +338,41 @@ export default (props: P) => {
             }
           </>
         }
+      />
+      <AskGroupModal
+        text="まだ開ける記録地図がありません。新しい記録地図を作成しましょうか？"
+        show={showCreateNewRecordGroupModal}
+        onClose={() => {
+          setShowCreateNewRecordGroupModal(false);
+        }}
+        onOk={() => {
+          setShowNewGroupModal(true);
+
+          setShowCreateNewRecordGroupModal(false);
+        }}
+      />
+      <NewGroupModal
+        show={showNewGroupModal}
+        onClose={() => {
+          setShowNewGroupModal(false);
+        }}
+        onOk={(name: string, desc: string, isPublic: boolean, showLivedLevel: boolean) => {
+          postRecordGroup(
+            thisMapId,
+            name,
+            desc,
+            isPublic,
+            showLivedLevel,
+            (data: any) => {
+              refreshRecordGroups();
+              setShowNewGroupModal(false);
+              setShowCreateNewRecordGroupModal(false);
+            },
+            errmsg => {
+              alert(errmsg);
+            }
+          );
+        }}
       />
     </div>
   );

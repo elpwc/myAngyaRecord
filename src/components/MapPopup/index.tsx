@@ -3,9 +3,11 @@ import { useEffect } from 'react';
 import './index.css';
 import { useMap } from 'react-leaflet';
 import { isLogin } from '../../utils/userUtils';
-import { recordStatus } from '../../utils/map';
-import { getCurrentFillColorByLevel, getCurrentForeColorByLevel, patchRecord, postRecord } from '../../utils/serverUtils';
+import { MapsId, recordStatus } from '../../utils/map';
+import { getCurrentFillColorByLevel, getCurrentForeColorByLevel, patchRecord, postRecord, postRecordGroup } from '../../utils/serverUtils';
 import { useHint } from '../InfrastructureCompo/HintProvider';
+import { AskGroupModal } from '../modals/AskGroupModal';
+import { NewGroupModal } from '../modals/NewGroupModal';
 
 interface P {
   addr: string;
@@ -15,14 +17,16 @@ interface P {
   recordId?: number;
   /* 記録がないと記録できない */
   hasOpenningRecordGroup: boolean;
+  mapId: MapsId;
   groupId: number;
   adminId: string;
   selected: number;
   isViewMode: boolean;
   onClick: (value: number) => void;
+  onNewGroupModalNeedToBeOpenned?: () => void;
 }
 
-export default ({ addr, name, comment, recordId, hasOpenningRecordGroup, groupId, adminId, selected, onClick, isViewMode }: P) => {
+export default ({ addr, name, comment, recordId, hasOpenningRecordGroup, mapId, groupId, adminId, selected, onClick, isViewMode, onNewGroupModalNeedToBeOpenned }: P) => {
   const thisMap = useMap();
   const hint = useHint();
 
@@ -133,6 +137,7 @@ export default ({ addr, name, comment, recordId, hasOpenningRecordGroup, groupId
                       onClick(value.value);
                     } else {
                       hint('top', 'まず記録を開く・作成してくださいね', 'red', 2000);
+                      onNewGroupModalNeedToBeOpenned?.();
                     }
                   } else {
                     hint('top', 'まずログインしてから記録してくださいね', 'red', 2000);
