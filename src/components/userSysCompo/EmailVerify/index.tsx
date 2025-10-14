@@ -50,9 +50,9 @@ export default (props: P) => {
         enableReinitialize
         initialValues={initialValues}
         onSubmit={async (values, { resetForm }) => {
-          setbuttonAvailable(false);
           if (values.email !== '') {
             if (recaptchaToken) {
+              setbuttonAvailable(false);
               verifyEmail({ email: values.email, token: recaptchaToken })
                 .then(e => {
                   const res = e.res;

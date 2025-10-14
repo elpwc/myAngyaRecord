@@ -63,8 +63,8 @@ export default (props: P) => {
         enableReinitialize
         initialValues={initialValues}
         onSubmit={async (values, { resetForm }) => {
-          setbuttonAvailable(false);
           if (values.password !== '' && values.password === values.password2) {
+            setbuttonAvailable(false);
             resetPassword({ email: email, pw: values.password })
               .then(e => {
                 setbuttonAvailable(true);

@@ -35,9 +35,9 @@ export default (props: P) => {
         enableReinitialize
         initialValues={initialValues}
         onSubmit={async (values, { resetForm }) => {
-          setbuttonAvailable(false);
           if (values.password !== '') {
             if (values.email !== '') {
+              setbuttonAvailable(false);
               loginUser({ email: values.email, password: values.password })
                 .then(e => {
                   setbuttonAvailable(true);
