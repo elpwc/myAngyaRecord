@@ -82,7 +82,7 @@ export default (props: P) => {
   };
 
   const refreshRecords = () => {
-    if (isLogin() && currentRecordGroup?.id) {
+    if (isLogin() && currentRecordGroup?.id && /* important */ currentRecordGroup?.mapid === thisMapId) {
       getRecords(
         currentRecordGroup?.id,
         (data: any) => {

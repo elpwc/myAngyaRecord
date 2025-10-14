@@ -76,7 +76,7 @@ export default (props: P) => {
   };
 
   const refreshRecords = () => {
-    if (isLogin() && currentRecordGroup?.id) {
+    if (isLogin() && currentRecordGroup?.id && /* important */ currentRecordGroup?.mapid === thisMapId) {
       getRecords(
         currentRecordGroup?.id,
         (data: any) => {
@@ -104,7 +104,6 @@ export default (props: P) => {
   // param.id
   useEffect(() => {
     if (currentRecordGroupId !== '-1') {
-      console.log(currentRecordGroupId);
       getRecordGroupById(
         Number(currentRecordGroupId),
         (data: RecordGroup[]) => {

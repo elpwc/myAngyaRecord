@@ -92,7 +92,7 @@ export default (props: P) => {
     id: number | undefined = currentRecordGroup?.id,
     show_lived_level: boolean = !(isLogin() && c_uid() === currentRecordGroup?.uid.toString()) && (currentRecordGroup?.show_lived_level ?? false)
   ) => {
-    if (id) {
+    if (id && /* important */ currentRecordGroup?.mapid === thisMapId) {
       getRecords(
         id,
         (data: Record[]) => {
