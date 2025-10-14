@@ -109,7 +109,7 @@ export default (props: P) => {
         (data: RecordGroup[]) => {
           if (data && data[0].mapid === thisMapId) {
             setCurrentRecordGroup(data[0]);
-            if (data[0].uid !== Number(c_uid())) {
+            if (data[0].uid !== Number(c_uid()) || !isLogin()) {
               setIsViewMode(true);
             }
             getRecords(

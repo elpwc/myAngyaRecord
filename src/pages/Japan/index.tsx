@@ -140,7 +140,6 @@ export default (props: P) => {
           if (data && data[0].mapid === thisMapId) {
             setCurrentRecordGroup(data[0]);
             if (data[0].uid !== Number(c_uid()) || !isLogin()) {
-              console.log(data[0].uid !== Number(c_uid()) || !isLogin());
               setIsViewMode(true);
             }
             refreshRecords(Number(currentRecordGroupId), data[0].show_lived_level);
