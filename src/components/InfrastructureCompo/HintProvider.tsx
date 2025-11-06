@@ -45,7 +45,7 @@ export const HintProvider = ({ children }: { children: ReactNode }) => {
   return (
     <HintContext.Provider value={{ showHint }}>
       {children}
-      <div className="fixed inset-0 pointer-events-none">
+      <div className="fixed inset-0 pointer-events-none z-[1145141919]">
         <AnimatePresence>
           {hints.map(h => (
             <motion.div
