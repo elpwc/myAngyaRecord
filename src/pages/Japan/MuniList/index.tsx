@@ -176,7 +176,8 @@ const MuniList = ({ muniBorderData, records, showCheckbox, onSelectedPrefChanged
                             {[5, 4, 3, 2, 1, 0].map(level => {
                               let total = prefMuniBorder.municipalities.length;
                               let value: number = Object.values(angyaStatus)[5 - level];
-                              if (isLogin()) {
+                              if (isLogin() || isViewMode) {
+                                // 登录时 / 或者未登录但是在查看他人记录时显示正确颜色条长度
                                 total = prefMuniBorder.municipalities.length;
                                 value = Object.values(angyaStatus)[5 - level];
                               } else {
