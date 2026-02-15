@@ -11,7 +11,7 @@ interface Props {
 export const DeleteGroupModal = ({ show, onClose, onOk }: Props) => {
   return (
     <Modal isOpen={show} mobileMode="center" onClose={onClose} onOk={onOk} title="本当に削除しますか？" showOkButton showCancelButton>
-      <></>
+      <p>永遠に戻ってこれなくなります！</p>
     </Modal>
   );
 };

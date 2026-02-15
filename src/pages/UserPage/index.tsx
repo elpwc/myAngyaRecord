@@ -59,7 +59,7 @@ export default (props: P) => {
       },
       (e: any) => {
         console.log(e);
-      }
+      },
     );
   };
 
@@ -87,7 +87,7 @@ export default (props: P) => {
         console.log(msg);
         hint('top', 'ユーザー情報の取得に失敗しました');
         navigate('/404');
-      }
+      },
     );
   }, [userId]);
 
@@ -120,7 +120,7 @@ export default (props: P) => {
         },
         e => {
           console.log(e);
-        }
+        },
       );
     } catch (err) {
       hint('bottom', '画像の圧縮に失敗しました');
@@ -169,9 +169,17 @@ export default (props: P) => {
               return (
                 <li key={group.id} className="record-item">
                   <Link to={`/${getMapUrlByMapsId(group.mapid)}/` + group.id} target="_blank" className="link">
-                    <div className="record-title">{getMapTitleByMapsId(group.mapid) + ' ' + group.name + ' ' + (group.is_public ? '' : '(非公開)')}</div>
+                    <div className="record-title">
+                      <span style={{ color: '#181955' }}>{getMapTitleByMapsId(group.mapid)}</span>
+                      <span>{group.name}</span>{' '}
+                      {group.is_public ? (
+                        <span style={{ backgroundColor: 'gray', color: 'white', borderRadius: '4px', fontSize: '12px', fontWeight: 'normal', padding: '0 2px', height: 'min-content' }}>非公開</span>
+                      ) : (
+                        <></>
+                      )}
+                    </div>
                     <div className="record-date">{group.create_date}</div>
-                    {group.desc && <div className="record-desc">{group.desc}</div>}
+                    {group.desc && <div className="record-desc">{'備考：' + group.desc}</div>}
                   </Link>
                   {isSelfUser && <GroupControlButtonGroup recordGroup={group} direction="row" onRecordGroupsInfoUpdate={() => refreshRecordGroups()} />}
                 </li>
@@ -280,7 +288,7 @@ export default (props: P) => {
             },
             e => {
               console.log(e);
-            }
+            },
           );
 
           // upload avatar

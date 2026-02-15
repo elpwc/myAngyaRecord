@@ -26,6 +26,7 @@ export const GroupControlButtonGroup = ({ recordGroup, onRecordGroupsInfoUpdate,
     <div style={{ display: 'flex', flexDirection: direction, gap: '4px' }}>
       {/* EditButton */}
       <button
+        title="編集"
         className="singleIcon-button"
         onClick={e => {
           e.stopPropagation();
@@ -42,6 +43,7 @@ export const GroupControlButtonGroup = ({ recordGroup, onRecordGroupsInfoUpdate,
       </button>
       {/* DeleteButton */}
       <button
+        title="削除"
         className="singleIcon-button"
         onClick={e => {
           e.stopPropagation();
@@ -54,13 +56,14 @@ export const GroupControlButtonGroup = ({ recordGroup, onRecordGroupsInfoUpdate,
       </button>
       {/* ShareButton */}
       <button
+        title="リンクをコピー"
         className="singleIcon-button"
         onClick={e => {
           e.stopPropagation();
 
           navigator.clipboard
             .writeText(`${appconfig.siteBaseURL}/${getMapUrlByMapsId(recordGroup.mapid)}/${recordGroup.id}`)
-            .then(() => hint('bottom', 'この行脚記録のURLをｸﾘｯﾌﾟﾎﾞｰﾄにコピーしました！'))
+            .then(() => hint('bottom', 'この行脚記録のURLをコピーしました！'))
             .catch(err => hint('bottom', 'この行脚記録のURLをｸﾘｯﾌﾟﾎﾞｰﾄにコピーできませんでした！', 'red', 2000));
         }}
       >
@@ -93,7 +96,7 @@ export const GroupControlButtonGroup = ({ recordGroup, onRecordGroupsInfoUpdate,
               desc,
               is_public: Boolean(isPublic),
               show_lived_level: Boolean(showLivedLevel),
-            }
+            },
           );
         }}
       />
@@ -111,7 +114,7 @@ export const GroupControlButtonGroup = ({ recordGroup, onRecordGroupsInfoUpdate,
             },
             e => {
               alert('削除失敗');
-            }
+            },
           );
         }}
       />

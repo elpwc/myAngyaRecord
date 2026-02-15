@@ -87,9 +87,15 @@
 }
 .record-title {
   font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 .record-date {
-  font-size: 0.9rem;
+  font-size: 0.7rem;
+  color: #666;
+}
+.record-desc {
   color: #666;
 }
 
